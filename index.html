@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>志愿填报助手 — 重庆高考</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <!-- ========== 登录遮罩 ========== -->
+  <div id="loginOverlay" class="login-overlay">
+    <div class="login-box">
+      <h1>⚓ 志愿填报助手</h1>
+      <p class="login-desc">私人辅助工具，请输入访问密码</p>
+      <input type="password" id="passwordInput" placeholder="请输入密码" autofocus>
+      <button onclick="checkPassword()">进入</button>
+      <p id="loginError" class="login-error"></p>
+    </div>
+  </div>
+
+  <!-- ========== 主界面 ========== -->
+  <div id="app" class="app" style="display:none;">
+    <!-- 导航 -->
+    <nav class="nav-bar">
+      <div class="nav-inner">
+        <span class="nav-title">⚓ 志愿填报助手</span>
+        <div class="nav-links">
+          <a href="#" class="active" data-page="dashboard">总览</a>
+          <a href="#" data-page="schools">院校推荐</a>
+          <a href="#" data-page="plan">志愿方案</a>
+          <a href="#" data-page="compare">对比</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- ===== 页面1: 总览 ===== -->
+      <section id="page-dashboard" class="page active">
+        <h2>📊 数据总览</h2>
+        <div class="score-card">
+          <div class="score-main">
+            <div class="score-number">
+              <span class="score-label">高考成绩</span>
+              <span class="score-value" id="displayScore">513</span>
+              <span class="score-unit">分</span>
+            </div>
+            <div class="score-detail">
+              <p>科目：<span id="displaySubject">物理类（物化生）</span></p>
+              <p>地区：<span id="displayProvince">重庆市</span></p>
+              <p>一本线（特殊类型资格线）：<strong id="displayBatchLine">496</strong> 分</p>
+              <p class="score-diff">超一本线 <strong id="displayDiff">17</strong> 分</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 核心预警 -->
+        <div class="alert-box alert-warning">
+          ⏰ 填报截止日期：<strong>2025年6月30日</strong> &nbsp;|&nbsp; 剩余 <span id="countdownDays">6</span> 天
+        </div>
+
+        <div class="info-grid">
+          <div class="info-card" id="pref-majors-card">
+            <h3>🎯 意向专业</h3>
+            <ul id="majorsList">
+              <li>生物工程</li>
+              <li>中医学 / 中医</li>
+              <li>铁路 / 轨道交通</li>
+              <li>电力 / 电气工程</li>
+            </ul>
+          </div>
+          <div class="info-card" id="pref-cities-card">
+            <h3>📍 意向城市</h3>
+            <ul id="citiesList">
+              <li>重庆</li>
+              <li>四川</li>
+              <li>湖北</li>
+              <li>江苏</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== 页面2: 院校推荐 ===== -->
+      <section id="page-schools" class="page">
+        <h2>🏫 院校推荐</h2>
+
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label>专业</label>
+            <select id="filterMajor">
+              <option value="all">全部</option>
+              <option value="bio-eng">生物工程</option>
+              <option value="tcm">中医学</option>
+              <option value="railway">铁路/轨道交通</option>
+              <option value="power">电力/电气</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>城市</label>
+            <select id="filterCity">
+              <option value="all">全部</option>
+              <option value="cq">重庆</option>
+              <option value="sc">四川</option>
+              <option value="hb">湖北</option>
+              <option value="js">江苏</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>策略</label>
+            <select id="filterStrategy">
+              <option value="all">全部</option>
+              <option value="rush">🚀 冲（高5-15分）</option>
+              <option value="steady">⚖️ 稳（±5分）</option>
+              <option value="safe">🛡️ 保（低5-20分）</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="school-table-wrap">
+          <table class="school-table">
+            <thead>
+              <tr>
+                <th>院校</th>
+                <th>专业</th>
+                <th>城市</th>
+                <th>2024最低分</th>
+                <th>2024位次</th>
+                <th>策略</th>
+                <th>匹配度</th>
+              </tr>
+            </thead>
+            <tbody id="schoolList">
+              <!-- JS 动态渲染 -->
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note" id="schoolCountNote">暂无数据</p>
+      </section>
+
+      <!-- ===== 页面3: 志愿方案 ===== -->
+      <section id="page-plan" class="page">
+        <h2>📋 志愿方案</h2>
+
+        <div class="plan-actions">
+          <button class="btn" onclick="generatePlan()">🔄 生成推荐方案</button>
+          <button class="btn btn-outline" onclick="exportPlan()">📥 导出方案</button>
+        </div>
+
+        <div class="plan-section" id="plan-rush">
+          <h3>🚀 冲刺志愿（高5-15分）</h3>
+          <div class="plan-list" id="planRushList">
+            <p class="plan-empty">暂无推荐</p>
+          </div>
+        </div>
+
+        <div class="plan-section" id="plan-steady">
+          <h3>⚖️ 稳妥志愿（±5分）</h3>
+          <div class="plan-list" id="planSteadyList">
+            <p class="plan-empty">暂无推荐</p>
+          </div>
+        </div>
+
+        <div class="plan-section" id="plan-safe">
+          <h3>🛡️ 保底志愿（低5-20分）</h3>
+          <div class="plan-list" id="planSafeList">
+            <p class="plan-empty">暂无推荐</p>
+          </div>
+        </div>
+
+        <div class="plan-tips">
+          <h4>💡 填报提示</h4>
+          <ul>
+            <li>重庆实行 <strong>专业（类）+ 学校</strong> 平行志愿模式，最多可填 96 个</li>
+            <li>建议按 "冲30% + 稳40% + 保30%" 比例分配</li>
+            <li>最终方案请结合 <strong>2025年一分一段表</strong> 和 <strong>招生计划</strong> 确认</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ===== 页面4: 对比 ===== -->
+      <section id="page-compare" class="page">
+        <h2>⚖️ 对比工具</h2>
+        <p class="page-desc">选择多个院校和专业进行横向对比</p>
+        <div class="compare-grid" id="compareGrid">
+          <div class="compare-placeholder">请先在「院校推荐」页选择要对比的项目</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
