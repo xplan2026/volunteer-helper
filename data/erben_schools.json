@@ -1,0 +1,2413 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-06-25",
+  "student": {
+    "city": "重庆",
+    "subject": "物理类（理科）",
+    "batch": "二本",
+    "score_range": "480-510分"
+  },
+  "filter_rules": {
+    "excluded_provinces": [
+      "西藏",
+      "内蒙",
+      "山西",
+      "河南",
+      "河北",
+      "湖南",
+      "广西",
+      "贵州",
+      "上海",
+      "安徽"
+    ],
+    "max_admit_ratio": "103%",
+    "majors": [
+      "生物工程",
+      "制药工程",
+      "铁路",
+      "电气自动化",
+      "通信工程",
+      "人工智能",
+      "材料科学与工程"
+    ]
+  },
+  "total_schools": 118,
+  "schools": [
+    {
+      "school": "云南中医药大学",
+      "major": "制药工程",
+      "province": "云南",
+      "city": "昆明",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "昆明理工大学",
+      "major": "材料科学与工程",
+      "province": "云南",
+      "city": "昆明",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "昆明理工大学",
+      "major": "电气自动化",
+      "province": "云南",
+      "city": "昆明",
+      "score": 497,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "北华大学",
+      "major": "制药工程",
+      "province": "吉林",
+      "city": "吉林",
+      "score": 484,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "北华大学",
+      "major": "生物工程",
+      "province": "吉林",
+      "city": "吉林",
+      "score": 483,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "长春工业大学",
+      "major": "材料科学与工程",
+      "province": "吉林",
+      "city": "长春",
+      "score": 492,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "长春工业大学",
+      "major": "生物工程",
+      "province": "吉林",
+      "city": "长春",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "长春工业大学",
+      "major": "电气自动化",
+      "province": "吉林",
+      "city": "长春",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "长春工业大学",
+      "major": "通信工程",
+      "province": "吉林",
+      "city": "长春",
+      "score": 493,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "川北医学院",
+      "major": "制药工程",
+      "province": "四川",
+      "city": "南充",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "成都医学院",
+      "major": "制药工程",
+      "province": "四川",
+      "city": "成都",
+      "score": 492,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "成都理工大学",
+      "major": "材料科学与工程",
+      "province": "四川",
+      "city": "成都",
+      "score": 508,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": "双一流"
+    },
+    {
+      "school": "成都理工大学",
+      "major": "电气自动化",
+      "province": "四川",
+      "city": "成都",
+      "score": 510,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": "双一流"
+    },
+    {
+      "school": "西南科技大学",
+      "major": "人工智能",
+      "province": "四川",
+      "city": "绵阳",
+      "score": 500,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西南科技大学",
+      "major": "制药工程",
+      "province": "四川",
+      "city": "绵阳",
+      "score": 494,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西南科技大学",
+      "major": "材料科学与工程",
+      "province": "四川",
+      "city": "绵阳",
+      "score": 493,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西南科技大学",
+      "major": "生物工程",
+      "province": "四川",
+      "city": "绵阳",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西南科技大学",
+      "major": "电气自动化",
+      "province": "四川",
+      "city": "绵阳",
+      "score": 499,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西南科技大学",
+      "major": "通信工程",
+      "province": "四川",
+      "city": "绵阳",
+      "score": 497,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "天津理工大学",
+      "major": "人工智能",
+      "province": "天津",
+      "city": "天津",
+      "score": 503,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "天津理工大学",
+      "major": "材料科学与工程",
+      "province": "天津",
+      "city": "天津",
+      "score": 499,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "天津理工大学",
+      "major": "电气自动化",
+      "province": "天津",
+      "city": "天津",
+      "score": 502,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "天津理工大学",
+      "major": "通信工程",
+      "province": "天津",
+      "city": "天津",
+      "score": 501,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "天津科技大学",
+      "major": "制药工程",
+      "province": "天津",
+      "city": "天津",
+      "score": 496,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "天津科技大学",
+      "major": "生物工程",
+      "province": "天津",
+      "city": "天津",
+      "score": 497,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "天津职业技术师范大学",
+      "major": "电气自动化",
+      "province": "天津",
+      "city": "天津",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "曲阜师范大学",
+      "major": "材料科学与工程",
+      "province": "山东",
+      "city": "曲阜",
+      "score": 486,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "曲阜师范大学",
+      "major": "生物工程",
+      "province": "山东",
+      "city": "曲阜",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "烟台大学",
+      "major": "制药工程",
+      "province": "山东",
+      "city": "烟台",
+      "score": 484,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "烟台大学",
+      "major": "生物工程",
+      "province": "山东",
+      "city": "烟台",
+      "score": 485,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "齐鲁工业大学",
+      "major": "制药工程",
+      "province": "山东",
+      "city": "济南",
+      "score": 491,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "齐鲁工业大学",
+      "major": "材料科学与工程",
+      "province": "山东",
+      "city": "济南",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "齐鲁工业大学",
+      "major": "生物工程",
+      "province": "山东",
+      "city": "济南",
+      "score": 492,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "齐鲁工业大学",
+      "major": "电气自动化",
+      "province": "山东",
+      "city": "济南",
+      "score": 494,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "东莞理工学院",
+      "major": "材料科学与工程",
+      "province": "广东",
+      "city": "东莞",
+      "score": 487,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "东莞理工学院",
+      "major": "电气自动化",
+      "province": "广东",
+      "city": "东莞",
+      "score": 492,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "东莞理工学院",
+      "major": "通信工程",
+      "province": "广东",
+      "city": "东莞",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "五邑大学",
+      "major": "电气自动化",
+      "province": "广东",
+      "city": "江门",
+      "score": 485,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "五邑大学",
+      "major": "通信工程",
+      "province": "广东",
+      "city": "江门",
+      "score": 484,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "广东药科大学",
+      "major": "制药工程",
+      "province": "广东",
+      "city": "广州",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "广东药科大学",
+      "major": "生物工程",
+      "province": "广东",
+      "city": "广州",
+      "score": 487,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "常州大学",
+      "major": "制药工程",
+      "province": "江苏",
+      "city": "常州",
+      "score": 492,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "常州大学",
+      "major": "材料科学与工程",
+      "province": "江苏",
+      "city": "常州",
+      "score": 489,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "常州大学",
+      "major": "生物工程",
+      "province": "江苏",
+      "city": "常州",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "常州大学",
+      "major": "电气自动化",
+      "province": "江苏",
+      "city": "常州",
+      "score": 493,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "江苏科技大学",
+      "major": "人工智能",
+      "province": "江苏",
+      "city": "镇江",
+      "score": 500,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "江苏科技大学",
+      "major": "材料科学与工程",
+      "province": "江苏",
+      "city": "镇江",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "江苏科技大学",
+      "major": "生物工程",
+      "province": "江苏",
+      "city": "镇江",
+      "score": 497,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "江苏科技大学",
+      "major": "电气自动化",
+      "province": "江苏",
+      "city": "镇江",
+      "score": 498,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "江苏科技大学",
+      "major": "通信工程",
+      "province": "江苏",
+      "city": "镇江",
+      "score": 496,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "东华理工大学",
+      "major": "材料科学与工程",
+      "province": "江西",
+      "city": "南昌",
+      "score": 487,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "东华理工大学",
+      "major": "生物工程",
+      "province": "江西",
+      "city": "南昌",
+      "score": 489,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "东华理工大学",
+      "major": "电气自动化",
+      "province": "江西",
+      "city": "南昌",
+      "score": 491,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "华东交通大学",
+      "major": "电气自动化",
+      "province": "江西",
+      "city": "南昌",
+      "score": 500,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "江西中医药大学",
+      "major": "制药工程",
+      "province": "江西",
+      "city": "南昌",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "江西理工大学",
+      "major": "材料科学与工程",
+      "province": "江西",
+      "city": "赣州",
+      "score": 493,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "江西理工大学",
+      "major": "电气自动化",
+      "province": "江西",
+      "city": "赣州",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "嘉兴大学",
+      "major": "生物工程",
+      "province": "浙江",
+      "city": "嘉兴",
+      "score": 486,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "嘉兴大学",
+      "major": "通信工程",
+      "province": "浙江",
+      "city": "嘉兴",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "浙江中医药大学",
+      "major": "制药工程",
+      "province": "浙江",
+      "city": "杭州",
+      "score": 500,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "浙江科技大学",
+      "major": "电气自动化",
+      "province": "浙江",
+      "city": "杭州",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "浙江科技大学",
+      "major": "通信工程",
+      "province": "浙江",
+      "city": "杭州",
+      "score": 494,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "温州大学",
+      "major": "材料科学与工程",
+      "province": "浙江",
+      "city": "温州",
+      "score": 489,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "温州大学",
+      "major": "生物工程",
+      "province": "浙江",
+      "city": "温州",
+      "score": 491,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "武汉轻工大学",
+      "major": "制药工程",
+      "province": "湖北",
+      "city": "武汉",
+      "score": 493,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "武汉轻工大学",
+      "major": "材料科学与工程",
+      "province": "湖北",
+      "city": "武汉",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "武汉轻工大学",
+      "major": "生物工程",
+      "province": "湖北",
+      "city": "武汉",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "武汉轻工大学",
+      "major": "电气自动化",
+      "province": "湖北",
+      "city": "武汉",
+      "score": 497,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "湖北汽车工业学院",
+      "major": "材料科学与工程",
+      "province": "湖北",
+      "city": "十堰",
+      "score": 484,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "湖北汽车工业学院",
+      "major": "电气自动化",
+      "province": "湖北",
+      "city": "十堰",
+      "score": 486,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "湖北科技学院",
+      "major": "制药工程",
+      "province": "湖北",
+      "city": "咸宁",
+      "score": 483,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "湖北科技学院",
+      "major": "生物工程",
+      "province": "湖北",
+      "city": "咸宁",
+      "score": 482,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "兰州交通大学",
+      "major": "电气自动化",
+      "province": "甘肃",
+      "city": "兰州",
+      "score": 500,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "兰州交通大学",
+      "major": "铁路",
+      "province": "甘肃",
+      "city": "兰州",
+      "score": 499,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "甘肃农业大学",
+      "major": "制药工程",
+      "province": "甘肃",
+      "city": "兰州",
+      "score": 483,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "甘肃农业大学",
+      "major": "生物工程",
+      "province": "甘肃",
+      "city": "兰州",
+      "score": 484,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西北师范大学",
+      "major": "生物工程",
+      "province": "甘肃",
+      "city": "兰州",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "福建理工大学",
+      "major": "电气自动化",
+      "province": "福建",
+      "city": "福州",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "福建理工大学",
+      "major": "通信工程",
+      "province": "福建",
+      "city": "福州",
+      "score": 493,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "集美大学",
+      "major": "生物工程",
+      "province": "福建",
+      "city": "厦门",
+      "score": 492,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "集美大学",
+      "major": "电气自动化",
+      "province": "福建",
+      "city": "厦门",
+      "score": 496,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "集美大学",
+      "major": "通信工程",
+      "province": "福建",
+      "city": "厦门",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "大连交通大学",
+      "major": "材料科学与工程",
+      "province": "辽宁",
+      "city": "大连",
+      "score": 498,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "大连交通大学",
+      "major": "电气自动化",
+      "province": "辽宁",
+      "city": "大连",
+      "score": 503,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "大连交通大学",
+      "major": "铁路",
+      "province": "辽宁",
+      "city": "大连",
+      "score": 505,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": "铁路特色"
+    },
+    {
+      "school": "沈阳化工大学",
+      "major": "制药工程",
+      "province": "辽宁",
+      "city": "沈阳",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "沈阳化工大学",
+      "major": "生物工程",
+      "province": "辽宁",
+      "city": "沈阳",
+      "score": 486,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "辽宁工业大学",
+      "major": "电气自动化",
+      "province": "辽宁",
+      "city": "锦州",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "辽宁工业大学",
+      "major": "通信工程",
+      "province": "辽宁",
+      "city": "锦州",
+      "score": 488,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆三峡学院",
+      "major": "生物工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 485,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆三峡学院",
+      "major": "电气自动化",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 487,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆三峡学院",
+      "major": "通信工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 486,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆科技大学",
+      "major": "人工智能",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 500,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆科技大学",
+      "major": "制药工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆科技大学",
+      "major": "材料科学与工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆科技大学",
+      "major": "生物工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 493,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆科技大学",
+      "major": "电气自动化",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 498,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "重庆科技大学",
+      "major": "通信工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 496,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "长江师范学院",
+      "major": "制药工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 484,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "长江师范学院",
+      "major": "材料科学与工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 482,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "长江师范学院",
+      "major": "生物工程",
+      "province": "重庆",
+      "city": "重庆",
+      "score": 483,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西安工业大学",
+      "major": "材料科学与工程",
+      "province": "陕西",
+      "city": "西安",
+      "score": 493,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西安工业大学",
+      "major": "电气自动化",
+      "province": "陕西",
+      "city": "西安",
+      "score": 497,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西安工业大学",
+      "major": "通信工程",
+      "province": "陕西",
+      "city": "西安",
+      "score": 495,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西安工程大学",
+      "major": "制药工程",
+      "province": "陕西",
+      "city": "西安",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西安工程大学",
+      "major": "生物工程",
+      "province": "陕西",
+      "city": "西安",
+      "score": 492,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西安科技大学",
+      "major": "材料科学与工程",
+      "province": "陕西",
+      "city": "西安",
+      "score": 494,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西安科技大学",
+      "major": "电气自动化",
+      "province": "陕西",
+      "city": "西安",
+      "score": 498,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "西安科技大学",
+      "major": "通信工程",
+      "province": "陕西",
+      "city": "西安",
+      "score": 496,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "陕西理工大学",
+      "major": "材料科学与工程",
+      "province": "陕西",
+      "city": "汉中",
+      "score": 482,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "陕西理工大学",
+      "major": "生物工程",
+      "province": "陕西",
+      "city": "汉中",
+      "score": 483,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "陕西理工大学",
+      "major": "电气自动化",
+      "province": "陕西",
+      "city": "汉中",
+      "score": 485,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "佳木斯大学",
+      "major": "制药工程",
+      "province": "黑龙江",
+      "city": "佳木斯",
+      "score": 480,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "黑龙江大学",
+      "major": "材料科学与工程",
+      "province": "黑龙江",
+      "city": "哈尔滨",
+      "score": 490,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "黑龙江大学",
+      "major": "生物工程",
+      "province": "黑龙江",
+      "city": "哈尔滨",
+      "score": 492,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "黑龙江大学",
+      "major": "通信工程",
+      "province": "黑龙江",
+      "city": "哈尔滨",
+      "score": 494,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "齐齐哈尔大学",
+      "major": "制药工程",
+      "province": "黑龙江",
+      "city": "齐齐哈尔",
+      "score": 481,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "齐齐哈尔大学",
+      "major": "生物工程",
+      "province": "黑龙江",
+      "city": "齐齐哈尔",
+      "score": 482,
+      "batch": "二本",
+      "ratio": 1.02,
+      "note": ""
+    }
+  ],
+  "by_major": {
+    "制药工程": [
+      {
+        "school": "浙江中医药大学",
+        "major": "制药工程",
+        "province": "浙江",
+        "city": "杭州",
+        "score": 500,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "天津科技大学",
+        "major": "制药工程",
+        "province": "天津",
+        "city": "天津",
+        "score": 496,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆科技大学",
+        "major": "制药工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西南科技大学",
+        "major": "制药工程",
+        "province": "四川",
+        "city": "绵阳",
+        "score": 494,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "武汉轻工大学",
+        "major": "制药工程",
+        "province": "湖北",
+        "city": "武汉",
+        "score": 493,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "成都医学院",
+        "major": "制药工程",
+        "province": "四川",
+        "city": "成都",
+        "score": 492,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "常州大学",
+        "major": "制药工程",
+        "province": "江苏",
+        "city": "常州",
+        "score": 492,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "齐鲁工业大学",
+        "major": "制药工程",
+        "province": "山东",
+        "city": "济南",
+        "score": 491,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "江西中医药大学",
+        "major": "制药工程",
+        "province": "江西",
+        "city": "南昌",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西安工程大学",
+        "major": "制药工程",
+        "province": "陕西",
+        "city": "西安",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "云南中医药大学",
+        "major": "制药工程",
+        "province": "云南",
+        "city": "昆明",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "川北医学院",
+        "major": "制药工程",
+        "province": "四川",
+        "city": "南充",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "广东药科大学",
+        "major": "制药工程",
+        "province": "广东",
+        "city": "广州",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "沈阳化工大学",
+        "major": "制药工程",
+        "province": "辽宁",
+        "city": "沈阳",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "北华大学",
+        "major": "制药工程",
+        "province": "吉林",
+        "city": "吉林",
+        "score": 484,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "烟台大学",
+        "major": "制药工程",
+        "province": "山东",
+        "city": "烟台",
+        "score": 484,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "长江师范学院",
+        "major": "制药工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 484,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "湖北科技学院",
+        "major": "制药工程",
+        "province": "湖北",
+        "city": "咸宁",
+        "score": 483,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "甘肃农业大学",
+        "major": "制药工程",
+        "province": "甘肃",
+        "city": "兰州",
+        "score": 483,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "齐齐哈尔大学",
+        "major": "制药工程",
+        "province": "黑龙江",
+        "city": "齐齐哈尔",
+        "score": 481,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "佳木斯大学",
+        "major": "制药工程",
+        "province": "黑龙江",
+        "city": "佳木斯",
+        "score": 480,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
+    "材料科学与工程": [
+      {
+        "school": "成都理工大学",
+        "major": "材料科学与工程",
+        "province": "四川",
+        "city": "成都",
+        "score": 508,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": "双一流"
+      },
+      {
+        "school": "天津理工大学",
+        "major": "材料科学与工程",
+        "province": "天津",
+        "city": "天津",
+        "score": 499,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "大连交通大学",
+        "major": "材料科学与工程",
+        "province": "辽宁",
+        "city": "大连",
+        "score": 498,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "昆明理工大学",
+        "major": "材料科学与工程",
+        "province": "云南",
+        "city": "昆明",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "江苏科技大学",
+        "major": "材料科学与工程",
+        "province": "江苏",
+        "city": "镇江",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西安科技大学",
+        "major": "材料科学与工程",
+        "province": "陕西",
+        "city": "西安",
+        "score": 494,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西南科技大学",
+        "major": "材料科学与工程",
+        "province": "四川",
+        "city": "绵阳",
+        "score": 493,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "江西理工大学",
+        "major": "材料科学与工程",
+        "province": "江西",
+        "city": "赣州",
+        "score": 493,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西安工业大学",
+        "major": "材料科学与工程",
+        "province": "陕西",
+        "city": "西安",
+        "score": 493,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "长春工业大学",
+        "major": "材料科学与工程",
+        "province": "吉林",
+        "city": "长春",
+        "score": 492,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "齐鲁工业大学",
+        "major": "材料科学与工程",
+        "province": "山东",
+        "city": "济南",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "武汉轻工大学",
+        "major": "材料科学与工程",
+        "province": "湖北",
+        "city": "武汉",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆科技大学",
+        "major": "材料科学与工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "黑龙江大学",
+        "major": "材料科学与工程",
+        "province": "黑龙江",
+        "city": "哈尔滨",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "常州大学",
+        "major": "材料科学与工程",
+        "province": "江苏",
+        "city": "常州",
+        "score": 489,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "温州大学",
+        "major": "材料科学与工程",
+        "province": "浙江",
+        "city": "温州",
+        "score": 489,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "东莞理工学院",
+        "major": "材料科学与工程",
+        "province": "广东",
+        "city": "东莞",
+        "score": 487,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "东华理工大学",
+        "major": "材料科学与工程",
+        "province": "江西",
+        "city": "南昌",
+        "score": 487,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "曲阜师范大学",
+        "major": "材料科学与工程",
+        "province": "山东",
+        "city": "曲阜",
+        "score": 486,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "湖北汽车工业学院",
+        "major": "材料科学与工程",
+        "province": "湖北",
+        "city": "十堰",
+        "score": 484,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "长江师范学院",
+        "major": "材料科学与工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 482,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "陕西理工大学",
+        "major": "材料科学与工程",
+        "province": "陕西",
+        "city": "汉中",
+        "score": 482,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
+    "电气自动化": [
+      {
+        "school": "成都理工大学",
+        "major": "电气自动化",
+        "province": "四川",
+        "city": "成都",
+        "score": 510,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": "双一流"
+      },
+      {
+        "school": "大连交通大学",
+        "major": "电气自动化",
+        "province": "辽宁",
+        "city": "大连",
+        "score": 503,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "天津理工大学",
+        "major": "电气自动化",
+        "province": "天津",
+        "city": "天津",
+        "score": 502,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "华东交通大学",
+        "major": "电气自动化",
+        "province": "江西",
+        "city": "南昌",
+        "score": 500,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "兰州交通大学",
+        "major": "电气自动化",
+        "province": "甘肃",
+        "city": "兰州",
+        "score": 500,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西南科技大学",
+        "major": "电气自动化",
+        "province": "四川",
+        "city": "绵阳",
+        "score": 499,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "江苏科技大学",
+        "major": "电气自动化",
+        "province": "江苏",
+        "city": "镇江",
+        "score": 498,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆科技大学",
+        "major": "电气自动化",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 498,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西安科技大学",
+        "major": "电气自动化",
+        "province": "陕西",
+        "city": "西安",
+        "score": 498,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "昆明理工大学",
+        "major": "电气自动化",
+        "province": "云南",
+        "city": "昆明",
+        "score": 497,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "武汉轻工大学",
+        "major": "电气自动化",
+        "province": "湖北",
+        "city": "武汉",
+        "score": 497,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西安工业大学",
+        "major": "电气自动化",
+        "province": "陕西",
+        "city": "西安",
+        "score": 497,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "集美大学",
+        "major": "电气自动化",
+        "province": "福建",
+        "city": "厦门",
+        "score": 496,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "长春工业大学",
+        "major": "电气自动化",
+        "province": "吉林",
+        "city": "长春",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "江西理工大学",
+        "major": "电气自动化",
+        "province": "江西",
+        "city": "赣州",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "浙江科技大学",
+        "major": "电气自动化",
+        "province": "浙江",
+        "city": "杭州",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "福建理工大学",
+        "major": "电气自动化",
+        "province": "福建",
+        "city": "福州",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "齐鲁工业大学",
+        "major": "电气自动化",
+        "province": "山东",
+        "city": "济南",
+        "score": 494,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "常州大学",
+        "major": "电气自动化",
+        "province": "江苏",
+        "city": "常州",
+        "score": 493,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "东莞理工学院",
+        "major": "电气自动化",
+        "province": "广东",
+        "city": "东莞",
+        "score": 492,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "东华理工大学",
+        "major": "电气自动化",
+        "province": "江西",
+        "city": "南昌",
+        "score": 491,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "辽宁工业大学",
+        "major": "电气自动化",
+        "province": "辽宁",
+        "city": "锦州",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "天津职业技术师范大学",
+        "major": "电气自动化",
+        "province": "天津",
+        "city": "天津",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆三峡学院",
+        "major": "电气自动化",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 487,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "湖北汽车工业学院",
+        "major": "电气自动化",
+        "province": "湖北",
+        "city": "十堰",
+        "score": 486,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "五邑大学",
+        "major": "电气自动化",
+        "province": "广东",
+        "city": "江门",
+        "score": 485,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "陕西理工大学",
+        "major": "电气自动化",
+        "province": "陕西",
+        "city": "汉中",
+        "score": 485,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
+    "生物工程": [
+      {
+        "school": "天津科技大学",
+        "major": "生物工程",
+        "province": "天津",
+        "city": "天津",
+        "score": 497,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "江苏科技大学",
+        "major": "生物工程",
+        "province": "江苏",
+        "city": "镇江",
+        "score": 497,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西南科技大学",
+        "major": "生物工程",
+        "province": "四川",
+        "city": "绵阳",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "武汉轻工大学",
+        "major": "生物工程",
+        "province": "湖北",
+        "city": "武汉",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆科技大学",
+        "major": "生物工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 493,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "齐鲁工业大学",
+        "major": "生物工程",
+        "province": "山东",
+        "city": "济南",
+        "score": 492,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "集美大学",
+        "major": "生物工程",
+        "province": "福建",
+        "city": "厦门",
+        "score": 492,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西安工程大学",
+        "major": "生物工程",
+        "province": "陕西",
+        "city": "西安",
+        "score": 492,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "黑龙江大学",
+        "major": "生物工程",
+        "province": "黑龙江",
+        "city": "哈尔滨",
+        "score": 492,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "温州大学",
+        "major": "生物工程",
+        "province": "浙江",
+        "city": "温州",
+        "score": 491,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "常州大学",
+        "major": "生物工程",
+        "province": "江苏",
+        "city": "常州",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西北师范大学",
+        "major": "生物工程",
+        "province": "甘肃",
+        "city": "兰州",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "东华理工大学",
+        "major": "生物工程",
+        "province": "江西",
+        "city": "南昌",
+        "score": 489,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "长春工业大学",
+        "major": "生物工程",
+        "province": "吉林",
+        "city": "长春",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "曲阜师范大学",
+        "major": "生物工程",
+        "province": "山东",
+        "city": "曲阜",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "广东药科大学",
+        "major": "生物工程",
+        "province": "广东",
+        "city": "广州",
+        "score": 487,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "嘉兴大学",
+        "major": "生物工程",
+        "province": "浙江",
+        "city": "嘉兴",
+        "score": 486,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "沈阳化工大学",
+        "major": "生物工程",
+        "province": "辽宁",
+        "city": "沈阳",
+        "score": 486,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "烟台大学",
+        "major": "生物工程",
+        "province": "山东",
+        "city": "烟台",
+        "score": 485,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆三峡学院",
+        "major": "生物工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 485,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "甘肃农业大学",
+        "major": "生物工程",
+        "province": "甘肃",
+        "city": "兰州",
+        "score": 484,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "北华大学",
+        "major": "生物工程",
+        "province": "吉林",
+        "city": "吉林",
+        "score": 483,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "长江师范学院",
+        "major": "生物工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 483,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "陕西理工大学",
+        "major": "生物工程",
+        "province": "陕西",
+        "city": "汉中",
+        "score": 483,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "湖北科技学院",
+        "major": "生物工程",
+        "province": "湖北",
+        "city": "咸宁",
+        "score": 482,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "齐齐哈尔大学",
+        "major": "生物工程",
+        "province": "黑龙江",
+        "city": "齐齐哈尔",
+        "score": 482,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
+    "通信工程": [
+      {
+        "school": "天津理工大学",
+        "major": "通信工程",
+        "province": "天津",
+        "city": "天津",
+        "score": 501,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西南科技大学",
+        "major": "通信工程",
+        "province": "四川",
+        "city": "绵阳",
+        "score": 497,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "江苏科技大学",
+        "major": "通信工程",
+        "province": "江苏",
+        "city": "镇江",
+        "score": 496,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆科技大学",
+        "major": "通信工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 496,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西安科技大学",
+        "major": "通信工程",
+        "province": "陕西",
+        "city": "西安",
+        "score": 496,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "集美大学",
+        "major": "通信工程",
+        "province": "福建",
+        "city": "厦门",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西安工业大学",
+        "major": "通信工程",
+        "province": "陕西",
+        "city": "西安",
+        "score": 495,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "浙江科技大学",
+        "major": "通信工程",
+        "province": "浙江",
+        "city": "杭州",
+        "score": 494,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "黑龙江大学",
+        "major": "通信工程",
+        "province": "黑龙江",
+        "city": "哈尔滨",
+        "score": 494,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "长春工业大学",
+        "major": "通信工程",
+        "province": "吉林",
+        "city": "长春",
+        "score": 493,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "福建理工大学",
+        "major": "通信工程",
+        "province": "福建",
+        "city": "福州",
+        "score": 493,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "东莞理工学院",
+        "major": "通信工程",
+        "province": "广东",
+        "city": "东莞",
+        "score": 490,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "嘉兴大学",
+        "major": "通信工程",
+        "province": "浙江",
+        "city": "嘉兴",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "辽宁工业大学",
+        "major": "通信工程",
+        "province": "辽宁",
+        "city": "锦州",
+        "score": 488,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆三峡学院",
+        "major": "通信工程",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 486,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "五邑大学",
+        "major": "通信工程",
+        "province": "广东",
+        "city": "江门",
+        "score": 484,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
+    "人工智能": [
+      {
+        "school": "天津理工大学",
+        "major": "人工智能",
+        "province": "天津",
+        "city": "天津",
+        "score": 503,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "西南科技大学",
+        "major": "人工智能",
+        "province": "四川",
+        "city": "绵阳",
+        "score": 500,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "江苏科技大学",
+        "major": "人工智能",
+        "province": "江苏",
+        "city": "镇江",
+        "score": 500,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "重庆科技大学",
+        "major": "人工智能",
+        "province": "重庆",
+        "city": "重庆",
+        "score": 500,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
+    "铁路": [
+      {
+        "school": "大连交通大学",
+        "major": "铁路",
+        "province": "辽宁",
+        "city": "大连",
+        "score": 505,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": "铁路特色"
+      },
+      {
+        "school": "兰州交通大学",
+        "major": "铁路",
+        "province": "甘肃",
+        "city": "兰州",
+        "score": 499,
+        "batch": "二本",
+        "ratio": 1.02,
+        "note": ""
+      }
+    ]
+  }
+}

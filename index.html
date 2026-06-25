@@ -29,6 +29,7 @@
           <a href="#" data-page="schools">院校推荐</a>
           <a href="#" data-page="plan">志愿方案</a>
           <a href="#" data-page="compare">对比</a>
+          <a href="#" data-page="data">数据表</a>
         </div>
       </div>
     </nav>
@@ -183,6 +184,65 @@
         <p class="page-desc">选择多个院校和专业进行横向对比</p>
         <div class="compare-grid" id="compareGrid">
           <div class="compare-placeholder">请先在「院校推荐」页选择要对比的项目</div>
+        </div>
+      </section>
+
+      <!-- ===== 页面5: 数据表 ===== -->
+      <section id="page-data" class="page">
+        <h2>📋 录取数据表</h2>
+
+        <!-- Tab 切换 -->
+        <div class="data-tabs">
+          <button class="data-tab active" data-batch="yiben">📘 一本（496-510分）</button>
+          <button class="data-tab" data-batch="erben">📗 二本（480-510分）</button>
+        </div>
+
+        <!-- 筛选 -->
+        <div class="filter-bar data-filter-bar">
+          <div class="filter-group">
+            <label>专业</label>
+            <select id="dataFilterMajor">
+              <option value="all">全部</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>省份</label>
+            <select id="dataFilterProvince">
+              <option value="all">全部</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>搜索学校</label>
+            <input type="text" id="dataFilterSchool" placeholder="输入学校名称">
+          </div>
+          <div class="filter-group data-stats" id="dataStats">
+            <span id="dataCountLabel">共 0 条记录</span>
+          </div>
+        </div>
+
+        <div class="data-table-wrap">
+          <table class="school-table data-table">
+            <thead>
+              <tr>
+                <th>院校</th>
+                <th>专业</th>
+                <th>省份</th>
+                <th>城市</th>
+                <th>2024最低分</th>
+                <th>投档比</th>
+                <th>备注</th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody">
+              <tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">加载数据中…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="table-note" id="dataPageNote">第 1 页 / 共 1 页</p>
+        <div class="data-pagination">
+          <button class="btn btn-small" id="dataPrevBtn" onclick="prevDataPage()">◀ 上一页</button>
+          <span id="dataPageInfo">1 / 1</span>
+          <button class="btn btn-small" id="dataNextBtn" onclick="nextDataPage()">下一页 ▶</button>
         </div>
       </section>
     </div>

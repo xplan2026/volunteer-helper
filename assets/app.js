@@ -210,6 +210,163 @@ function getTagSchools(tag) {
   return getSchools().filter(s => s.tag === tag);
 }
 
-// ======== 自动生成初始方案 ========
-// 在页面加载后自动生成一次
-setTimeout(generatePlan, 500);
+// ======== 数据表页面 ========
+let dataStore = [];           // 当前显示的完整数据
+let dataFiltered = [];        // 筛选后的数据
+let dataPageSize = 20;        // 每页显示条数
+let dataCurrentPage = 1;      // 当前页码
+let dataBatch = 'yiben';      // 当前批次 yiben/erben
+
+// 加载 JSON 数据
+async function loadData(batch) {
+  const tbody = document.getElementById('dataTableBody');
+  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">⏳ 加载数据中…</td></tr>';
+
+  try {
+    const resp = await fetch(`data/${batch}_schools.json`);
+    if (!resp.ok) throw new Error('数据文件未找到');
+    const data = await resp.json();
+    dataStore = data.schools || [];
+    dataBatch = batch;
+
+    // 初始化筛选器选项
+    initDataFilters();
+
+    // 应用筛选
+    applyDataFilters();
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#d93025;padding:40px;">❌ 加载失败：${e.message}</td></tr>`;
+  }
+}
+
+// 初始化筛选器选项
+function initDataFilters() {
+  // 专业
+  const majors = [...new Set(dataStore.map(d => d.major))].sort();
+  const majorSel = document.getElementById('dataFilterMajor');
+  majorSel.innerHTML = '<option value="all">全部专业</option>' +
+    majors.map(m => `<option value="${m}">${m}</option>`).join('');
+
+  // 省份
+  const provinces = [...new Set(dataStore.map(d => d.province))].sort();
+  const provSel = document.getElementById('dataFilterProvince');
+  provSel.innerHTML = '<option value="all">全部省份</option>' +
+    provinces.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
+// 应用筛选
+function applyDataFilters() {
+  const major = document.getElementById('dataFilterMajor').value;
+  const province = document.getElementById('dataFilterProvince').value;
+  const school = document.getElementById('dataFilterSchool').value.trim().toLowerCase();
+
+  dataFiltered = dataStore.filter(d => {
+    if (major !== 'all' && d.major !== major) return false;
+    if (province !== 'all' && d.province !== province) return false;
+    if (school && !d.school.toLowerCase().includes(school)) return false;
+    return true;
+  });
+
+  dataCurrentPage = 1;
+  renderDataTable();
+}
+
+// 渲染数据表格
+function renderDataTable() {
+  const tbody = document.getElementById('dataTableBody');
+  const note = document.getElementById('dataPageNote');
+
+  if (dataFiltered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">暂无匹配记录</td></tr>';
+    document.getElementById('dataCountLabel').textContent = '共 0 条记录';
+    note.textContent = '第 0 / 0 页';
+    updatePagination();
+    return;
+  }
+
+  const totalPages = Math.ceil(dataFiltered.length / dataPageSize);
+  const start = (dataCurrentPage - 1) * dataPageSize;
+  const end = Math.min(start + dataPageSize, dataFiltered.length);
+  const pageData = dataFiltered.slice(start, end);
+
+  tbody.innerHTML = pageData.map(d => `
+    <tr>
+      <td><span class="school-name">${d.school}</span></td>
+      <td>${d.major}</td>
+      <td><span class="province-badge">${d.province}</span></td>
+      <td>${d.city}</td>
+      <td><strong>${d.score}</strong> 分</td>
+      <td>${(d.ratio * 100).toFixed(1)}%</td>
+      <td style="color:#999;font-size:12px;">${d.note || '—'}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('dataCountLabel').textContent =
+    `共 ${dataFiltered.length} 条记录（${dataBatch === 'yiben' ? '一本' : '二本'}）`;
+  note.textContent = `第 ${dataCurrentPage} 页 / 共 ${totalPages} 页`;
+  updatePagination();
+}
+
+// 分页控件
+function updatePagination() {
+  const totalPages = Math.ceil(dataFiltered.length / dataPageSize) || 1;
+  document.getElementById('dataPageInfo').textContent = `${dataCurrentPage} / ${totalPages}`;
+  document.getElementById('dataPrevBtn').disabled = dataCurrentPage <= 1;
+  document.getElementById('dataNextBtn').disabled = dataCurrentPage >= totalPages;
+}
+
+function prevDataPage() {
+  if (dataCurrentPage > 1) {
+    dataCurrentPage--;
+    renderDataTable();
+  }
+}
+
+function nextDataPage() {
+  const totalPages = Math.ceil(dataFiltered.length / dataPageSize) || 1;
+  if (dataCurrentPage < totalPages) {
+    dataCurrentPage++;
+    renderDataTable();
+  }
+}
+
+// ======== 数据表筛选事件绑定 ========
+document.addEventListener('change', e => {
+  if (['dataFilterMajor', 'dataFilterProvince'].includes(e.target.id)) {
+    applyDataFilters();
+  }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'dataFilterSchool') {
+    applyDataFilters();
+  }
+});
+
+// Tab 切换
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('data-tab')) {
+    document.querySelectorAll('.data-tab').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    loadData(e.target.dataset.batch);
+  }
+});
+
+// 修改导航切换，进入数据表页时加载数据
+const origSetup = setupNavigation;
+setupNavigation = function() {
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const page = link.dataset.page;
+      document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + page)?.classList.add('active');
+
+      // 进入数据表页时加载
+      if (page === 'data') {
+        loadData('yiben');
+      }
+    });
+  });
+};

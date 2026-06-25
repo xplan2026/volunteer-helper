@@ -173,7 +173,58 @@ h2 { font-size: 22px; margin-bottom: 20px; display: flex; align-items: center; g
 /* === 对比页 === */
 .page-desc { color: #666; margin-bottom: 16px; }
 .compare-grid { background: #fff; border-radius: 12px; min-height: 200px; padding: 20px; }
-.compare-placeholder { text-align: center; color: #999; padding: 40px; }
+.btn-small {
+  padding: 6px 14px; font-size: 13px;
+  background: #1a73e8; color: #fff; border: none;
+  border-radius: 6px; cursor: pointer;
+}
+.btn-small:hover { background: #1557b0; }
+.btn-small:disabled { background: #ccc; cursor: not-allowed; }
+
+/* === 数据表页 === */
+.data-tabs {
+  display: flex; gap: 8px; margin-bottom: 16px;
+}
+.data-tab {
+  padding: 10px 20px; border: 1px solid #e0e0e0; border-radius: 8px;
+  background: #fff; color: #333; font-size: 14px; cursor: pointer;
+  transition: all .2s;
+}
+.data-tab:hover { border-color: #1a73e8; color: #1a73e8; }
+.data-tab.active {
+  background: #1a73e8; color: #fff; border-color: #1a73e8;
+}
+.data-filter-bar {
+  display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+}
+.data-filter-bar .filter-group {
+  min-width: 120px;
+}
+.data-filter-bar input[type="text"] {
+  padding: 8px 12px; border: 1px solid #e0e0e0; border-radius: 6px;
+  font-size: 14px; outline: none; width: 160px;
+}
+.data-filter-bar input[type="text"]:focus { border-color: #1a73e8; }
+.data-stats {
+  margin-left: auto; display: flex; align-items: center;
+  font-size: 14px; color: #666;
+}
+.data-table-wrap {
+  background: #fff; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 12px;
+}
+.data-table th { white-space: nowrap; }
+.data-table td { font-size: 13px; }
+.data-table .school-name { font-weight: 600; }
+.data-table .province-badge {
+  display: inline-block; padding: 1px 6px; border-radius: 4px;
+  font-size: 11px; background: #e8f0fe; color: #1a73e8;
+}
+.data-pagination {
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  padding: 12px 0;
+}
+.data-pagination span { font-size: 14px; color: #666; }
 
 /* === 响应式 === */
 @media (max-width: 768px) {
