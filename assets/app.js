@@ -19,6 +19,7 @@ function initApp() {
 }
 
 // ======== 导航切换 ========
+// 注意：此函数在末尾被覆写以支持 data 页面，请同时更新两处
 function setupNavigation() {
   document.querySelectorAll('.nav-links a').forEach(link => {
     link.addEventListener('click', e => {
@@ -210,33 +211,34 @@ function getTagSchools(tag) {
   return getSchools().filter(s => s.tag === tag);
 }
 
-// ======== 数据表页面 ========
+// ======== 数据表页面（内联数据，避免fetch跨域） ========
+const DATA_SOURCE = {
+  yiben: YIBEN_DATA_SCHOOLS,
+  erben: ERBEN_DATA_SCHOOLS
+};
+
 let dataStore = [];           // 当前显示的完整数据
 let dataFiltered = [];        // 筛选后的数据
 let dataPageSize = 20;        // 每页显示条数
 let dataCurrentPage = 1;      // 当前页码
 let dataBatch = 'yiben';      // 当前批次 yiben/erben
 
-// 加载 JSON 数据
-async function loadData(batch) {
+// 加载数据（直接使用内联JS变量）
+function loadData(batch) {
   const tbody = document.getElementById('dataTableBody');
-  tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;">⏳ 加载数据中…</td></tr>';
-
-  try {
-    const resp = await fetch(`data/${batch}_schools.json`);
-    if (!resp.ok) throw new Error('数据文件未找到');
-    const data = await resp.json();
-    dataStore = data.schools || [];
-    dataBatch = batch;
-
-    // 初始化筛选器选项
-    initDataFilters();
-
-    // 应用筛选
-    applyDataFilters();
-  } catch (e) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:#d93025;padding:40px;">❌ 加载失败：${e.message}</td></tr>`;
+  const schools = DATA_SOURCE[batch];
+  if (!schools || schools.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>';
+    return;
   }
+  dataStore = schools;
+  dataBatch = batch;
+
+  // 初始化筛选器选项
+  initDataFilters();
+
+  // 应用筛选
+  applyDataFilters();
 }
 
 // 初始化筛选器选项
@@ -351,22 +353,13 @@ document.addEventListener('click', e => {
   }
 });
 
-// 修改导航切换，进入数据表页时加载数据
-const origSetup = setupNavigation;
-setupNavigation = function() {
-  document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const page = link.dataset.page;
-      document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
-      link.classList.add('active');
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById('page-' + page)?.classList.add('active');
-
-      // 进入数据表页时加载
-      if (page === 'data') {
-        loadData('yiben');
-      }
-    });
-  });
-};
+// ======== 导航切换数据页增强 ========
+// 在原始导航基础上，进入数据表页时加载对应数据
+// 保存原始 setupNavigation 的绑定已完成，此处只附加 data 页加载逻辑
+document.addEventListener('click', function navDataHandler(e) {
+  const link = e.target.closest('.nav-links a');
+  if (link && link.dataset.page === 'data') {
+    // 延迟执行等待 page 切换完成后加载
+    setTimeout(() => loadData('yiben'), 50);
+  }
+});
