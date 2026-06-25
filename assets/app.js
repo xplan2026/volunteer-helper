@@ -279,7 +279,7 @@ function renderDataTable() {
   const note = document.getElementById('dataPageNote');
 
   if (dataFiltered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">暂无匹配记录</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">暂无匹配记录</td></tr>';
     document.getElementById('dataCountLabel').textContent = '共 0 条记录';
     note.textContent = '第 0 / 0 页';
     updatePagination();
@@ -294,10 +294,13 @@ function renderDataTable() {
   tbody.innerHTML = pageData.map(d => `
     <tr>
       <td><span class="school-name">${d.school}</span></td>
-      <td>${d.major}</td>
+      <td><code>${d.code || '—'}</code></td>
       <td><span class="province-badge">${d.province}</span></td>
       <td>${d.city}</td>
-      <td><strong>${d.score}</strong> 分</td>
+      <td>${d.major}</td>
+      <td><strong>${d.score_min > 0 ? d.score_min + ' 分' : '待填'}</strong></td>
+      <td>${d.score_avg > 0 ? d.score_avg + ' 分' : '待填'}</td>
+      <td>${d.plan_count > 0 ? d.plan_count + ' 人' : '待填'}</td>
       <td>${(d.ratio * 100).toFixed(1)}%</td>
       <td style="color:#999;font-size:12px;">${d.note || '—'}</td>
     </tr>
