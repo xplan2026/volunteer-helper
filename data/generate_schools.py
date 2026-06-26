@@ -28,21 +28,26 @@ SCORE_LOWER = 489        # 等位分 -20
 SCORE_UPPER = 514        # 等位分 +5
 
 EXCLUDED_PROVINCES = {"西藏", "内蒙", "内蒙古", "山西", "河南", "河北", "湖南", "广西", "贵州", "上海", "安徽"}
-# 目标专业匹配规则：resource.json 中的专业名称
-# 注意原名 "电气自动化" → "电气工程及其自动化"、"铁路" → "轨道交通信号与控制"
+# 目标专业精确匹配
 TARGET_MAJORS = [
     "生物工程",
     "制药工程",
     "轨道交通信号与控制",
     "电气工程及其自动化",
+    "电气工程及自动化",
+    "电气工程与智能控制",
+    "自动化",
     "通信工程",
     "人工智能",
     "材料科学与工程"
 ]
-# 同时包含以下专业关键字的也纳入（如各种带"（中外合作）"的电气工程及其自动化）
+# 前缀匹配（如电气工程及其自动化(中外合作办学)）
 TARGET_MAJORS_PREFIX = {
-    "电气工程及其自动化",   # 匹配 电气工程及其自动化(中外合作办学) 等
+    "电气工程及其自动化",
 }
+
+# 学校名称包含以下关键词时纳入（如「石家庄铁道大学」等铁路相关学校）
+TARGET_SCHOOL_KEYWORDS = ["铁路", "铁道"]
 
 
 def main():
@@ -62,7 +67,10 @@ def main():
     filtered = [r for r in filtered if SCORE_LOWER <= r["score_min"] <= SCORE_UPPER]
     print(f"分数截取 {SCORE_LOWER}~{SCORE_UPPER} 后: {len(filtered)} 条")
 
-    # 4. 仅保留目标专业（精确匹配 + 前缀匹配）
+    # 在专业筛选前，先保存分数范围内的全量数据
+    filtered_on_score = filtered  # 489~514 + 排除省份 的所有数据
+
+    # 4. 专业筛选（精确匹配 + 前缀匹配）
     def match_major(major):
         if major in TARGET_MAJORS:
             return True
@@ -70,8 +78,19 @@ def main():
             if major.startswith(prefix):
                 return True
         return False
-    filtered = [r for r in filtered if match_major(r["major"])]
-    print(f"专业筛选（目标专业）后: {len(filtered)} 条")
+
+    filtered = [r for r in filtered_on_score if match_major(r["major"])]
+    print(f"专业筛选后: {len(filtered)} 条（匹配专业名）")
+
+    # 4b. 学校名称含关键词的也保留（所有专业，但仍在分数/地区范围内）
+    school_keyword_set = set()
+    for r in filtered_on_score:
+        if any(kw in r["school"] for kw in TARGET_SCHOOL_KEYWORDS):
+            school_keyword_set.add(json.dumps(r, ensure_ascii=False, sort_keys=True))
+    already_set = set(json.dumps(r, ensure_ascii=False, sort_keys=True) for r in filtered)
+    new_records = [json.loads(s) for s in school_keyword_set if s not in already_set]
+    print(f"学校名含铁路关键词（补充）: {len(new_records)} 条")
+    filtered.extend(new_records)
 
     # 5. 排序
     filtered.sort(key=lambda x: (x["score_min"], x["province"], x["school"], x["major"]))
