@@ -310,6 +310,42 @@ h2 { font-size: 22px; margin-bottom: 20px; display: flex; align-items: center; g
 /* === 页面描述 === */
 .page-desc { color: #666; margin-bottom: 16px; }
 
+/* === Dashboard 两栏布局 === */
+.dashboard-two-col {
+  display: grid; grid-template-columns: 1fr 380px; gap: 24px;
+}
+.dash-left { flex: 1; }
+.dash-right { width: 380px; min-width: 340px; }
+#page-dashboard.active {
+  display: grid !important;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 1024px) {
+  #page-dashboard.active {
+    grid-template-columns: 1fr;
+  }
+  .dash-right { width: 100%; }
+}
+
+/* === 目录树 === */
+.dir-card {
+  background: #fff; border-radius: 12px; padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.dir-card h3 { font-size: 16px; margin-bottom: 16px; color: #333; }
+.dir-tree {
+  font-size: 13px; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  line-height: 2;
+}
+.dir-item { padding: 0 0 0 12px; }
+.dir-root { font-weight: 700; color: #1a237e; font-size: 14px; padding-left: 0; margin-bottom: 4px; }
+.dir-dir { color: #1565c0; font-weight: 600; }
+.dir-file { color: #333; }
+.dir-file .dir-desc { color: #999; font-size: 11px; margin-left: 6px; }
+.dir-children { padding-left: 20px; border-left: 1px dashed #e0e0e0; margin-left: 6px; }
+
 /* === 响应式 === */
 @media (max-width: 768px) {
   .sidebar { width: 60px; }
