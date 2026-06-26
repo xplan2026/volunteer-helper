@@ -13,43 +13,47 @@
       box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 24px;
     }
     .eq-card h1 { font-size: 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
-    .eq-card h2 { font-size: 18px; margin: 24px 0 12px; color: #1a237e; }
+    .eq-card h2 { font-size: 18px; margin: 28px 0 12px; color: #1a237e; }
     .eq-card h3 { font-size: 15px; margin: 20px 0 10px; color: #333; }
-    .eq-card p, .eq-card li { font-size: 15px; line-height: 1.8; color: #444; }
+    .eq-card p, .eq-card li { font-size: 15px; line-height: 1.9; color: #444; }
     .eq-card ul { padding-left: 20px; }
+    .eq-card ol { padding-left: 20px; }
+    .eq-card ol li { margin-bottom: 8px; }
     .eq-highlight {
       background: #e8f0fe; border-radius: 8px; padding: 16px 20px;
       margin: 12px 0; border-left: 4px solid #1a73e8;
     }
     .eq-highlight strong { color: #1a73e8; font-size: 18px; }
-    .eq-step {
-      counter-increment: step-counter;
-      margin: 16px 0;
-    }
-    .eq-step::before {
-      content: counter(step-counter) ". ";
-      font-weight: 700; color: #1a73e8;
-    }
-    .eq-table-wrap { overflow-x: auto; margin: 16px 0; }
-    .eq-table {
-      width: 100%; border-collapse: collapse; font-size: 14px;
-    }
-    .eq-table th {
-      background: #1a237e; color: #fff; padding: 10px 16px;
-      text-align: center; font-weight: 600;
-    }
-    .eq-table td {
-      padding: 8px 16px; border-bottom: 1px solid #e0e0e0;
-      text-align: center;
-    }
-    .eq-table tr:hover td { background: #f8f9ff; }
-    .eq-table .eq-our { background: #e8f0fe; font-weight: 700; }
-    .back-link { display: inline-block; margin-bottom: 20px; color: #1a73e8; }
     .info-box {
       background: #fff3e0; border-radius: 8px; padding: 16px 20px;
       margin: 12px 0; border-left: 4px solid #ff9800;
     }
     .info-box strong { color: #e65100; }
+    .back-link { display: inline-block; margin-bottom: 20px; color: #1a73e8; }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; background: #1a237e; color: #fff;
+      border-radius: 50%; font-size: 14px; font-weight: 700;
+      margin-right: 10px; flex-shrink: 0;
+    }
+    .step-header { display: flex; align-items: center; margin-bottom: 12px; }
+    .step-header h2 { margin: 0; }
+    .strategy-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+    .strategy-table th { background: #1a237e; color: #fff; padding: 10px 16px; text-align: center; }
+    .strategy-table td { padding: 10px 16px; border-bottom: 1px solid #e0e0e0; text-align: center; }
+    .strategy-table tr:hover td { background: #f8f9ff; }
+    .tag-rush { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 13px; background: #fce4ec; color: #c62828; }
+    .tag-steady { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 13px; background: #e8f5e9; color: #2e7d32; }
+    .tag-safe { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 13px; background: #e3f2fd; color: #1565c0; }
+    .value-box {
+      background: #1a237e; color: #fff; border-radius: 10px;
+      padding: 20px 24px; margin: 16px 0;
+    }
+    .value-box .big { font-size: 36px; font-weight: 800; }
+    .value-box .label { font-size: 13px; opacity: 0.8; }
+    @media (max-width: 600px) {
+      .eq-card { padding: 20px; }
+    }
   </style>
 </head>
 <body>
@@ -57,41 +61,69 @@
   <a href="../index.html" class="back-link">← 返回首页</a>
 
   <div class="eq-card">
-    <h1>📊 2025-2026 等位分换算</h1>
+    <h1>📐 2025-2026 等位分换算</h1>
+    <p style="color:#666;margin-bottom:20px;">将 2026 年高考成绩换算为 2025 年等效分数，以便使用 2025 年录取数据进行志愿筛选。</p>
 
-    <h2>一、查位次</h2>
+    <div class="step-header"><span class="step-num">1</span><h2>查位次</h2></div>
     <div class="eq-highlight">
       <p><strong>2026年高考成绩 513 分</strong> → 位次 <strong>55,893</strong> 名（同分 607 人）</p>
-      <p style="font-size:13px;color:#666;margin-top:4px;">数据来源：2026年物理类含加分一分段表</p>
+      <p style="font-size:13px;color:#666;margin-top:4px;">数据来源：<a href="https://www.cqksy.cn/uploadFile/infopub/2026/ptgk/yfd/lk.htm" target="_blank">2026年物理类含加分一分段表</a></p>
     </div>
 
-    <h2>二、等位分换算原理</h2>
-    <p>等位分换算的核心逻辑：<strong>看位次，不看分数</strong>。</p>
-    <p>因为每年试卷难度不同，同一分数对应的含金量（位次）不同。所以我们需要将 2026 年的位次映射到 2025 年的分数上，从而使用 2025 年的录取数据来评估志愿。</p>
-
-    <h2>三、换算方法</h2>
-    <p>依据 2025 年一分一段表，查找 55,893 名对应的分数。如果位次落在某两个分数之间，采用插值估算。</p>
-
-    <div class="eq-highlight">
-      <p>2025年位次 55,893 → 等位分 ≈ <strong>507 分</strong></p>
-      <p style="font-size:13px;color:#666;margin-top:4px;">（以 2025 年一分一段表实际数据为准）</p>
+    <div class="step-header"><span class="step-num">2</span><h2>换算等位分</h2></div>
+    <p>查看 <a href="https://www.cqksy.cn/uploadFile/infopub/2025/pg/yfd/lk.htm" target="_blank">2025年物理类含加分一分段表(志愿填报)</a>，55,893 位次对应的分数：</p>
+    <div class="value-box" style="text-align:center;">
+      <div class="label">2025 等位分</div>
+      <div class="big">509</div>
+      <div class="label">（对应 2026 年 513 分位次 55,893）</div>
     </div>
+
+    <div class="step-header"><span class="step-num">3</span><h2>筛选分数范围</h2></div>
+    <ul>
+      <li><strong>上限：</strong>等位分 + 5分 = 509 + 5 = <strong>514</strong> 分</li>
+      <li><strong>下限：</strong>等位分 - 20分 = 509 - 20 = <strong>489</strong> 分</li>
+      <li>在 <strong>489 ~ 514 分</strong> 之间挑选专业和大学</li>
+    </ul>
+
+    <div class="step-header"><span class="step-num">4</span><h2>设置冲、稳、保</h2></div>
+    <p>在筛选结果中按分数区间手动标记策略：</p>
+    <table class="strategy-table">
+      <thead>
+        <tr>
+          <th>策略</th>
+          <th>分数范围</th>
+          <th>说明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag-rush">冲</span></td>
+          <td>等位分 + 3 ~ +8 分<br><span style="color:#999;font-size:12px;">512 ~ 517 分</span></td>
+          <td>分数线略高于成绩，有机会冲一冲</td>
+        </tr>
+        <tr>
+          <td><span class="tag-steady">稳</span></td>
+          <td>等位分 -5 ~ +3 分<br><span style="color:#999;font-size:12px;">504 ~ 512 分</span></td>
+          <td>分数线与成绩相当，较为稳妥</td>
+        </tr>
+        <tr>
+          <td><span class="tag-safe">保</span></td>
+          <td>等位分 -25 ~ -5 分<br><span style="color:#999;font-size:12px;">484 ~ 504 分</span></td>
+          <td>分数线低于成绩，确保有学上</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="step-header"><span class="step-num">5</span><h2>排序与检查</h2></div>
+    <ol>
+      <li>排列院校和专业顺序（冲 → 稳 → 保）</li>
+      <li>检查专业是否符合招生要求（体检限制、单科成绩等）</li>
+      <li>确认不同院校的投档比和录取规则</li>
+    </ol>
 
     <div class="info-box">
-      <strong>⚠️ 重要说明：</strong>等位分换算需根据 2025 年一分一段表的实际分段数据精确计算，<br>
-      以上为示意数值。请打开 <a href="https://www.cqksy.cn/uploadFile/infopub/2025/pg/yfd/lk.htm" target="_blank">2025年一分一段表</a> 核实位次对应分数。
+      <strong>💡 提示：</strong>以上方法为等位分法基础应用。实际填报建议结合院校历年数据趋势、招生计划变化等因素综合判断。
     </div>
-
-    <h2>四、换算后志愿参考</h2>
-    <p>将等位分（约 507 分）作为 2025 年的等效成绩，查找 2025 年录取数据中最低分在 500-510 分之间的院校专业，作为填报参考。</p>
-
-    <h2>五、注意事项</h2>
-    <ul>
-      <li>等位分换算有一定误差，建议以 ±3 分为安全区间</li>
-      <li>招生计划变化、新增/取消专业会影响录取线</li>
-      <li>建议参考近 2-3 年的数据趋势，而非仅看一年</li>
-      <li>最终填报以重庆市教育考试院官方信息为准</li>
-    </ul>
   </div>
 </div>
 </body>
