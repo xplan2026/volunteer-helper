@@ -20,234 +20,306 @@
 
   <!-- ========== 主界面 ========== -->
   <div id="app" class="app" style="display:none;">
-    <!-- 导航 -->
-    <nav class="nav-bar">
-      <div class="nav-inner">
-        <span class="nav-title">⚓ 志愿填报助手</span>
-        <div class="nav-links">
-          <a href="#" class="active" data-page="dashboard">总览</a>
-          <a href="#" data-page="schools">院校推荐</a>
-          <a href="#" data-page="plan">志愿方案</a>
-          <a href="#" data-page="compare">对比</a>
-          <a href="#" data-page="data">数据表</a>
-        </div>
+    <!-- 侧边栏导航 -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>⚓ 志愿填报助手</h1>
+        <div class="subtitle">重庆高考 · 物理类</div>
       </div>
-    </nav>
+      <nav class="sidebar-nav">
+        <div class="nav-section">首页</div>
+        <a href="#" class="active" data-page="dashboard">
+          <span class="nav-icon">📊</span>
+          <span>总览</span>
+        </a>
+        <div class="nav-section">数据</div>
+        <a href="#" data-page="data">
+          <span class="nav-icon">📋</span>
+          <span>数据表</span>
+        </a>
+        <a href="#" data-page="schools">
+          <span class="nav-icon">🏫</span>
+          <span>院校推荐</span>
+        </a>
+        <div class="nav-section">方案</div>
+        <a href="#" data-page="planning">
+          <span class="nav-icon">📝</span>
+          <span>筛选方案</span>
+        </a>
+        <a href="#" data-page="plan">
+          <span class="nav-icon">📋</span>
+          <span>志愿方案</span>
+        </a>
+      </nav>
+    </aside>
 
-    <div class="container">
-      <!-- ===== 页面1: 总览 ===== -->
-      <section id="page-dashboard" class="page active">
-        <h2>📊 数据总览</h2>
-        <div class="score-card">
-          <div class="score-main">
-            <div class="score-number">
-              <span class="score-label">高考成绩</span>
-              <span class="score-value" id="displayScore">513</span>
-              <span class="score-unit">分</span>
+    <!-- 主内容区 -->
+    <div class="main-content">
+      <!-- 顶栏 -->
+      <div class="top-bar">
+        <div class="breadcrumb" id="breadcrumb">📊 <span>总览</span></div>
+        <div style="font-size:13px;color:#999;" id="topBarInfo">513 分 · 物理类 · 重庆</div>
+      </div>
+
+      <div class="container">
+        <!-- ===== 页面1: 总览 ===== -->
+        <section id="page-dashboard" class="page active">
+          <h2>📊 数据总览</h2>
+          <div class="score-card">
+            <div class="score-main">
+              <div class="score-number">
+                <span class="score-label">高考成绩</span>
+                <span class="score-value" id="displayScore">513</span>
+                <span class="score-unit">分</span>
+              </div>
+              <div class="score-detail">
+                <p>科目：<span id="displaySubject">物理类（物化生）</span></p>
+                <p>地区：<span id="displayProvince">重庆市</span></p>
+                <p>一本线（特殊类型资格线）：<strong id="displayBatchLine">496</strong> 分</p>
+                <p class="score-diff">超一本线 <strong id="displayDiff">17</strong> 分</p>
+              </div>
             </div>
-            <div class="score-detail">
-              <p>科目：<span id="displaySubject">物理类（物化生）</span></p>
-              <p>地区：<span id="displayProvince">重庆市</span></p>
-              <p>一本线（特殊类型资格线）：<strong id="displayBatchLine">496</strong> 分</p>
-              <p class="score-diff">超一本线 <strong id="displayDiff">17</strong> 分</p>
+          </div>
+
+          <div class="alert-box alert-warning">
+            ⏰ 填报截止日期：<strong>2025年6月30日</strong> &nbsp;|&nbsp; 剩余 <span id="countdownDays">6</span> 天
+          </div>
+
+          <!-- 筛选设置 -->
+          <div class="settings-card">
+            <h3>⚙️ 筛选设置</h3>
+            <div class="settings-row">
+              <label>剔除地区</label>
+              <input type="text" id="settingExcluded" value="西藏,内蒙,山西,河南,河北,湖南,广西,贵州,上海,安徽" style="flex:1;min-width:200px;">
+            </div>
+            <div class="settings-row">
+              <label>投档比上限</label>
+              <select id="settingRatio">
+                <option value="1.03">103%</option>
+                <option value="1.05">105%</option>
+                <option value="1.10">110%</option>
+                <option value="2">不限制</option>
+              </select>
+            </div>
+            <div class="settings-row">
+              <label>一本分数范围</label>
+              <input type="number" id="settingYibenMin" value="496" style="width:80px;"> ~
+              <input type="number" id="settingYibenMax" value="510" style="width:80px;"> 分
+            </div>
+            <div class="settings-row">
+              <label>二本分数范围</label>
+              <input type="number" id="settingErbenMin" value="480" style="width:80px;"> ~
+              <input type="number" id="settingErbenMax" value="510" style="width:80px;"> 分
+            </div>
+            <div class="settings-row">
+              <label>限定专业</label>
+              <input type="text" id="settingMajors" value="生物工程,制药工程,铁路,电气自动化,通信工程,人工智能,材料科学与工程" style="flex:1;min-width:200px;">
+            </div>
+            <div class="btn-group" style="margin-top:12px;">
+              <button class="btn btn-small btn-success" onclick="saveSettings()">💾 保存设置</button>
+              <button class="btn btn-small btn-outline" onclick="resetSettings()">↩ 重置</button>
             </div>
           </div>
-        </div>
 
-        <!-- 核心预警 -->
-        <div class="alert-box alert-warning">
-          ⏰ 填报截止日期：<strong>2025年6月30日</strong> &nbsp;|&nbsp; 剩余 <span id="countdownDays">6</span> 天
-        </div>
+          <!-- 参考资料 -->
+          <div class="settings-card">
+            <h3>🔗 参考资料</h3>
+            <div id="refLinks">
+              <p style="color:#999;font-size:14px;">暂无参考资料，按进度随时添加</p>
+            </div>
+          </div>
+        </section>
 
-        <div class="info-grid">
-          <div class="info-card" id="pref-majors-card">
-            <h3>🎯 意向专业</h3>
-            <ul id="majorsList">
-              <li>生物工程</li>
-              <li>中医学 / 中医</li>
-              <li>铁路 / 轨道交通</li>
-              <li>电力 / 电气工程</li>
-            </ul>
+        <!-- ===== 页面2: 数据表 ===== -->
+        <section id="page-data" class="page">
+          <h2>📋 录取数据表</h2>
+          <div class="data-tabs">
+            <button class="data-tab active" data-batch="yiben">📘 一本（496-510分）</button>
+            <button class="data-tab" data-batch="erben">📗 二本（480-510分）</button>
           </div>
-          <div class="info-card" id="pref-cities-card">
-            <h3>📍 意向城市</h3>
-            <ul id="citiesList">
-              <li>重庆</li>
-              <li>四川</li>
-              <li>湖北</li>
-              <li>江苏</li>
-            </ul>
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>专业</label>
+              <select id="dataFilterMajor"><option value="all">全部</option></select>
+            </div>
+            <div class="filter-group">
+              <label>省份</label>
+              <select id="dataFilterProvince"><option value="all">全部</option></select>
+            </div>
+            <div class="filter-group">
+              <label>搜索学校</label>
+              <input type="text" id="dataFilterSchool" placeholder="输入学校名称">
+            </div>
+            <div class="filter-group" style="margin-left:auto;">
+              <span id="dataCountLabel" style="font-size:14px;color:#666;">共 0 条记录</span>
+            </div>
           </div>
-        </div>
-      </section>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>院校</th><th>院校代码</th><th>省份</th><th>城市</th><th>专业</th>
+                  <th>2025最低分</th><th>2025平均分</th><th>录取人数</th><th>投档比</th><th>备注</th>
+                </tr>
+              </thead>
+              <tbody id="dataTableBody">
+                <tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">加载数据中…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note" id="dataPageNote">第 1 页 / 共 1 页</p>
+          <div class="data-pagination">
+            <button class="btn btn-small" id="dataPrevBtn" onclick="prevDataPage()" disabled>◀ 上一页</button>
+            <span id="dataPageInfo">1 / 1</span>
+            <button class="btn btn-small" id="dataNextBtn" onclick="nextDataPage()">下一页 ▶</button>
+          </div>
+        </section>
 
-      <!-- ===== 页面2: 院校推荐 ===== -->
-      <section id="page-schools" class="page">
-        <h2>🏫 院校推荐</h2>
+        <!-- ===== 页面3: 院校推荐 ===== -->
+        <section id="page-schools" class="page">
+          <h2>🏫 院校推荐</h2>
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>专业</label>
+              <select id="schoolFilterMajor"><option value="all">全部</option></select>
+            </div>
+            <div class="filter-group">
+              <label>省份</label>
+              <select id="schoolFilterProvince"><option value="all">全部</option></select>
+            </div>
+            <div class="filter-group">
+              <label>批次</label>
+              <select id="schoolFilterBatch"><option value="all">全部</option><option value="一本">一本</option><option value="二本">二本</option></select>
+            </div>
+            <div class="filter-group">
+              <label>搜索</label>
+              <input type="text" id="schoolFilterSearch" placeholder="学校/专业名">
+            </div>
+            <div class="filter-group" style="margin-left:auto;">
+              <span id="schoolCountLabel" style="font-size:14px;color:#666;">共 0 条记录</span>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>院校</th><th>省份</th><th>城市</th><th>专业</th><th>批次</th><th>2025最低分</th><th>投档比</th><th>备注</th>
+                </tr>
+              </thead>
+              <tbody id="schoolTableBody">
+                <tr><td colspan="8" style="text-align:center;color:#999;padding:40px;">加载数据中…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="table-note" id="schoolPageNote">第 1 页 / 共 1 页</p>
+          <div class="data-pagination">
+            <button class="btn btn-small" id="schoolPrevBtn" onclick="prevSchoolPage()" disabled>◀ 上一页</button>
+            <span id="schoolPageInfo">1 / 1</span>
+            <button class="btn btn-small" id="schoolNextBtn" onclick="nextSchoolPage()">下一页 ▶</button>
+          </div>
+        </section>
 
-        <div class="filter-bar">
-          <div class="filter-group">
-            <label>专业</label>
-            <select id="filterMajor">
-              <option value="all">全部</option>
-              <option value="bio-eng">生物工程</option>
-              <option value="tcm">中医学</option>
-              <option value="railway">铁路/轨道交通</option>
-              <option value="power">电力/电气</option>
-            </select>
+        <!-- ===== 页面4: 筛选方案 ===== -->
+        <section id="page-planning" class="page">
+          <h2>📝 筛选方案</h2>
+          <div class="tip-box">
+            在每个专业表内通过 <strong>▲▼</strong> 箭头调整学校顺序，并在「策略」列标记冲/稳/保/忽略。
+            调整完成后点击 <strong>💾 保存</strong> 将排序结果保存到 data/main/ 目录。
           </div>
-          <div class="filter-group">
-            <label>城市</label>
-            <select id="filterCity">
-              <option value="all">全部</option>
-              <option value="cq">重庆</option>
-              <option value="sc">四川</option>
-              <option value="hb">湖北</option>
-              <option value="js">江苏</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label>策略</label>
-            <select id="filterStrategy">
-              <option value="all">全部</option>
-              <option value="rush">🚀 冲（高5-15分）</option>
-              <option value="steady">⚖️ 稳（±5分）</option>
-              <option value="safe">🛡️ 保（低5-20分）</option>
-            </select>
-          </div>
-        </div>
 
-        <div class="school-table-wrap">
-          <table class="school-table">
-            <thead>
-              <tr>
-                <th>院校</th>
-                <th>专业</th>
-                <th>城市</th>
-                <th>2024最低分</th>
-                <th>2024位次</th>
-                <th>策略</th>
-                <th>匹配度</th>
-              </tr>
-            </thead>
-            <tbody id="schoolList">
+          <!-- 面包屑 -->
+          <div class="breadcrumb-nav" id="planningBreadcrumb">
+            <a onclick="showPlanningMajorList()">所有专业</a>
+            <span class="separator">/</span>
+            <span class="current" id="planningCurrentMajor">生物工程</span>
+          </div>
+
+          <!-- 专业列表视图 -->
+          <div id="planningMajorList">
+            <div class="major-tabs" id="planningMajorTabs">
               <!-- JS 动态渲染 -->
-            </tbody>
-          </table>
-        </div>
-        <p class="table-note" id="schoolCountNote">暂无数据</p>
-      </section>
-
-      <!-- ===== 页面3: 志愿方案 ===== -->
-      <section id="page-plan" class="page">
-        <h2>📋 志愿方案</h2>
-
-        <div class="plan-actions">
-          <button class="btn" onclick="generatePlan()">🔄 生成推荐方案</button>
-          <button class="btn btn-outline" onclick="exportPlan()">📥 导出方案</button>
-        </div>
-
-        <div class="plan-section" id="plan-rush">
-          <h3>🚀 冲刺志愿（高5-15分）</h3>
-          <div class="plan-list" id="planRushList">
-            <p class="plan-empty">暂无推荐</p>
+            </div>
+            <p style="color:#999;font-size:14px;">点击上方专业标签进入对应学校的排序页面</p>
           </div>
-        </div>
 
-        <div class="plan-section" id="plan-steady">
-          <h3>⚖️ 稳妥志愿（±5分）</h3>
-          <div class="plan-list" id="planSteadyList">
-            <p class="plan-empty">暂无推荐</p>
+          <!-- 单专业排序视图 -->
+          <div id="planningMajorView" style="display:none;">
+            <div class="filter-bar">
+              <div class="filter-group">
+                <label>筛选批次</label>
+                <select id="planBatchFilter"><option value="all">全部</option><option value="一本">一本</option><option value="二本">二本</option></select>
+              </div>
+              <div class="filter-group">
+                <label>筛选省份</label>
+                <select id="planProvinceFilter"><option value="all">全部</option></select>
+              </div>
+              <div class="btn-group" style="margin-left:auto;">
+                <button class="btn btn-small btn-success" onclick="savePlan()">💾 保存</button>
+                <button class="btn btn-small btn-outline" onclick="exportPlanTxt()">📥 导出TXT</button>
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th style="width:40px;">#</th>
+                    <th>院校</th>
+                    <th>省份</th>
+                    <th>专业</th>
+                    <th>批次</th>
+                    <th>最低分</th>
+                    <th>策略</th>
+                    <th style="width:60px;">排序</th>
+                  </tr>
+                </thead>
+                <tbody id="planTableBody">
+                  <tr><td colspan="8" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="btn-group" style="margin-top:12px;">
+              <button class="btn btn-success" onclick="savePlan()">💾 保存方案</button>
+              <button class="btn btn-outline" onclick="exportPlanTxt()">📥 导出TXT方案</button>
+              <button class="btn btn-outline" onclick="exportPlanJSON()">📥 导出JSON数据</button>
+            </div>
           </div>
-        </div>
+        </section>
 
-        <div class="plan-section" id="plan-safe">
-          <h3>🛡️ 保底志愿（低5-20分）</h3>
-          <div class="plan-list" id="planSafeList">
-            <p class="plan-empty">暂无推荐</p>
+        <!-- ===== 页面5: 志愿方案 ===== -->
+        <section id="page-plan" class="page">
+          <h2>📋 志愿方案</h2>
+          <p class="page-desc">基于 data/main/ 中已保存的排序方案，按手动标记的策略生成最终志愿方案</p>
+          <div class="btn-group" style="margin-bottom:20px;">
+            <button class="btn" onclick="loadPlanSummary()">🔄 加载方案</button>
+            <button class="btn btn-outline" onclick="exportFinalPlan()">📥 导出最终方案</button>
           </div>
-        </div>
-
-        <div class="plan-tips">
-          <h4>💡 填报提示</h4>
-          <ul>
-            <li>重庆实行 <strong>专业（类）+ 学校</strong> 平行志愿模式，最多可填 96 个</li>
-            <li>建议按 "冲30% + 稳40% + 保30%" 比例分配</li>
-            <li>最终方案请结合 <strong>2025年一分一段表</strong> 和 <strong>招生计划</strong> 确认</li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- ===== 页面4: 对比 ===== -->
-      <section id="page-compare" class="page">
-        <h2>⚖️ 对比工具</h2>
-        <p class="page-desc">选择多个院校和专业进行横向对比</p>
-        <div class="compare-grid" id="compareGrid">
-          <div class="compare-placeholder">请先在「院校推荐」页选择要对比的项目</div>
-        </div>
-      </section>
-
-      <!-- ===== 页面5: 数据表 ===== -->
-      <section id="page-data" class="page">
-        <h2>📋 录取数据表</h2>
-
-        <!-- Tab 切换 -->
-        <div class="data-tabs">
-          <button class="data-tab active" data-batch="yiben">📘 一本（496-510分）</button>
-          <button class="data-tab" data-batch="erben">📗 二本（480-510分）</button>
-        </div>
-
-        <!-- 筛选 -->
-        <div class="filter-bar data-filter-bar">
-          <div class="filter-group">
-            <label>专业</label>
-            <select id="dataFilterMajor">
-              <option value="all">全部</option>
-            </select>
+          <div id="planSummary">
+            <p style="color:#999;font-size:14px;">点击「加载方案」从已保存的数据生成志愿方案</p>
           </div>
-          <div class="filter-group">
-            <label>省份</label>
-            <select id="dataFilterProvince">
-              <option value="all">全部</option>
-            </select>
-          </div>
-          <div class="filter-group">
-            <label>搜索学校</label>
-            <input type="text" id="dataFilterSchool" placeholder="输入学校名称">
-          </div>
-          <div class="filter-group data-stats" id="dataStats">
-            <span id="dataCountLabel">共 0 条记录</span>
-          </div>
-        </div>
 
-        <div class="data-table-wrap">
-          <table class="school-table data-table">
-            <thead>
-              <tr>
-                <th>院校</th>
-                <th>院校代码</th>
-                <th>省份</th>
-                <th>城市</th>
-                <th>专业</th>
-                <th>2025最低分</th>
-                <th>2025平均分</th>
-                <th>录取人数</th>
-                <th>投档比</th>
-                <th>备注</th>
-              </tr>
-            </thead>
-            <tbody id="dataTableBody">
-              <tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">加载数据中…</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="table-note" id="dataPageNote">第 1 页 / 共 1 页</p>
-        <div class="data-pagination">
-          <button class="btn btn-small" id="dataPrevBtn" onclick="prevDataPage()">◀ 上一页</button>
-          <span id="dataPageInfo">1 / 1</span>
-          <button class="btn btn-small" id="dataNextBtn" onclick="nextDataPage()">下一页 ▶</button>
-        </div>
-      </section>
+          <div class="plan-section" id="plan-rush">
+            <h3>🚀 冲刺志愿</h3>
+            <div class="plan-list" id="planRushList"><p class="plan-empty">暂无</p></div>
+          </div>
+          <div class="plan-section" id="plan-steady">
+            <h3>⚖️ 稳妥志愿</h3>
+            <div class="plan-list" id="planSteadyList"><p class="plan-empty">暂无</p></div>
+          </div>
+          <div class="plan-section" id="plan-safe">
+            <h3>🛡️ 保底志愿</h3>
+            <div class="plan-list" id="planSafeList"><p class="plan-empty">暂无</p></div>
+          </div>
+
+          <div class="plan-tips">
+            <h4>💡 填报提示</h4>
+            <ul>
+              <li>重庆实行 <strong>专业（类）+ 学校</strong> 平行志愿模式，最多可填 96 个</li>
+              <li>建议按 "冲30% + 稳40% + 保30%" 比例分配</li>
+              <li>最终方案请结合 <strong>2025年一分一段表</strong> 和 <strong>招生计划</strong> 确认</li>
+            </ul>
+          </div>
+        </section>
+      </div>
     </div>
   </div>
 
