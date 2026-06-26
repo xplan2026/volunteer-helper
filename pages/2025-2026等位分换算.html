@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025-2026等位分换算 — 志愿填报助手</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <style>
+    body { display: block; background: #f0f2f5; padding: 40px 20px; }
+    .page-wrap { max-width: 800px; margin: 0 auto; }
+    .eq-card {
+      background: #fff; border-radius: 16px; padding: 40px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 24px;
+    }
+    .eq-card h1 { font-size: 24px; margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+    .eq-card h2 { font-size: 18px; margin: 24px 0 12px; color: #1a237e; }
+    .eq-card h3 { font-size: 15px; margin: 20px 0 10px; color: #333; }
+    .eq-card p, .eq-card li { font-size: 15px; line-height: 1.8; color: #444; }
+    .eq-card ul { padding-left: 20px; }
+    .eq-highlight {
+      background: #e8f0fe; border-radius: 8px; padding: 16px 20px;
+      margin: 12px 0; border-left: 4px solid #1a73e8;
+    }
+    .eq-highlight strong { color: #1a73e8; font-size: 18px; }
+    .eq-step {
+      counter-increment: step-counter;
+      margin: 16px 0;
+    }
+    .eq-step::before {
+      content: counter(step-counter) ". ";
+      font-weight: 700; color: #1a73e8;
+    }
+    .eq-table-wrap { overflow-x: auto; margin: 16px 0; }
+    .eq-table {
+      width: 100%; border-collapse: collapse; font-size: 14px;
+    }
+    .eq-table th {
+      background: #1a237e; color: #fff; padding: 10px 16px;
+      text-align: center; font-weight: 600;
+    }
+    .eq-table td {
+      padding: 8px 16px; border-bottom: 1px solid #e0e0e0;
+      text-align: center;
+    }
+    .eq-table tr:hover td { background: #f8f9ff; }
+    .eq-table .eq-our { background: #e8f0fe; font-weight: 700; }
+    .back-link { display: inline-block; margin-bottom: 20px; color: #1a73e8; }
+    .info-box {
+      background: #fff3e0; border-radius: 8px; padding: 16px 20px;
+      margin: 12px 0; border-left: 4px solid #ff9800;
+    }
+    .info-box strong { color: #e65100; }
+  </style>
+</head>
+<body>
+<div class="page-wrap">
+  <a href="../index.html" class="back-link">← 返回首页</a>
+
+  <div class="eq-card">
+    <h1>📊 2025-2026 等位分换算</h1>
+
+    <h2>一、查位次</h2>
+    <div class="eq-highlight">
+      <p><strong>2026年高考成绩 513 分</strong> → 位次 <strong>55,893</strong> 名（同分 607 人）</p>
+      <p style="font-size:13px;color:#666;margin-top:4px;">数据来源：2026年物理类含加分一分段表</p>
+    </div>
+
+    <h2>二、等位分换算原理</h2>
+    <p>等位分换算的核心逻辑：<strong>看位次，不看分数</strong>。</p>
+    <p>因为每年试卷难度不同，同一分数对应的含金量（位次）不同。所以我们需要将 2026 年的位次映射到 2025 年的分数上，从而使用 2025 年的录取数据来评估志愿。</p>
+
+    <h2>三、换算方法</h2>
+    <p>依据 2025 年一分一段表，查找 55,893 名对应的分数。如果位次落在某两个分数之间，采用插值估算。</p>
+
+    <div class="eq-highlight">
+      <p>2025年位次 55,893 → 等位分 ≈ <strong>507 分</strong></p>
+      <p style="font-size:13px;color:#666;margin-top:4px;">（以 2025 年一分一段表实际数据为准）</p>
+    </div>
+
+    <div class="info-box">
+      <strong>⚠️ 重要说明：</strong>等位分换算需根据 2025 年一分一段表的实际分段数据精确计算，<br>
+      以上为示意数值。请打开 <a href="https://www.cqksy.cn/uploadFile/infopub/2025/pg/yfd/lk.htm" target="_blank">2025年一分一段表</a> 核实位次对应分数。
+    </div>
+
+    <h2>四、换算后志愿参考</h2>
+    <p>将等位分（约 507 分）作为 2025 年的等效成绩，查找 2025 年录取数据中最低分在 500-510 分之间的院校专业，作为填报参考。</p>
+
+    <h2>五、注意事项</h2>
+    <ul>
+      <li>等位分换算有一定误差，建议以 ±3 分为安全区间</li>
+      <li>招生计划变化、新增/取消专业会影响录取线</li>
+      <li>建议参考近 2-3 年的数据趋势，而非仅看一年</li>
+      <li>最终填报以重庆市教育考试院官方信息为准</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>
