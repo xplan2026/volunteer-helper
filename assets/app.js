@@ -14,7 +14,7 @@ document.getElementById('passwordInput')?.addEventListener('keydown', e => { if 
 
 // ======== 全局常量 ========
 const MAJORS = ['生物工程','制药工程','铁路','电气自动化','通信工程','人工智能','材料科学与工程'];
-const DATA_SOURCE = { yiben: YIBEN_DATA_SCHOOLS, erben: ERBEN_DATA_SCHOOLS };
+const DATA_SOURCE = SELECTABLE_SCHOOLS;
 const SAVED_DIR_PREFIX = 'data/main/';
 
 // ======== 应用初始化 ========
@@ -218,7 +218,7 @@ let schoolPage = 1;
 
 function initSchoolsTable() {
   // 合并一本二本数据
-  schoolAllData = [...(DATA_SOURCE.yiben || []), ...(DATA_SOURCE.erben || [])];
+  schoolAllData = [...(DATA_SOURCE.schools || [])];
   // 初始化筛选选项
   const majors = [...new Set(schoolAllData.map(d => d.major))].sort();
   document.getElementById('schoolFilterMajor').innerHTML =
@@ -343,7 +343,7 @@ function openPlanningMajor(major) {
   document.getElementById('planningCurrentMajor').textContent = major;
 
   // 收集该专业的所有学校（去重：同一学校同一批次同一专业只保留一条）
-  const allData = [...(DATA_SOURCE.yiben || []), ...(DATA_SOURCE.erben || [])];
+  const allData = [...(DATA_SOURCE.schools || [])];
   const schools = allData.filter(d => d.major === major && !d.school.includes('★'));
   // 去重
   const seen = new Set();
