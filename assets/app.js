@@ -2,6 +2,7 @@
 function checkPassword() {
   const pw = document.getElementById('passwordInput').value;
   if (pw === 'alexia!2026$') {
+    document.cookie = 'auth_token=alexia!2026$; path=/; max-age=' + (7*24*60*60);
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     initApp();
@@ -676,3 +677,17 @@ document.addEventListener('change', e => {
 
 // ======== 初始加载 ========
 loadSettings();
+
+// 自动登录：检查 cookie
+(function() {
+  const cookies = document.cookie.split('; ').reduce((acc, c) => {
+    const [k, v] = c.split('=');
+    acc[k] = v;
+    return acc;
+  }, {});
+  if (cookies['auth_token'] === 'alexia!2026$') {
+    document.getElementById('loginOverlay').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  }
+})();
