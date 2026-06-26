@@ -1,32 +1,45 @@
 #!/usr/bin/env python3
 """
-重庆高考志愿填报 - 学校筛选数据生成脚本 v2
+重庆高考志愿填报 - 学校筛选数据生成脚本 v3（等位分版）
+
+等位分换算说明：
+  2026年513分 → 位次55,893 → 2025等位分 509 分（源自一分一段表）
+  筛选区间：等位分 -20~+5 分 → 489 ~ 514 分
+  冲：等位分+3~+8分 → 512~517
+  稳：等位分-5~+3分 → 504~512
+  保：等位分-25~-5分 → 484~504
 
 数据结构：
   每条学校专业记录包含：
     school:      学校名称
     province:    所在省份
     city:        所在城市
-    code:        院校代码（待填充）
-    batch:       批次（一本|二本）
+    code:        院校代码
+    batch:       批次（一本|二本）  — 按原始院校属性分本，非按分数
     major:       专业名称
-    score_min:   2025录取最低分（待填充）
-    score_avg:   2025录取平均分（待填充）
-    plan_count:  专业录取人数（待填充）
+    score_min:   2025录取最低分（0=待填充）
+    score_avg:   2025录取平均分（0=待填充）
+    plan_count:  专业录取人数（0=待填充）
     ratio:       投档比
     note:        备注
 
 用法：
-  1. 在 schools_raw 中填充真实数据
-  2. python3 generate_schools.py
-  3. 输出 yiben_schools.json / erben_schools.json
+  1. python3 generate_schools.py
+  2. 输出 yiben_schools.json / erben_schools.json
+  3. 前端搭配等位分换算逻辑使用（见 pages/2025-2026等位分换算.html）
 """
 import json
 
 # ========== 参数定义 ==========
+# 等位分参数
+EQUIVALENT_SCORE = 509   # 2026年513分 → 2025等位分（位次55893）
+SCORE_UPPER = 514        # 等位分 +5
+SCORE_LOWER = 489        # 等位分 -20
+
+# 筛选参数
 EXCLUDED_PROVINCES = {"西藏", "内蒙", "内蒙古", "山西", "河南", "河北", "湖南", "广西", "贵州", "上海", "安徽"}
-YIBEN_MIN, YIBEN_MAX = 500, 530
-ERBEN_MIN, ERBEN_MAX = 480, 510
+YIBEN_MIN, YIBEN_MAX = 496, SCORE_UPPER   # 一本线496起，上限等位分+5
+ERBEN_MIN, ERBEN_MAX = SCORE_LOWER, SCORE_UPPER  # 统一用等位分区间
 
 # ========== 学校数据集 ==========
 # (school, province, city, code, batch, major, score_min, score_avg, plan_count, ratio, note)
@@ -360,10 +373,22 @@ def main():
             by_major[m].sort(key=lambda x: x["score_min"], reverse=True)
 
         return {
-            "version": "2.0.0",
-            "updated": "2026-06-25",
-            "student": {"city": "重庆", "subject": "物理类", "batch": batch_label},
+            "version": "3.0.0",
+            "updated": "2026-06-26",
+            "student": {"city": "重庆", "subject": "物理类", "score_2026": 513, "rank_2026": 55893, "batch": batch_label},
+            "equivalent_score": {
+                "description": "2026年513分(位次55893) → 2025等位分509分",
+                "score_2026": 513,
+                "rank_2026": 55893,
+                "score_2025": 509
+            },
+            "strategy_ranges": {
+                "rush": {"label": "冲", "range": "512~517", "desc": "等位分+3~+8分"},
+                "steady": {"label": "稳", "range": "504~512", "desc": "等位分-5~+3分"},
+                "safe": {"label": "保", "range": "484~504", "desc": "等位分-25~-5分"}
+            },
             "filter_rules": {
+                "score_range": f"489~514（等位分509-20 ~ 509+5）",
                 "excluded_provinces": list(EXCLUDED_PROVINCES),
                 "max_admit_ratio": "103%%",
                 "majors": ["生物工程","制药工程","铁路","电气自动化","通信工程","人工智能","材料科学与工程"]
