@@ -28,7 +28,21 @@ SCORE_LOWER = 489        # 等位分 -20
 SCORE_UPPER = 514        # 等位分 +5
 
 EXCLUDED_PROVINCES = {"西藏", "内蒙", "内蒙古", "山西", "河南", "河北", "湖南", "广西", "贵州", "上海", "安徽"}
-TARGET_MAJORS = ["生物工程", "制药工程", "铁路", "电气自动化", "通信工程", "人工智能", "材料科学与工程"]
+# 目标专业匹配规则：resource.json 中的专业名称
+# 注意原名 "电气自动化" → "电气工程及其自动化"、"铁路" → "轨道交通信号与控制"
+TARGET_MAJORS = [
+    "生物工程",
+    "制药工程",
+    "轨道交通信号与控制",
+    "电气工程及其自动化",
+    "通信工程",
+    "人工智能",
+    "材料科学与工程"
+]
+# 同时包含以下专业关键字的也纳入（如各种带"（中外合作）"的电气工程及其自动化）
+TARGET_MAJORS_PREFIX = {
+    "电气工程及其自动化",   # 匹配 电气工程及其自动化(中外合作办学) 等
+}
 
 
 def main():
@@ -48,9 +62,16 @@ def main():
     filtered = [r for r in filtered if SCORE_LOWER <= r["score_min"] <= SCORE_UPPER]
     print(f"分数截取 {SCORE_LOWER}~{SCORE_UPPER} 后: {len(filtered)} 条")
 
-    # 4. 仅保留7个目标专业
-    filtered = [r for r in filtered if r["major"] in TARGET_MAJORS]
-    print(f"专业筛选（7个目标专业）后: {len(filtered)} 条")
+    # 4. 仅保留目标专业（精确匹配 + 前缀匹配）
+    def match_major(major):
+        if major in TARGET_MAJORS:
+            return True
+        for prefix in TARGET_MAJORS_PREFIX:
+            if major.startswith(prefix):
+                return True
+        return False
+    filtered = [r for r in filtered if match_major(r["major"])]
+    print(f"专业筛选（目标专业）后: {len(filtered)} 条")
 
     # 5. 排序
     filtered.sort(key=lambda x: (x["score_min"], x["province"], x["school"], x["major"]))
