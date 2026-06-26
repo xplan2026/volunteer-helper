@@ -50,12 +50,15 @@
       "制药工程",
       "轨道交通信号与控制",
       "电气工程及其自动化",
+      "电气工程及自动化",
+      "电气工程与智能控制",
+      "自动化",
       "通信工程",
       "人工智能",
       "材料科学与工程"
     ]
   },
-  "total": 79,
+  "total": 99,
   "schools": [
     {
       "school": "成都理工大学工程技术学院",
@@ -142,6 +145,30 @@
       "note": ""
     },
     {
+      "school": "四川大学锦江学院",
+      "province": "四川",
+      "city": "成都",
+      "code": "5191",
+      "batch": "二本",
+      "major": "自动化",
+      "score_min": 491,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "天津理工大学中环信息学院",
+      "province": "天津",
+      "city": "天津",
+      "code": "1246",
+      "batch": "二本",
+      "major": "自动化",
+      "score_min": 491,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
       "school": "厦门大学嘉庚学院",
       "province": "",
       "city": "",
@@ -209,6 +236,18 @@
       "batch": "二本",
       "major": "生物工程",
       "score_min": 494,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "茅台学院",
+      "province": "",
+      "city": "",
+      "code": "5270",
+      "batch": "二本",
+      "major": "自动化",
+      "score_min": 495,
       "plan_count": 0,
       "ratio": 1.02,
       "note": ""
@@ -322,6 +361,18 @@
       "note": ""
     },
     {
+      "school": "江西职业技术大学",
+      "province": "江西",
+      "city": "南昌",
+      "code": "3633",
+      "batch": "一本",
+      "major": "电气工程及自动化",
+      "score_min": 498,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
       "school": "青海理工学院",
       "province": "青海",
       "city": "西宁",
@@ -358,6 +409,18 @@
       "note": ""
     },
     {
+      "school": "沧州师范学院",
+      "province": "",
+      "city": "",
+      "code": "1399",
+      "batch": "一本",
+      "major": "自动化",
+      "score_min": 499,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
       "school": "西昌学院",
       "province": "",
       "city": "",
@@ -377,6 +440,18 @@
       "batch": "一本",
       "major": "材料科学与工程",
       "score_min": 499,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "绥化学院",
+      "province": "",
+      "city": "",
+      "code": "2350",
+      "batch": "一本",
+      "major": "自动化",
+      "score_min": 500,
       "plan_count": 0,
       "ratio": 1.02,
       "note": ""
@@ -442,6 +517,30 @@
       "note": ""
     },
     {
+      "school": "新疆工程学院",
+      "province": "新疆",
+      "city": "乌鲁木齐",
+      "code": "6512",
+      "batch": "一本",
+      "major": "自动化",
+      "score_min": 501,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "周口师范学院",
+      "province": "",
+      "city": "",
+      "code": "4177",
+      "batch": "一本",
+      "major": "电气工程与智能控制",
+      "score_min": 502,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
       "school": "喀什大学",
       "province": "",
       "city": "",
@@ -452,6 +551,30 @@
       "plan_count": 0,
       "ratio": 1.02,
       "note": ""
+    },
+    {
+      "school": "晋中学院",
+      "province": "",
+      "city": "",
+      "code": "1445",
+      "batch": "一本",
+      "major": "自动化",
+      "score_min": 502,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "batch": "一本",
+      "city": "",
+      "code": "1308",
+      "major": "城市地下空间工程",
+      "note": "",
+      "plan_count": 0,
+      "province": "",
+      "ratio": 1.02,
+      "school": "石家庄铁道大学",
+      "score_min": 502
     },
     {
       "school": "重庆文理学院",
@@ -532,6 +655,18 @@
       "code": "6207",
       "batch": "一本",
       "major": "生物工程",
+      "score_min": 503,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "四川工程职业技术大学",
+      "province": "四川",
+      "city": "成都",
+      "code": "5146",
+      "batch": "一本",
+      "major": "电气工程及自动化",
       "score_min": 503,
       "plan_count": 0,
       "ratio": 1.02,
@@ -682,6 +817,18 @@
       "note": ""
     },
     {
+      "school": "佳木斯大学",
+      "province": "",
+      "city": "",
+      "code": "2314",
+      "batch": "一本",
+      "major": "自动化",
+      "score_min": 506,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
       "school": "周口师范学院",
       "province": "",
       "city": "",
@@ -712,6 +859,18 @@
       "code": "3632",
       "batch": "一本",
       "major": "通信工程",
+      "score_min": 506,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "陇东学院",
+      "province": "",
+      "city": "",
+      "code": "6219",
+      "batch": "一本",
+      "major": "自动化",
       "score_min": 506,
       "plan_count": 0,
       "ratio": 1.02,
@@ -760,6 +919,18 @@
       "code": "3232",
       "batch": "一本",
       "major": "生物工程",
+      "score_min": 508,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "景德镇学院",
+      "province": "",
+      "city": "",
+      "code": "3629",
+      "batch": "一本",
+      "major": "自动化",
       "score_min": 508,
       "plan_count": 0,
       "ratio": 1.02,
@@ -910,6 +1081,18 @@
       "note": ""
     },
     {
+      "school": "辽宁科技学院",
+      "province": "辽宁",
+      "city": "沈阳",
+      "code": "2126",
+      "batch": "一本",
+      "major": "自动化",
+      "score_min": 511,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
       "school": "青海理工学院",
       "province": "青海",
       "city": "西宁",
@@ -920,6 +1103,18 @@
       "plan_count": 0,
       "ratio": 1.02,
       "note": ""
+    },
+    {
+      "batch": "一本",
+      "city": "",
+      "code": "1308",
+      "major": "金融学",
+      "note": "",
+      "plan_count": 0,
+      "province": "",
+      "ratio": 1.02,
+      "school": "石家庄铁道大学",
+      "score_min": 512
     },
     {
       "school": "新疆工程学院",
@@ -970,12 +1165,60 @@
       "note": ""
     },
     {
+      "school": "哈尔滨学院",
+      "province": "",
+      "city": "",
+      "code": "2316",
+      "batch": "一本",
+      "major": "电气工程与智能控制",
+      "score_min": 514,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "太原工业学院",
+      "province": "",
+      "city": "",
+      "code": "1446",
+      "batch": "一本",
+      "major": "电气工程与智能控制",
+      "score_min": 514,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "太原工业学院",
+      "province": "",
+      "city": "",
+      "code": "1446",
+      "batch": "一本",
+      "major": "自动化",
+      "score_min": 514,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
       "school": "廊坊师范学院",
       "province": "",
       "city": "",
       "code": "1372",
       "batch": "一本",
       "major": "电气工程及其自动化",
+      "score_min": 514,
+      "plan_count": 0,
+      "ratio": 1.02,
+      "note": ""
+    },
+    {
+      "school": "洛阳师范学院",
+      "province": "",
+      "city": "",
+      "code": "4142",
+      "batch": "一本",
+      "major": "自动化",
       "score_min": 514,
       "plan_count": 0,
       "ratio": 1.02,
@@ -1541,6 +1784,164 @@
         "note": ""
       }
     ],
+    "自动化": [
+      {
+        "school": "四川大学锦江学院",
+        "province": "四川",
+        "city": "成都",
+        "code": "5191",
+        "batch": "二本",
+        "major": "自动化",
+        "score_min": 491,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "天津理工大学中环信息学院",
+        "province": "天津",
+        "city": "天津",
+        "code": "1246",
+        "batch": "二本",
+        "major": "自动化",
+        "score_min": 491,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "茅台学院",
+        "province": "",
+        "city": "",
+        "code": "5270",
+        "batch": "二本",
+        "major": "自动化",
+        "score_min": 495,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "沧州师范学院",
+        "province": "",
+        "city": "",
+        "code": "1399",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 499,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "绥化学院",
+        "province": "",
+        "city": "",
+        "code": "2350",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 500,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "新疆工程学院",
+        "province": "新疆",
+        "city": "乌鲁木齐",
+        "code": "6512",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 501,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "晋中学院",
+        "province": "",
+        "city": "",
+        "code": "1445",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 502,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "佳木斯大学",
+        "province": "",
+        "city": "",
+        "code": "2314",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 506,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "陇东学院",
+        "province": "",
+        "city": "",
+        "code": "6219",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 506,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "景德镇学院",
+        "province": "",
+        "city": "",
+        "code": "3629",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 508,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "辽宁科技学院",
+        "province": "辽宁",
+        "city": "沈阳",
+        "code": "2126",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 511,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "太原工业学院",
+        "province": "",
+        "city": "",
+        "code": "1446",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 514,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "洛阳师范学院",
+        "province": "",
+        "city": "",
+        "code": "4142",
+        "batch": "一本",
+        "major": "自动化",
+        "score_min": 514,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
     "材料科学与工程": [
       {
         "school": "乐山师范学院",
@@ -1895,6 +2296,32 @@
         "note": ""
       }
     ],
+    "电气工程及自动化": [
+      {
+        "school": "江西职业技术大学",
+        "province": "江西",
+        "city": "南昌",
+        "code": "3633",
+        "batch": "一本",
+        "major": "电气工程及自动化",
+        "score_min": 498,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "四川工程职业技术大学",
+        "province": "四川",
+        "city": "成都",
+        "code": "5146",
+        "batch": "一本",
+        "major": "电气工程及自动化",
+        "score_min": 503,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
     "电气工程及其自动化(职业师资教育方向)": [
       {
         "school": "新疆工程学院",
@@ -1907,6 +2334,58 @@
         "plan_count": 0,
         "ratio": 1.02,
         "note": ""
+      }
+    ],
+    "电气工程与智能控制": [
+      {
+        "school": "周口师范学院",
+        "province": "",
+        "city": "",
+        "code": "4177",
+        "batch": "一本",
+        "major": "电气工程与智能控制",
+        "score_min": 502,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "哈尔滨学院",
+        "province": "",
+        "city": "",
+        "code": "2316",
+        "batch": "一本",
+        "major": "电气工程与智能控制",
+        "score_min": 514,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      },
+      {
+        "school": "太原工业学院",
+        "province": "",
+        "city": "",
+        "code": "1446",
+        "batch": "一本",
+        "major": "电气工程与智能控制",
+        "score_min": 514,
+        "plan_count": 0,
+        "ratio": 1.02,
+        "note": ""
+      }
+    ],
+    "城市地下空间工程": [
+      {
+        "batch": "一本",
+        "city": "",
+        "code": "1308",
+        "major": "城市地下空间工程",
+        "note": "",
+        "plan_count": 0,
+        "province": "",
+        "ratio": 1.02,
+        "school": "石家庄铁道大学",
+        "score_min": 502
       }
     ],
     "轨道交通信号与控制": [
@@ -1973,6 +2452,20 @@
         "plan_count": 0,
         "ratio": 1.02,
         "note": ""
+      }
+    ],
+    "金融学": [
+      {
+        "batch": "一本",
+        "city": "",
+        "code": "1308",
+        "major": "金融学",
+        "note": "",
+        "plan_count": 0,
+        "province": "",
+        "ratio": 1.02,
+        "school": "石家庄铁道大学",
+        "score_min": 512
       }
     ]
   }
