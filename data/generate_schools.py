@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-重庆高考志愿填报 - 学校筛选数据生成脚本 v3（等位分版）
+重庆高考志愿填报 - 学校筛选数据生成脚本 v4（统一筛选版）
 
 等位分换算说明：
   2026年513分 → 位次55,893 → 2025等位分 509 分（源自一分一段表）
@@ -341,7 +341,7 @@ def to_dict(s):
 
 
 def main():
-    # 筛选：剔除地区、投档比>103%
+    # 筛选：剔除地区、投档比>1.03
     filtered = []
     for s in schools_raw:
         _, province, _, _, _, _, _, _, _, ratio, _ = s
@@ -351,72 +351,60 @@ def main():
             continue
         filtered.append(s)
 
-    yiben_raw = [s for s in filtered if s[4] == "一本"]
-    erben_raw = [s for s in filtered if s[4] == "二本"]
+    # 统一筛选（不分一本/二本），按等位分区间保留
+    items = [to_dict(s) for s in filtered]
+    items = [d for d in items if (d["score_min"] == 0 or
+             (SCORE_LOWER <= d["score_min"] <= SCORE_UPPER))]
+    items.sort(key=lambda x: (x["province"], x["school"], x["major"]))
 
-    def to_output(raw_list, batch_label, score_min, score_max):
-        items = [to_dict(s) for s in raw_list]
-        # 只保留分数范围内的
-        if score_min or score_max:
-            items = [d for d in items if (d["score_min"] == 0 or
-                     (score_min <= d["score_min"] <= score_max))]
-        items.sort(key=lambda x: (x["province"], x["school"], x["major"]))
+    # 按专业分组
+    by_major = {}
+    for d in items:
+        m = d["major"]
+        if m not in by_major:
+            by_major[m] = []
+        by_major[m].append(d)
+    for m in by_major:
+        by_major[m].sort(key=lambda x: x["score_min"], reverse=True)
 
-        # 按专业分组
-        by_major = {}
-        for d in items:
-            m = d["major"]
-            if m not in by_major:
-                by_major[m] = []
-            by_major[m].append(d)
-        for m in by_major:
-            by_major[m].sort(key=lambda x: x["score_min"], reverse=True)
-
-        return {
-            "version": "3.0.0",
-            "updated": "2026-06-26",
-            "student": {"city": "重庆", "subject": "物理类", "score_2026": 513, "rank_2026": 55893, "batch": batch_label},
-            "equivalent_score": {
-                "description": "2026年513分(位次55893) → 2025等位分509分",
-                "score_2026": 513,
-                "rank_2026": 55893,
-                "score_2025": 509
-            },
-            "strategy_ranges": {
-                "rush": {"label": "冲", "range": "512~517", "desc": "等位分+3~+8分"},
-                "steady": {"label": "稳", "range": "504~512", "desc": "等位分-5~+3分"},
-                "safe": {"label": "保", "range": "484~504", "desc": "等位分-25~-5分"}
-            },
-            "filter_rules": {
-                "score_range": f"489~514（等位分509-20 ~ 509+5）",
-                "excluded_provinces": list(EXCLUDED_PROVINCES),
-                "max_admit_ratio": "103%%",
-                "majors": ["生物工程","制药工程","铁路","电气自动化","通信工程","人工智能","材料科学与工程"]
-            },
-            "total": len(items),
-            "schools": items,
-            "by_major": by_major
-        }
-
-    yiben_output = to_output(yiben_raw, "一本", YIBEN_MIN, YIBEN_MAX)
-    erben_output = to_output(erben_raw, "二本", ERBEN_MIN, ERBEN_MAX)
+    output = {
+        "version": "4.0.0",
+        "updated": "2026-06-26",
+        "student": {"city": "重庆", "subject": "物理类（物化生）", "score_2026": 513, "rank_2026": 55893},
+        "equivalent_score": {
+            "description": "2026年513分(位次55893) → 2025等位分509分",
+            "score_2026": 513,
+            "rank_2026": 55893,
+            "score_2025": EQUIVALENT_SCORE
+        },
+        "strategy_ranges": {
+            "rush": {"label": "冲", "range": "512~517", "desc": "等位分+3~+8分"},
+            "steady": {"label": "稳", "range": "504~512", "desc": "等位分-5~+3分"},
+            "safe": {"label": "保", "range": "484~504", "desc": "等位分-25~-5分"}
+        },
+        "filter_rules": {
+            "score_range": f"{SCORE_LOWER}~{SCORE_UPPER}（等位分-20~+5）",
+            "excluded_provinces": list(EXCLUDED_PROVINCES),
+            "max_admit_ratio": "103%",
+            "majors": ["生物工程","制药工程","铁路","电气自动化","通信工程","人工智能","材料科学与工程"]
+        },
+        "total": len(items),
+        "schools": items,
+        "by_major": by_major
+    }
 
     base = "/tmp/volunteer-helper/data"
-    with open(f"{base}/yiben_schools.json", "w", encoding="utf-8") as f:
-        json.dump(yiben_output, f, ensure_ascii=False, indent=2)
-    print(f"一本: {len(yiben_output['schools'])} 条 -> yiben_schools.json")
+    json_path = f"{base}/可选择学校.json"
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(output, f, ensure_ascii=False, indent=2)
+    print(f"共 {len(items)} 条 -> {json_path}")
 
-    with open(f"{base}/erben_schools.json", "w", encoding="utf-8") as f:
-        json.dump(erben_output, f, ensure_ascii=False, indent=2)
-    print(f"二本: {len(erben_output['schools'])} 条 -> erben_schools.json")
+    js = f"// 自动生成 - 可选择学校.js\nconst SELECTABLE_SCHOOLS = {json.dumps(output, ensure_ascii=False)};\n"
+    js_path = f"{base}/可选择学校.js"
+    with open(js_path, "w", encoding="utf-8") as f:
+        f.write(js)
+    print(f"{js_path}: {len(items)} records")
 
-    # 生成JS内联变量
-    for fname, vname, data in [("YIBEN_DATA.js", "YIBEN_DATA_SCHOOLS", yiben_output['schools']),
-                                ("ERBEN_DATA.js", "ERBEN_DATA_SCHOOLS", erben_output['schools'])]:
-        js = f"// 自动生成 - {fname}\nconst {vname} = {json.dumps(data, ensure_ascii=False)};\n"
-        with open(f"{base}/{fname}", "w", encoding="utf-8") as f:
-            f.write(js)
-        print(f"{fname}: {len(data)} records")
 
 if __name__ == "__main__":
     main()
