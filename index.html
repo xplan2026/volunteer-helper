@@ -64,70 +64,117 @@
       <div class="container">
         <!-- ===== 页面1: 总览 ===== -->
         <section id="page-dashboard" class="page active">
-          <h2>📊 数据总览</h2>
-          <div class="score-card">
-            <div class="score-main">
-              <div class="score-number">
-                <span class="score-label">高考成绩</span>
-                <span class="score-value" id="displayScore">513</span>
-                <span class="score-unit">分</span>
+          <!-- 两栏布局左侧：数据总览 -->
+          <div class="dash-left">
+            <h2>📊 数据总览</h2>
+            <div class="score-card">
+              <div class="score-main">
+                <div class="score-number">
+                  <span class="score-label">高考成绩</span>
+                  <span class="score-value" id="displayScore">513</span>
+                  <span class="score-unit">分</span>
+                </div>
+                <div class="score-detail">
+                  <p>科目：<span id="displaySubject">物理类（物化生）</span></p>
+                  <p>地区：<span id="displayProvince">重庆市</span></p>
+                  <p>一本线（特殊类型资格线）：<strong id="displayBatchLine">496</strong> 分</p>
+                  <p class="score-diff">超一本线 <strong id="displayDiff">17</strong> 分</p>
+                </div>
               </div>
-              <div class="score-detail">
-                <p>科目：<span id="displaySubject">物理类（物化生）</span></p>
-                <p>地区：<span id="displayProvince">重庆市</span></p>
-                <p>一本线（特殊类型资格线）：<strong id="displayBatchLine">496</strong> 分</p>
-                <p class="score-diff">超一本线 <strong id="displayDiff">17</strong> 分</p>
+            </div>
+
+            <div class="alert-box alert-warning">
+              ⏰ 填报截止日期：<strong>2025年6月30日</strong> &nbsp;|&nbsp; 剩余 <span id="countdownDays">6</span> 天
+            </div>
+
+            <!-- 筛选设置 -->
+            <div class="settings-card">
+              <h3>⚙️ 筛选设置</h3>
+              <div class="settings-row">
+                <label>剔除地区</label>
+                <input type="text" id="settingExcluded" value="西藏,内蒙,山西,河南,河北,湖南,广西,贵州,上海,安徽" style="flex:1;min-width:200px;">
+              </div>
+              <div class="settings-row">
+                <label>投档比上限</label>
+                <select id="settingRatio">
+                  <option value="1.03">103%</option>
+                  <option value="1.05">105%</option>
+                  <option value="1.10">110%</option>
+                  <option value="2">不限制</option>
+                </select>
+              </div>
+              <div class="settings-row">
+                <label>一本分数范围</label>
+                <input type="number" id="settingYibenMin" value="496" style="width:80px;"> ~
+                <input type="number" id="settingYibenMax" value="510" style="width:80px;"> 分
+              </div>
+              <div class="settings-row">
+                <label>二本分数范围</label>
+                <input type="number" id="settingErbenMin" value="480" style="width:80px;"> ~
+                <input type="number" id="settingErbenMax" value="510" style="width:80px;"> 分
+              </div>
+              <div class="settings-row">
+                <label>限定专业</label>
+                <input type="text" id="settingMajors" value="生物工程,制药工程,铁路,电气自动化,通信工程,人工智能,材料科学与工程" style="flex:1;min-width:200px;">
+              </div>
+              <div class="btn-group" style="margin-top:12px;">
+                <button class="btn btn-small btn-success" onclick="saveSettings()">💾 保存设置</button>
+                <button class="btn btn-small btn-outline" onclick="resetSettings()">↩ 重置</button>
+              </div>
+            </div>
+
+            <!-- 参考资料 -->
+            <div class="settings-card">
+              <h3>🔗 参考资料</h3>
+              <div id="refLinks">
+                      <ul>
+          <li><a href="https://www.cqksy.cn/uploadFile/infopub/202507/1947199748985856000.pdf?fileName=2025xxb-Bkp_WLPx0721.pdf&amp;fileSize=1033364" target="_blank">2025年重庆市普通高校招生信息表(本科批-物理-平行志愿)</a></li>
+        </ul>
               </div>
             </div>
           </div>
 
-          <div class="alert-box alert-warning">
-            ⏰ 填报截止日期：<strong>2025年6月30日</strong> &nbsp;|&nbsp; 剩余 <span id="countdownDays">6</span> 天
-          </div>
-
-          <!-- 筛选设置 -->
-          <div class="settings-card">
-            <h3>⚙️ 筛选设置</h3>
-            <div class="settings-row">
-              <label>剔除地区</label>
-              <input type="text" id="settingExcluded" value="西藏,内蒙,山西,河南,河北,湖南,广西,贵州,上海,安徽" style="flex:1;min-width:200px;">
-            </div>
-            <div class="settings-row">
-              <label>投档比上限</label>
-              <select id="settingRatio">
-                <option value="1.03">103%</option>
-                <option value="1.05">105%</option>
-                <option value="1.10">110%</option>
-                <option value="2">不限制</option>
-              </select>
-            </div>
-            <div class="settings-row">
-              <label>一本分数范围</label>
-              <input type="number" id="settingYibenMin" value="496" style="width:80px;"> ~
-              <input type="number" id="settingYibenMax" value="510" style="width:80px;"> 分
-            </div>
-            <div class="settings-row">
-              <label>二本分数范围</label>
-              <input type="number" id="settingErbenMin" value="480" style="width:80px;"> ~
-              <input type="number" id="settingErbenMax" value="510" style="width:80px;"> 分
-            </div>
-            <div class="settings-row">
-              <label>限定专业</label>
-              <input type="text" id="settingMajors" value="生物工程,制药工程,铁路,电气自动化,通信工程,人工智能,材料科学与工程" style="flex:1;min-width:200px;">
-            </div>
-            <div class="btn-group" style="margin-top:12px;">
-              <button class="btn btn-small btn-success" onclick="saveSettings()">💾 保存设置</button>
-              <button class="btn btn-small btn-outline" onclick="resetSettings()">↩ 重置</button>
-            </div>
-          </div>
-
-          <!-- 参考资料 -->
-          <div class="settings-card">
-            <h3>🔗 参考资料</h3>
-            <div id="refLinks">
-                    <ul>
-        <li><a href="https://www.cqksy.cn/uploadFile/infopub/202507/1947199748985856000.pdf?fileName=2025xxb-Bkp_WLPx0721.pdf&amp;fileSize=1033364" target="_blank">2025年重庆市普通高校招生信息表(本科批-物理-平行志愿)</a></li>
-      </ul>
+          <!-- 两栏布局右侧：目录结构 -->
+          <div class="dash-right">
+            <div class="dir-card">
+              <h3>📁 项目目录结构</h3>
+              <div class="dir-tree">
+                <div class="dir-item dir-root">volunteer-helper/</div>
+                <div class="dir-children">
+                  <div class="dir-item dir-file">📄 index.html <span class="dir-desc">主页面（导航+数据总览）</span></div>
+                  <div class="dir-item dir-file">📄 README.md</div>
+                  <div class="dir-item dir-file">📄 TODO.md</div>
+                  <div class="dir-item dir-file">📄 _headers</div>
+                  <div class="dir-item dir-dir">📁 assets/</div>
+                  <div class="dir-children">
+                    <div class="dir-item dir-file">app.js <span class="dir-desc">全局逻辑</span></div>
+                    <div class="dir-item dir-file">config.js <span class="dir-desc">学生信息</span></div>
+                    <div class="dir-item dir-file">style.css</div>
+                  </div>
+                  <div class="dir-item dir-dir">📁 config/</div>
+                  <div class="dir-children">
+                    <div class="dir-item dir-file">data.json</div>
+                  </div>
+                  <div class="dir-item dir-dir">📁 data/</div>
+                  <div class="dir-children">
+                    <div class="dir-item dir-file">YIBEN_DATA.js <span class="dir-desc">一本各校最低分数据</span></div>
+                    <div class="dir-item dir-file">ERBEN_DATA.js <span class="dir-desc">二本各校最低分数据</span></div>
+                    <div class="dir-item dir-file">yiben_schools.json</div>
+                    <div class="dir-item dir-file">erben_schools.json</div>
+                    <div class="dir-item dir-file">resource.json <span class="dir-desc">2025年原始投档线数据（11349条）</span></div>
+                    <div class="dir-item dir-file">generate_schools.py <span class="dir-desc">数据筛选/匹配脚本</span></div>
+                    <div class="dir-item dir-dir">main/</div>
+                    <div class="dir-children">
+                      <div class="dir-item dir-file">.gitkeep <span class="dir-desc">保存的筛选方案</span></div>
+                    </div>
+                  </div>
+                  <div class="dir-item dir-dir">📁 pages/</div>
+                  <div class="dir-children">
+                    <div class="dir-item dir-file">数据表.html</div>
+                    <div class="dir-item dir-file">筛选方案.html</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
