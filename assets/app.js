@@ -70,10 +70,8 @@ function saveSettings() {
   localStorage.setItem('volunteer_settings', JSON.stringify({
     excluded: document.getElementById('settingExcluded').value,
     ratio: parseFloat(document.getElementById('settingRatio').value),
-    yibenMin: parseInt(document.getElementById('settingYibenMin').value),
-    yibenMax: parseInt(document.getElementById('settingYibenMax').value),
-    erbenMin: parseInt(document.getElementById('settingErbenMin').value),
-    erbenMax: parseInt(document.getElementById('settingErbenMax').value),
+    scoreMin: parseInt(document.getElementById('settingScoreMin').value),
+    scoreMax: parseInt(document.getElementById('settingScoreMax').value),
     majors: document.getElementById('settingMajors').value
   }));
   alert('✅ 设置已保存到本地');
@@ -82,10 +80,8 @@ function saveSettings() {
 function resetSettings() {
   document.getElementById('settingExcluded').value = '西藏,内蒙,山西,河南,河北,湖南,广西,贵州,上海,安徽';
   document.getElementById('settingRatio').value = '1.03';
-  document.getElementById('settingYibenMin').value = '496';
-  document.getElementById('settingYibenMax').value = '510';
-  document.getElementById('settingErbenMin').value = '480';
-  document.getElementById('settingErbenMax').value = '510';
+  document.getElementById('settingScoreMin').value = '489';
+  document.getElementById('settingScoreMax').value = '514';
   document.getElementById('settingMajors').value = MAJORS.join(',');
   saveSettings();
 }
@@ -98,10 +94,8 @@ function loadSettings() {
       const s = JSON.parse(saved);
       document.getElementById('settingExcluded').value = s.excluded || '西藏,内蒙,山西,河南,河北,湖南,广西,贵州,上海,安徽';
       document.getElementById('settingRatio').value = s.ratio || '1.03';
-      document.getElementById('settingYibenMin').value = s.yibenMin || '496';
-      document.getElementById('settingYibenMax').value = s.yibenMax || '510';
-      document.getElementById('settingErbenMin').value = s.erbenMin || '480';
-      document.getElementById('settingErbenMax').value = s.erbenMax || '510';
+      document.getElementById('settingScoreMin').value = s.scoreMin || '489';
+      document.getElementById('settingScoreMax').value = s.scoreMax || '514';
       document.getElementById('settingMajors').value = s.majors || MAJORS.join(',');
     } catch(e) {}
   }
@@ -112,21 +106,14 @@ let dataStore = [];
 let dataFiltered = [];
 let dataPageSize = 30;
 let dataCurrentPage = 1;
-let dataBatch = 'yiben';
 
 function initDataTable() {
-  loadData(dataBatch);
-}
-
-function loadData(batch) {
-  const schools = DATA_SOURCE[batch];
-  if (!schools || schools.length === 0) {
+  dataStore = DATA_SOURCE.schools || [];
+  if (!dataStore.length) {
     document.getElementById('dataTableBody').innerHTML =
       '<tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>';
     return;
   }
-  dataStore = schools;
-  dataBatch = batch;
   initDataFilters();
   applyDataFilters();
 }
@@ -183,7 +170,7 @@ function renderDataTable() {
       <td style="color:#999;font-size:12px;">${d.note || '—'}</td>
     </tr>
   `).join('');
-  document.getElementById('dataCountLabel').textContent = `共 ${dataFiltered.length} 条记录（${dataBatch === 'yiben' ? '一本' : '二本'}）`;
+  document.getElementById('dataCountLabel').textContent = `共 ${dataFiltered.length} 条记录`;
   document.getElementById('dataPageNote').textContent = `第 ${dataCurrentPage} 页 / 共 ${totalPages} 页`;
   document.getElementById('dataPageInfo').textContent = `${dataCurrentPage} / ${totalPages}`;
   document.getElementById('dataPrevBtn').disabled = dataCurrentPage <= 1;
@@ -202,13 +189,7 @@ document.addEventListener('change', e => {
 document.addEventListener('input', e => {
   if (e.target.id === 'dataFilterSchool') applyDataFilters();
 });
-document.addEventListener('click', e => {
-  if (e.target.classList.contains('data-tab')) {
-    document.querySelectorAll('.data-tab').forEach(t => t.classList.remove('active'));
-    e.target.classList.add('active');
-    loadData(e.target.dataset.batch);
-  }
-});
+
 
 // ======== 院校推荐页面 ========
 let schoolAllData = [];
@@ -232,12 +213,10 @@ function initSchoolsTable() {
 function applySchoolFilters() {
   const major = document.getElementById('schoolFilterMajor').value;
   const province = document.getElementById('schoolFilterProvince').value;
-  const batch = document.getElementById('schoolFilterBatch').value;
   const search = document.getElementById('schoolFilterSearch').value.trim().toLowerCase();
   schoolFiltered = schoolAllData.filter(d => {
     if (major !== 'all' && d.major !== major) return false;
     if (province !== 'all' && d.province !== province) return false;
-    if (batch !== 'all' && d.batch !== batch) return false;
     if (search && !d.school.toLowerCase().includes(search) && !d.major.toLowerCase().includes(search)) return false;
     return true;
   });
@@ -286,7 +265,7 @@ function nextSchoolPage() {
 }
 
 document.addEventListener('change', e => {
-  if (['schoolFilterMajor','schoolFilterProvince','schoolFilterBatch'].includes(e.target.id)) applySchoolFilters();
+  if (['schoolFilterMajor','schoolFilterProvince'].includes(e.target.id)) applySchoolFilters();
 });
 document.addEventListener('input', e => {
   if (e.target.id === 'schoolFilterSearch') applySchoolFilters();
@@ -379,10 +358,8 @@ function renderPlanTable() {
   }
 
   // 应用筛选
-  const batchFilter = document.getElementById('planBatchFilter')?.value || 'all';
   const provFilter = document.getElementById('planProvinceFilter')?.value || 'all';
   let filtered = schools.filter(d => {
-    if (batchFilter !== 'all' && d.batch !== batchFilter) return false;
     if (provFilter !== 'all' && d.province !== provFilter) return false;
     return true;
   });
@@ -670,7 +647,7 @@ function exportFinalPlan() {
 
 // ======== 监听筛选方案页面的筛选变化 ========
 document.addEventListener('change', e => {
-  if (['planBatchFilter','planProvinceFilter'].includes(e.target.id)) {
+  if (['planProvinceFilter'].includes(e.target.id)) {
     renderPlanTable();
   }
 });
