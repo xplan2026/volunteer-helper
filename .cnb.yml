@@ -1,0 +1,8 @@
+$:
+  vscode:
+    - name: webide
+      runner:
+        cpus: 2
+      stages:
+        - name: ready
+          script: echo "WebIDE ready"

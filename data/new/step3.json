@@ -1,0 +1,492 @@
+[
+  {
+    "school_code": "1216",
+    "school_name": "天津城建大学",
+    "specialty_code": "512",
+    "specialty_name": "材料科学与工程",
+    "min_score": 513
+  },
+  {
+    "school_code": "1246",
+    "school_name": "天津理工大学中环信息学院",
+    "specialty_code": "50A",
+    "specialty_name": "通信工程",
+    "min_score": 481
+  },
+  {
+    "school_code": "2106",
+    "school_name": "辽宁科技大学",
+    "specialty_code": "502",
+    "specialty_name": "材料科学与工程",
+    "min_score": 512
+  },
+  {
+    "school_code": "2203",
+    "school_name": "长春理工大学",
+    "specialty_code": "5K3",
+    "specialty_name": "生物工程",
+    "min_score": 525
+  },
+  {
+    "school_code": "2203",
+    "school_name": "长春理工大学(中外合作)",
+    "specialty_code": "5K4",
+    "specialty_name": "生物工程(中外合作办学)",
+    "min_score": 490
+  },
+  {
+    "school_code": "2207",
+    "school_name": "吉林农业大学",
+    "specialty_code": "50B",
+    "specialty_name": "生物工程类",
+    "min_score": 510
+  },
+  {
+    "school_code": "2214",
+    "school_name": "吉林农业科技学院",
+    "specialty_code": "517",
+    "specialty_name": "制药工程",
+    "min_score": 504
+  },
+  {
+    "school_code": "2311",
+    "school_name": "黑龙江中医药大学",
+    "specialty_code": "513",
+    "specialty_name": "制药工程",
+    "min_score": 523
+  },
+  {
+    "school_code": "2343",
+    "school_name": "哈尔滨职业技术大学",
+    "specialty_code": "558",
+    "specialty_name": "制药工程技术",
+    "min_score": 485
+  },
+  {
+    "school_code": "3227",
+    "school_name": "江苏海洋大学",
+    "specialty_code": "526",
+    "specialty_name": "生物工程",
+    "min_score": 519
+  },
+  {
+    "school_code": "3232",
+    "school_name": "徐州工程学院",
+    "specialty_code": "535",
+    "specialty_name": "生物工程",
+    "min_score": 508
+  },
+  {
+    "school_code": "3244",
+    "school_name": "东南大学成贤学院",
+    "specialty_code": "518",
+    "specialty_name": "制药工程",
+    "min_score": 513
+  },
+  {
+    "school_code": "3258",
+    "school_name": "南京邮电大学通达学院",
+    "specialty_code": "50C",
+    "specialty_name": "通信工程",
+    "min_score": 480
+  },
+  {
+    "school_code": "3349",
+    "school_name": "湖州师范学院",
+    "specialty_code": "549",
+    "specialty_name": "材料科学与工程",
+    "min_score": 515
+  },
+  {
+    "school_code": "3506",
+    "school_name": "福建师范大学",
+    "specialty_code": "529",
+    "specialty_name": "生物工程",
+    "min_score": 525
+  },
+  {
+    "school_code": "3513",
+    "school_name": "集美大学诚毅学院",
+    "specialty_code": "50G",
+    "specialty_name": "通信工程",
+    "min_score": 484
+  },
+  {
+    "school_code": "3514",
+    "school_name": "武夷学院",
+    "specialty_code": "524",
+    "specialty_name": "生物工程",
+    "min_score": 509
+  },
+  {
+    "school_code": "3514",
+    "school_name": "武夷学院",
+    "specialty_code": "529",
+    "specialty_name": "通信工程",
+    "min_score": 518
+  },
+  {
+    "school_code": "3529",
+    "school_name": "福建农林大学",
+    "specialty_code": "554",
+    "specialty_name": "材料科学与工程",
+    "min_score": 527
+  },
+  {
+    "school_code": "3561",
+    "school_name": "厦门华厦学院",
+    "specialty_code": "508",
+    "specialty_name": "制药工程",
+    "min_score": 480
+  },
+  {
+    "school_code": "3604",
+    "school_name": "江西理工大学",
+    "specialty_code": "5V5",
+    "specialty_name": "生物工程",
+    "min_score": 518
+  },
+  {
+    "school_code": "3608",
+    "school_name": "赣南医科大学",
+    "specialty_code": "50K",
+    "specialty_name": "制药工程",
+    "min_score": 521
+  },
+  {
+    "school_code": "3618",
+    "school_name": "宜春学院",
+    "specialty_code": "5R6",
+    "specialty_name": "通信工程",
+    "min_score": 521
+  },
+  {
+    "school_code": "3625",
+    "school_name": "南昌航空大学科技学院",
+    "specialty_code": "527",
+    "specialty_name": "通信工程",
+    "min_score": 482
+  },
+  {
+    "school_code": "3632",
+    "school_name": "新余学院",
+    "specialty_code": "51U",
+    "specialty_name": "通信工程",
+    "min_score": 506
+  },
+  {
+    "school_code": "3713",
+    "school_name": "烟台大学",
+    "specialty_code": "538",
+    "specialty_name": "生物工程",
+    "min_score": 516
+  },
+  {
+    "school_code": "3713",
+    "school_name": "烟台大学",
+    "specialty_code": "550",
+    "specialty_name": "材料科学与工程",
+    "min_score": 520
+  },
+  {
+    "school_code": "3717",
+    "school_name": "潍坊学院",
+    "specialty_code": "509",
+    "specialty_name": "通信工程",
+    "min_score": 509
+  },
+  {
+    "school_code": "3739",
+    "school_name": "山东理工大学",
+    "specialty_code": "511",
+    "specialty_name": "材料科学与工程",
+    "min_score": 522
+  },
+  {
+    "school_code": "3742",
+    "school_name": "山东农业大学",
+    "specialty_code": "546",
+    "specialty_name": "生物工程",
+    "min_score": 523
+  },
+  {
+    "school_code": "4246",
+    "school_name": "荆楚理工学院",
+    "specialty_code": "50H",
+    "specialty_name": "制药工程",
+    "min_score": 509
+  },
+  {
+    "school_code": "4250",
+    "school_name": "武汉生物工程学院",
+    "specialty_code": "514",
+    "specialty_name": "生物工程",
+    "min_score": 484
+  },
+  {
+    "school_code": "4250",
+    "school_name": "武汉生物工程学院",
+    "specialty_code": "517",
+    "specialty_name": "制药工程",
+    "min_score": 487
+  },
+  {
+    "school_code": "4281",
+    "school_name": "湖北工业大学工程技术学院",
+    "specialty_code": "514",
+    "specialty_name": "生物工程",
+    "min_score": 484
+  },
+  {
+    "school_code": "4436",
+    "school_name": "珠海科技学院",
+    "specialty_code": "555",
+    "specialty_name": "材料科学与工程",
+    "min_score": 483
+  },
+  {
+    "school_code": "5008",
+    "school_name": "重庆文理学院",
+    "specialty_code": "511",
+    "specialty_name": "制药工程",
+    "min_score": 502
+  },
+  {
+    "school_code": "5008",
+    "school_name": "重庆文理学院",
+    "specialty_code": "551",
+    "specialty_name": "材料科学与工程",
+    "min_score": 499
+  },
+  {
+    "school_code": "5010",
+    "school_name": "长江师范学院",
+    "specialty_code": "501",
+    "specialty_name": "通信工程",
+    "min_score": 505
+  },
+  {
+    "school_code": "5010",
+    "school_name": "长江师范学院",
+    "specialty_code": "531",
+    "specialty_name": "生物工程",
+    "min_score": 495
+  },
+  {
+    "school_code": "5010",
+    "school_name": "长江师范学院",
+    "specialty_code": "581",
+    "specialty_name": "制药工程",
+    "min_score": 498
+  },
+  {
+    "school_code": "5016",
+    "school_name": "重庆工商大学(地方专项)",
+    "specialty_code": "51L",
+    "specialty_name": "制药工程(地方专项)",
+    "min_score": 527
+  },
+  {
+    "school_code": "5016",
+    "school_name": "重庆工商大学",
+    "specialty_code": "51M",
+    "specialty_name": "制药工程",
+    "min_score": 521
+  },
+  {
+    "school_code": "5016",
+    "school_name": "重庆工商大学(地方专项)",
+    "specialty_code": "597",
+    "specialty_name": "材料科学与工程(地方专项)",
+    "min_score": 527
+  },
+  {
+    "school_code": "5016",
+    "school_name": "重庆工商大学",
+    "specialty_code": "598",
+    "specialty_name": "材料科学与工程",
+    "min_score": 524
+  },
+  {
+    "school_code": "5027",
+    "school_name": "重庆科技大学",
+    "specialty_code": "539",
+    "specialty_name": "制药工程",
+    "min_score": 519
+  },
+  {
+    "school_code": "5028",
+    "school_name": "重庆电子科技职业大学",
+    "specialty_code": "548",
+    "specialty_name": "现代通信工程",
+    "min_score": 487
+  },
+  {
+    "school_code": "5120",
+    "school_name": "宜宾学院",
+    "specialty_code": "531",
+    "specialty_name": "制药工程",
+    "min_score": 509
+  },
+  {
+    "school_code": "5120",
+    "school_name": "宜宾学院",
+    "specialty_code": "536",
+    "specialty_name": "生物工程",
+    "min_score": 505
+  },
+  {
+    "school_code": "5121",
+    "school_name": "乐山师范学院",
+    "specialty_code": "57D",
+    "specialty_name": "材料科学与工程",
+    "min_score": 494
+  },
+  {
+    "school_code": "5129",
+    "school_name": "西昌学院",
+    "specialty_code": "50U",
+    "specialty_name": "材料科学与工程",
+    "min_score": 499
+  },
+  {
+    "school_code": "5134",
+    "school_name": "四川工商学院",
+    "specialty_code": "527",
+    "specialty_name": "通信工程",
+    "min_score": 483
+  },
+  {
+    "school_code": "5136",
+    "school_name": "电子科技大学成都学院",
+    "specialty_code": "50H",
+    "specialty_name": "通信工程",
+    "min_score": 487
+  },
+  {
+    "school_code": "5146",
+    "school_name": "四川工程职业技术大学",
+    "specialty_code": "5D4",
+    "specialty_name": "卫星通信工程",
+    "min_score": 487
+  },
+  {
+    "school_code": "5184",
+    "school_name": "成都锦城学院",
+    "specialty_code": "5D8",
+    "specialty_name": "通信工程",
+    "min_score": 485
+  },
+  {
+    "school_code": "5191",
+    "school_name": "四川大学锦江学院",
+    "specialty_code": "50F",
+    "specialty_name": "通信工程",
+    "min_score": 485
+  },
+  {
+    "school_code": "5337",
+    "school_name": "红河学院",
+    "specialty_code": "5G4",
+    "specialty_name": "通信工程",
+    "min_score": 505
+  },
+  {
+    "school_code": "6130",
+    "school_name": "西安航空学院",
+    "specialty_code": "523",
+    "specialty_name": "材料科学与工程",
+    "min_score": 514
+  },
+  {
+    "school_code": "6207",
+    "school_name": "西北民族大学",
+    "specialty_code": "5L8",
+    "specialty_name": "生物工程",
+    "min_score": 503
+  },
+  {
+    "school_code": "6217",
+    "school_name": "西北师范大学",
+    "specialty_code": "549",
+    "specialty_name": "制药工程",
+    "min_score": 519
+  },
+  {
+    "school_code": "6302",
+    "school_name": "青海民族大学",
+    "specialty_code": "512",
+    "specialty_name": "通信工程",
+    "min_score": 527
+  },
+  {
+    "school_code": "6313",
+    "school_name": "青海理工学院",
+    "specialty_code": "508",
+    "specialty_name": "材料科学与工程",
+    "min_score": 497
+  },
+  {
+    "school_code": "6403",
+    "school_name": "北方民族大学",
+    "specialty_code": "517",
+    "specialty_name": "生物工程",
+    "min_score": 504
+  },
+  {
+    "school_code": "6504",
+    "school_name": "新疆师范大学",
+    "specialty_code": "5A5",
+    "specialty_name": "生物工程",
+    "min_score": 489
+  },
+  {
+    "school_code": "6505",
+    "school_name": "伊犁师范大学",
+    "specialty_code": "5GA",
+    "specialty_name": "材料科学与工程",
+    "min_score": 484
+  },
+  {
+    "school_code": "6508",
+    "school_name": "新疆理工学院",
+    "specialty_code": "5G1",
+    "specialty_name": "通信工程",
+    "min_score": 496
+  },
+  {
+    "school_code": "6512",
+    "school_name": "新疆工程学院",
+    "specialty_code": "507",
+    "specialty_name": "材料科学与工程",
+    "min_score": 485
+  },
+  {
+    "school_code": "6512",
+    "school_name": "新疆工程学院",
+    "specialty_code": "543",
+    "specialty_name": "通信工程",
+    "min_score": 510
+  },
+  {
+    "school_code": "6524",
+    "school_name": "喀什大学",
+    "specialty_code": "53C",
+    "specialty_name": "通信工程",
+    "min_score": 502
+  },
+  {
+    "school_code": "6526",
+    "school_name": "塔里木大学",
+    "specialty_code": "527",
+    "specialty_name": "化学工程与工业生物工程",
+    "min_score": 494
+  },
+  {
+    "school_code": "6526",
+    "school_name": "塔里木大学",
+    "specialty_code": "555",
+    "specialty_name": "通信工程",
+    "min_score": 505
+  }
+]

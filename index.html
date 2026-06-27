@@ -32,15 +32,13 @@
           <span class="nav-icon">📊</span>
           <span>总览</span>
         </a>
+
         <div class="nav-section">数据</div>
-        <a href="#" data-page="data">
+        <a href="#" data-page="allschools">
           <span class="nav-icon">📋</span>
-          <span>数据表</span>
+          <span>所有可选学校</span>
         </a>
-        <a href="#" data-page="schools">
-          <span class="nav-icon">🏫</span>
-          <span>院校推荐</span>
-        </a>
+
         <div class="nav-section">方案</div>
         <a href="#" data-page="planning">
           <span class="nav-icon">📝</span>
@@ -115,7 +113,7 @@
               </div>
               <div class="settings-row">
                 <label>限定专业</label>
-                <input type="text" id="settingMajors" value="生物工程,制药工程,铁路,电气自动化,通信工程,人工智能,材料科学与工程" style="flex:1;min-width:200px;">
+                <input type="text" id="settingMajors" value="生物工程,制药工程,通信工程,材料科学与工程" style="flex:1;min-width:200px;">
               </div>
               <div class="btn-group" style="margin-top:12px;">
                 <button class="btn btn-small btn-success" onclick="saveSettings()">💾 保存设置</button>
@@ -160,8 +158,9 @@
                   </div>
                   <div class="dir-item dir-dir">📁 data/</div>
                   <div class="dir-children">
-                    <div class="dir-item dir-file">selectable_schools.js <span class="dir-desc">统一筛选数据（56条）</span></div>
-                    <div class="dir-item dir-file">selectable_schools.json <span class="dir-desc">结构化数据（含等位分/策略区间）</span></div>
+                    <div class="dir-item dir-file">selectable_schools.js <span class="dir-desc">筛选后的可选学校（供主页加载）</span></div>
+                    <div class="dir-item dir-file">selectable_schools.json <span class="dir-desc">同上（JSON格式）</span></div>
+                    <div class="dir-item dir-file">all_selectable_schools.json <span class="dir-desc">全部可选学校源数据（2849条）</span></div>
                     <div class="dir-item dir-file" style="color:#999;text-decoration:line-through;">yiben_schools.json（已废弃）</div>
                     <div class="dir-item dir-file" style="color:#999;text-decoration:line-through;">erben_schools.json（已废弃）</div>
                     <div class="dir-item dir-file">resource.json <span class="dir-desc">2025年原始投档线数据（11349条）</span></div>
@@ -173,8 +172,7 @@
                   </div>
                   <div class="dir-item dir-dir">📁 pages/</div>
                   <div class="dir-children">
-                    <div class="dir-item dir-file">数据表.html</div>
-                    <div class="dir-item dir-file">筛选方案.html</div>
+                    <div class="dir-item dir-file">2025-2026等位分换算.html</div>
                   </div>
                 </div>
               </div>
@@ -182,91 +180,47 @@
           </div>
         </section>
 
-        <!-- ===== 页面2: 数据表 ===== -->
-        <section id="page-data" class="page">
-          <h2>📋 录取数据表</h2>
-          <div class="data-header" style="margin-bottom:10px;font-size:14px;color:#333;">
-            📋 selectable_schools · 可选择院校总表（489~514分，等位分-20~+5）
-          </div>
-          <div class="filter-bar">
-            <div class="filter-group">
-              <label>专业</label>
-              <select id="dataFilterMajor"><option value="all">全部</option></select>
-            </div>
-            <div class="filter-group">
-              <label>省份</label>
-              <select id="dataFilterProvince"><option value="all">全部</option></select>
-            </div>
-            <div class="filter-group">
-              <label>搜索学校</label>
-              <input type="text" id="dataFilterSchool" placeholder="输入学校名称">
-            </div>
-            <div class="filter-group" style="margin-left:auto;">
-              <span id="dataCountLabel" style="font-size:14px;color:#666;">共 0 条记录</span>
-            </div>
-          </div>
-          <div class="table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>院校</th><th>院校代码</th><th>省份</th><th>城市</th><th>专业</th>
-                  <th>2025最低分</th><th>2025平均分</th><th>录取人数</th><th>投档比</th><th>备注</th>
-                </tr>
-              </thead>
-              <tbody id="dataTableBody">
-                <tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">加载数据中…</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="table-note" id="dataPageNote">第 1 页 / 共 1 页</p>
-          <div class="data-pagination">
-            <button class="btn btn-small" id="dataPrevBtn" onclick="prevDataPage()" disabled>◀ 上一页</button>
-            <span id="dataPageInfo">1 / 1</span>
-            <button class="btn btn-small" id="dataNextBtn" onclick="nextDataPage()">下一页 ▶</button>
-          </div>
-        </section>
 
-        <!-- ===== 页面3: 院校推荐 ===== -->
-        <section id="page-schools" class="page">
-          <h2>🏫 院校推荐</h2>
+
+        <!-- ===== 页面: 所有可选学校 ===== -->
+        <section id="page-allschools" class="page">
+          <h2>📋 所有可选学校</h2>
+          <div class="tip-box">
+            从全部 2849 条源数据中勾选学校，点击 <strong>💾 保存到可选列表</strong> 将其同步到 selectable_schools.json。
+          </div>
           <div class="filter-bar">
             <div class="filter-group">
-              <label>专业</label>
-              <select id="schoolFilterMajor"><option value="all">全部</option></select>
+              <label for="allFilterMajor">筛选专业</label>
+              <select id="allFilterMajor" title="筛选专业"><option value="all">全部专业</option></select>
             </div>
             <div class="filter-group">
-              <label>省份</label>
-              <select id="schoolFilterProvince"><option value="all">全部</option></select>
+              <label for="allFilterSchool">搜索学校</label>
+              <input type="text" id="allFilterSchool" title="搜索学校" placeholder="输入学校名称">
             </div>
             <div class="filter-group">
-              <label>批次</label>
-              <select id="schoolFilterBatch"><option value="all">全部</option><option value="一本">一本</option><option value="二本">二本</option></select>
+              <label for="allFilterChecked">勾选状态</label>
+              <select id="allFilterChecked" title="勾选状态"><option value="all">全部</option><option value="checked">已勾选</option><option value="unchecked">未勾选</option></select>
             </div>
-            <div class="filter-group">
-              <label>搜索</label>
-              <input type="text" id="schoolFilterSearch" placeholder="学校/专业名">
-            </div>
-            <div class="filter-group" style="margin-left:auto;">
-              <span id="schoolCountLabel" style="font-size:14px;color:#666;">共 0 条记录</span>
+            <div class="btn-group" style="margin-left:auto;">
+              <span id="allCheckedCount" style="font-size:13px;color:#666;"></span>
+              <button class="btn btn-small btn-success" id="allSaveBtn">💾 保存到可选列表</button>
             </div>
           </div>
           <div class="table-wrap">
             <table class="data-table">
               <thead>
-                <tr>
-                  <th>院校</th><th>省份</th><th>城市</th><th>专业</th><th>批次</th><th>2025最低分</th><th>投档比</th><th>备注</th>
-                </tr>
+                <tr><th style="width:40px;">#</th><th>院校</th><th>院校代码</th><th>专业</th><th>专业代码</th><th>最低分</th><th style="width:50px;">勾选</th><th style="width:60px;">排序</th></tr>
               </thead>
-              <tbody id="schoolTableBody">
+              <tbody id="allTableBody">
                 <tr><td colspan="8" style="text-align:center;color:#999;padding:40px;">加载数据中…</td></tr>
               </tbody>
             </table>
           </div>
-          <p class="table-note" id="schoolPageNote">第 1 页 / 共 1 页</p>
+          <p class="table-note" id="allPageNote">第 1 页 / 共 1 页</p>
           <div class="data-pagination">
-            <button class="btn btn-small" id="schoolPrevBtn" onclick="prevSchoolPage()" disabled>◀ 上一页</button>
-            <span id="schoolPageInfo">1 / 1</span>
-            <button class="btn btn-small" id="schoolNextBtn" onclick="nextSchoolPage()">下一页 ▶</button>
+            <button class="btn btn-small" id="allPrevBtn" disabled>◀ 上一页</button>
+            <span id="allPageInfo">1 / 1</span>
+            <button class="btn btn-small" id="allNextBtn">下一页 ▶</button>
           </div>
         </section>
 
@@ -274,72 +228,53 @@
         <section id="page-planning" class="page">
           <h2>📝 筛选方案</h2>
           <div class="tip-box">
-            在每个专业表内通过 <strong>▲▼</strong> 箭头调整学校顺序，并在「策略」列标记冲/稳/保/忽略。
-            调整完成后点击 <strong>💾 保存</strong> 将排序结果保存到 data/main/ 目录。
+            勾选心仪的学校后，点击 <strong>💾 保存</strong> 将勾选的学校保存到志愿方案。
+            可点击 <strong>▲▼</strong> 调整排序。
           </div>
 
-          <!-- 面包屑 -->
-          <div class="breadcrumb-nav" id="planningBreadcrumb">
-            <a onclick="showPlanningMajorList()">所有专业</a>
-            <span class="separator">/</span>
-            <span class="current" id="planningCurrentMajor">生物工程</span>
+          <div class="filter-bar">
+            <div class="filter-group">
+              <label>筛选专业</label>
+              <select id="planFilterMajor"><option value="all">全部专业</option></select>
+            </div>
+            <div class="filter-group">
+              <label>搜索学校</label>
+              <input type="text" id="planFilterSchool" placeholder="输入学校名称">
+            </div>
+            <div class="filter-group">
+              <label>勾选状态</label>
+              <select id="planFilterChecked"><option value="all">全部</option><option value="checked">已勾选</option><option value="unchecked">未勾选</option></select>
+            </div>
+            <div class="btn-group" style="margin-left:auto;">
+              <span id="planCheckedCount" style="font-size:13px;color:#666;"></span>
+              <button class="btn btn-small btn-success" onclick="savePlan()">💾 保存方案</button>
+              <button class="btn btn-small btn-outline" onclick="exportPlanTxt()">📥 导出TXT</button>
+            </div>
           </div>
-
-          <!-- 专业列表视图 -->
-          <div id="planningMajorList">
-            <div class="major-tabs" id="planningMajorTabs">
-              <!-- JS 动态渲染 -->
-            </div>
-            <p style="color:#999;font-size:14px;">点击上方专业标签进入对应学校的排序页面</p>
-          </div>
-
-          <!-- 单专业排序视图 -->
-          <div id="planningMajorView" style="display:none;">
-            <div class="filter-bar">
-              <div class="filter-group">
-                <label>筛选批次</label>
-                <select id="planBatchFilter"><option value="all">全部</option><option value="一本">一本</option><option value="二本">二本</option></select>
-              </div>
-              <div class="filter-group">
-                <label>筛选省份</label>
-                <select id="planProvinceFilter"><option value="all">全部</option></select>
-              </div>
-              <div class="btn-group" style="margin-left:auto;">
-                <button class="btn btn-small btn-success" onclick="savePlan()">💾 保存</button>
-                <button class="btn btn-small btn-outline" onclick="exportPlanTxt()">📥 导出TXT</button>
-              </div>
-            </div>
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th style="width:40px;">#</th>
-                    <th>院校</th>
-                    <th>省份</th>
-                    <th>专业</th>
-                    <th>批次</th>
-                    <th>最低分</th>
-                    <th>策略</th>
-                    <th style="width:60px;">排序</th>
-                  </tr>
-                </thead>
-                <tbody id="planTableBody">
-                  <tr><td colspan="8" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="btn-group" style="margin-top:12px;">
-              <button class="btn btn-success" onclick="savePlan()">💾 保存方案</button>
-              <button class="btn btn-outline" onclick="exportPlanTxt()">📥 导出TXT方案</button>
-              <button class="btn btn-outline" onclick="exportPlanJSON()">📥 导出JSON数据</button>
-            </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width:40px;">#</th>
+                  <th>院校</th>
+                  <th>专业</th>
+                  <th>最低分</th>
+                  <th>类别</th>
+                  <th style="width:50px;">勾选</th>
+                  <th style="width:60px;">排序</th>
+                </tr>
+              </thead>
+              <tbody id="planTableBody">
+                <tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
         <!-- ===== 页面5: 志愿方案 ===== -->
         <section id="page-plan" class="page">
           <h2>📋 志愿方案</h2>
-          <p class="page-desc">基于 data/main/ 中已保存的排序方案，按手动标记的策略生成最终志愿方案</p>
+          <p class="page-desc">基于筛选方案中勾选的学校，按冲/稳/保分类展示志愿方案</p>
           <div class="btn-group" style="margin-bottom:20px;">
             <button class="btn" onclick="loadPlanSummary()">🔄 加载方案</button>
             <button class="btn btn-outline" onclick="exportFinalPlan()">📥 导出最终方案</button>

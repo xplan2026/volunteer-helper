@@ -1,8 +1,19 @@
 // ======== 密码验证 ========
+// 密码从 URL hash 参数或页面内嵌配置读取，避免硬编码
+// 生产部署时通过环境变量注入 AUTH_PASSWORD
+const AUTH_PASSWORD = (function() {
+  // 优先从 URL hash 读取: #pwd=xxx
+  var m = location.hash.match(/pwd=([^&]+)/);
+  if (m) return m[1];
+  // 否则使用内嵌配置（部署时替换此值）
+  return '__AUTH_PASSWORD_PLACEHOLDER__';
+})();
+const AUTH_TOKEN = AUTH_PASSWORD;
+
 function checkPassword() {
   const pw = document.getElementById('passwordInput').value;
-  if (pw === 'alexia!2026$') {
-    document.cookie = 'auth_token=alexia!2026$; path=/; max-age=' + (7*24*60*60);
+  if (pw === AUTH_PASSWORD) {
+    document.cookie = 'auth_token=' + encodeURIComponent(AUTH_TOKEN) + '; path=/; max-age=' + (7*24*60*60);
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     initApp();
@@ -13,15 +24,14 @@ function checkPassword() {
 document.getElementById('passwordInput')?.addEventListener('keydown', e => { if (e.key === 'Enter') checkPassword(); });
 
 // ======== 全局常量 ========
-const MAJORS = ['生物工程','制药工程','铁路','电气自动化','通信工程','人工智能','材料科学与工程'];
+const MAJORS = ['生物工程','制药工程','通信工程','材料科学与工程'];
 const DATA_SOURCE = SELECTABLE_SCHOOLS;
 const SAVED_DIR_PREFIX = 'data/main/';
 
 // ======== 应用初始化 ========
 function initApp() {
   renderDashboard();
-  initDataTable();
-  initSchoolsTable();
+  initAllSchoolsPage();
   initPlanningPage();
   loadPlanSummary();
   setupNavigation();
@@ -39,11 +49,9 @@ function setupNavigation() {
       const target = document.getElementById('page-' + page);
       if (target) {
         target.classList.add('active');
-        const names = { dashboard:'📊 总览', data:'📋 数据表', schools:'🏫 院校推荐', planning:'📝 筛选方案', plan:'📋 志愿方案' };
-        document.getElementById('breadcrumb').innerHTML = (names[page] || page) + ' <span>' + (page === 'data' ? '数据表' : page === 'dashboard' ? '总览' : names[page]?.split(' ')[1] || '') + '</span>';
-        // 页面切换时的加载逻辑
-        if (page === 'data') initDataTable();
-        if (page === 'schools') initSchoolsTable();
+        const names = { dashboard:'📊 总览', allschools:'📋 所有可选学校', planning:'📝 筛选方案', plan:'📋 志愿方案' };
+        document.getElementById('breadcrumb').innerHTML = (names[page] || page) + ' <span>' + (page === 'dashboard' ? '总览' : names[page]?.split(' ')[1] || '') + '</span>';
+        if (page === 'allschools') initAllSchoolsPage();
         if (page === 'planning') initPlanningPage();
         if (page === 'plan') loadPlanSummary();
       }
@@ -82,11 +90,10 @@ function resetSettings() {
   document.getElementById('settingRatio').value = '1.03';
   document.getElementById('settingScoreMin').value = '489';
   document.getElementById('settingScoreMax').value = '514';
-  document.getElementById('settingMajors').value = MAJORS.join(',');
+  document.getElementById('settingMajors').value = '生物工程,制药工程,铁路,电气自动化,通信工程,人工智能,材料科学与工程';
   saveSettings();
 }
 
-// 加载已保存的设置
 function loadSettings() {
   const saved = localStorage.getItem('volunteer_settings');
   if (saved) {
@@ -101,327 +108,329 @@ function loadSettings() {
   }
 }
 
-// ======== 数据表页面 ========
-let dataStore = [];
-let dataFiltered = [];
-let dataPageSize = 30;
-let dataCurrentPage = 1;
+// ======== 字段映射工具 ========
+// 将原始数据字段映射到前端统一使用的字段名
+function mapFields(d) {
+  return {
+    school: d.school_name || '',
+    school_code: d.school_code || '',
+    major: d.specialty_name || '',
+    specialty_code: d.specialty_code || '',
+    score_min: d.min_score || 0,
+    // 以下字段数据中不存在，使用默认值
+    province: '—',
+    city: '—',
+    batch: '—',
+    score_avg: 0,
+    plan_count: 0,
+    ratio: 0,
+    note: ''
+  };
+}
 
-function initDataTable() {
-  dataStore = DATA_SOURCE.schools || [];
-  if (!dataStore.length) {
-    document.getElementById('dataTableBody').innerHTML =
-      '<tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>';
+// ======== 所有可选学校页面 ========
+let allSchoolsData = [];
+let allSchoolsChecked = {};
+let allSchoolsFiltered = [];
+let allSchoolsPageSize = 50;
+let allSchoolsPage = 1;
+let allSchoolsLoaded = false;
+
+function initAllSchoolsPage() {
+  if (allSchoolsLoaded) {
+    allSchoolsApplyFilters();
     return;
   }
-  initDataFilters();
-  applyDataFilters();
+
+  fetch('data/all_selectable_schools.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      allSchoolsData = data.map(function(d) {
+        return {
+          school: d.school_name || '',
+          school_code: d.school_code || '',
+          major: d.specialty_name || '',
+          specialty_code: d.specialty_code || '',
+          score_min: d.min_score || 0,
+          _key: (d.school_code || '') + '|' + (d.specialty_code || '')
+        };
+      });
+      allSchoolsData.sort(function(a, b) { return b.score_min - a.score_min; });
+      allSchoolsLoaded = true;
+
+      var majorSet = {};
+      var majors = [];
+      for (var i = 0; i < allSchoolsData.length; i++) {
+        if (!majorSet[allSchoolsData[i].major]) {
+          majorSet[allSchoolsData[i].major] = true;
+          majors.push(allSchoolsData[i].major);
+        }
+      }
+      majors.sort();
+      var opts = '<option value="all">全部专业</option>';
+      for (var i = 0; i < majors.length; i++) {
+        opts += '<option value="' + majors[i] + '">' + majors[i] + '</option>';
+      }
+      document.getElementById('allFilterMajor').innerHTML = opts;
+
+      var saved = localStorage.getItem('all_schools_checked');
+      if (saved) { try { allSchoolsChecked = JSON.parse(saved); } catch(e) {} }
+
+      allSchoolsApplyFilters();
+    })
+    .catch(function(err) {
+      console.error('加载所有可选学校数据失败:', err);
+      document.getElementById('allTableBody').innerHTML =
+        '<tr><td colspan="8" style="text-align:center;color:#d93025;padding:40px;">❌ 数据加载失败: ' + err.message + '</td></tr>';
+    });
 }
 
-function initDataFilters() {
-  const majors = [...new Set(dataStore.map(d => d.major))].sort();
-  document.getElementById('dataFilterMajor').innerHTML =
-    '<option value="all">全部专业</option>' + majors.map(m => `<option value="${m}">${m}</option>`).join('');
-  const provinces = [...new Set(dataStore.map(d => d.province))].sort();
-  document.getElementById('dataFilterProvince').innerHTML =
-    '<option value="all">全部省份</option>' + provinces.map(p => `<option value="${p}">${p}</option>`).join('');
-}
+function allSchoolsApplyFilters() {
+  var major = document.getElementById('allFilterMajor').value;
+  var school = document.getElementById('allFilterSchool').value.trim().toLowerCase();
+  var cf = document.getElementById('allFilterChecked').value;
 
-function applyDataFilters() {
-  const major = document.getElementById('dataFilterMajor').value;
-  const province = document.getElementById('dataFilterProvince').value;
-  const school = document.getElementById('dataFilterSchool').value.trim().toLowerCase();
-  dataFiltered = dataStore.filter(d => {
-    if (major !== 'all' && d.major !== major) return false;
-    if (province !== 'all' && d.province !== province) return false;
-    if (school && !d.school.toLowerCase().includes(school)) return false;
-    return true;
-  });
-  dataCurrentPage = 1;
-  renderDataTable();
-}
-
-function renderDataTable() {
-  const tbody = document.getElementById('dataTableBody');
-  if (dataFiltered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">暂无匹配记录</td></tr>';
-    document.getElementById('dataCountLabel').textContent = '共 0 条记录';
-    document.getElementById('dataPageNote').textContent = '第 0 / 0 页';
-    document.getElementById('dataPrevBtn').disabled = true;
-    document.getElementById('dataNextBtn').disabled = true;
-    document.getElementById('dataPageInfo').textContent = '0 / 0';
-    return;
+  allSchoolsFiltered = [];
+  for (var i = 0; i < allSchoolsData.length; i++) {
+    var d = allSchoolsData[i];
+    if (major !== 'all' && d.major !== major) continue;
+    if (school && d.school.toLowerCase().indexOf(school) === -1) continue;
+    if (cf === 'checked' && !allSchoolsChecked[d._key]) continue;
+    if (cf === 'unchecked' && allSchoolsChecked[d._key]) continue;
+    allSchoolsFiltered.push(d);
   }
-  const totalPages = Math.ceil(dataFiltered.length / dataPageSize);
-  const start = (dataCurrentPage - 1) * dataPageSize;
-  const end = Math.min(start + dataPageSize, dataFiltered.length);
-  const pageData = dataFiltered.slice(start, end);
-  tbody.innerHTML = pageData.map(d => `
-    <tr>
-      <td><strong>${d.school}</strong></td>
-      <td><code>${d.code || '—'}</code></td>
-      <td><span class="batch-badge">${d.province}</span></td>
-      <td>${d.city}</td>
-      <td>${d.major}</td>
-      <td><strong>${d.score_min > 0 ? d.score_min + ' 分' : '待填'}</strong></td>
-      <td>${d.score_avg > 0 ? d.score_avg + ' 分' : '待填'}</td>
-      <td>${d.plan_count > 0 ? d.plan_count + ' 人' : '待填'}</td>
-      <td>${(d.ratio * 100).toFixed(1)}%</td>
-      <td style="color:#999;font-size:12px;">${d.note || '—'}</td>
-    </tr>
-  `).join('');
-  document.getElementById('dataCountLabel').textContent = `共 ${dataFiltered.length} 条记录`;
-  document.getElementById('dataPageNote').textContent = `第 ${dataCurrentPage} 页 / 共 ${totalPages} 页`;
-  document.getElementById('dataPageInfo').textContent = `${dataCurrentPage} / ${totalPages}`;
-  document.getElementById('dataPrevBtn').disabled = dataCurrentPage <= 1;
-  document.getElementById('dataNextBtn').disabled = dataCurrentPage >= totalPages;
+  allSchoolsPage = 1;
+  allSchoolsRenderTable();
 }
 
-function prevDataPage() { if (dataCurrentPage > 1) { dataCurrentPage--; renderDataTable(); } }
-function nextDataPage() {
-  const totalPages = Math.ceil(dataFiltered.length / dataPageSize) || 1;
-  if (dataCurrentPage < totalPages) { dataCurrentPage++; renderDataTable(); }
-}
-
-document.addEventListener('change', e => {
-  if (['dataFilterMajor','dataFilterProvince'].includes(e.target.id)) applyDataFilters();
-});
-document.addEventListener('input', e => {
-  if (e.target.id === 'dataFilterSchool') applyDataFilters();
-});
-
-
-// ======== 院校推荐页面 ========
-let schoolAllData = [];
-let schoolFiltered = [];
-let schoolPageSize = 30;
-let schoolPage = 1;
-
-function initSchoolsTable() {
-  // 合并一本二本数据
-  schoolAllData = [...(DATA_SOURCE.schools || [])];
-  // 初始化筛选选项
-  const majors = [...new Set(schoolAllData.map(d => d.major))].sort();
-  document.getElementById('schoolFilterMajor').innerHTML =
-    '<option value="all">全部专业</option>' + majors.map(m => `<option value="${m}">${m}</option>`).join('');
-  const provinces = [...new Set(schoolAllData.map(d => d.province))].sort();
-  document.getElementById('schoolFilterProvince').innerHTML =
-    '<option value="all">全部省份</option>' + provinces.map(p => `<option value="${p}">${p}</option>`).join('');
-  applySchoolFilters();
-}
-
-function applySchoolFilters() {
-  const major = document.getElementById('schoolFilterMajor').value;
-  const province = document.getElementById('schoolFilterProvince').value;
-  const search = document.getElementById('schoolFilterSearch').value.trim().toLowerCase();
-  schoolFiltered = schoolAllData.filter(d => {
-    if (major !== 'all' && d.major !== major) return false;
-    if (province !== 'all' && d.province !== province) return false;
-    if (search && !d.school.toLowerCase().includes(search) && !d.major.toLowerCase().includes(search)) return false;
-    return true;
-  });
-  schoolPage = 1;
-  renderSchoolTable();
-}
-
-function renderSchoolTable() {
-  const tbody = document.getElementById('schoolTableBody');
-  if (schoolFiltered.length === 0) {
+function allSchoolsRenderTable() {
+  var tbody = document.getElementById('allTableBody');
+  if (allSchoolsFiltered.length === 0) {
     tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#999;padding:40px;">暂无匹配记录</td></tr>';
-    document.getElementById('schoolCountLabel').textContent = '共 0 条记录';
-    document.getElementById('schoolPageNote').textContent = '第 0 / 0 页';
-    document.getElementById('schoolPrevBtn').disabled = true;
-    document.getElementById('schoolNextBtn').disabled = true;
-    document.getElementById('schoolPageInfo').textContent = '0 / 0';
+    document.getElementById('allPrevBtn').disabled = true;
+    document.getElementById('allNextBtn').disabled = true;
+    document.getElementById('allPageInfo').textContent = '0 / 0';
+    document.getElementById('allPageNote').textContent = '第 0 / 0 页';
+    allSchoolsUpdateCheckedCount();
     return;
   }
-  const totalPages = Math.ceil(schoolFiltered.length / schoolPageSize);
-  const start = (schoolPage - 1) * schoolPageSize;
-  const end = Math.min(start + schoolPageSize, schoolFiltered.length);
-  const pageData = schoolFiltered.slice(start, end);
-  tbody.innerHTML = pageData.map(d => `
-    <tr>
-      <td><strong>${d.school}</strong></td>
-      <td><span class="batch-badge">${d.province}</span></td>
-      <td>${d.city}</td>
-      <td>${d.major}</td>
-      <td><span class="${d.batch === '一本' ? 'tag-rush' : 'tag-safe'}">${d.batch}</span></td>
-      <td><strong>${d.score_min > 0 ? d.score_min + ' 分' : '待填'}</strong></td>
-      <td>${(d.ratio * 100).toFixed(1)}%</td>
-      <td style="color:#999;font-size:12px;">${d.note || '—'}</td>
-    </tr>
-  `).join('');
-  document.getElementById('schoolCountLabel').textContent = `共 ${schoolFiltered.length} 条记录`;
-  document.getElementById('schoolPageNote').textContent = `第 ${schoolPage} 页 / 共 ${totalPages} 页`;
-  document.getElementById('schoolPageInfo').textContent = `${schoolPage} / ${totalPages}`;
-  document.getElementById('schoolPrevBtn').disabled = schoolPage <= 1;
-  document.getElementById('schoolNextBtn').disabled = schoolPage >= totalPages;
+
+  var totalPages = Math.ceil(allSchoolsFiltered.length / allSchoolsPageSize);
+  if (allSchoolsPage > totalPages) allSchoolsPage = totalPages;
+  var start = (allSchoolsPage - 1) * allSchoolsPageSize;
+  var end = Math.min(start + allSchoolsPageSize, allSchoolsFiltered.length);
+
+  var rows = '';
+  for (var i = start; i < end; i++) {
+    var d = allSchoolsFiltered[i];
+    var isChk = allSchoolsChecked[d._key] ? 'checked' : '';
+    rows += '<tr>' +
+      '<td style="text-align:center;color:#999;">' + (i + 1) + '</td>' +
+      '<td><strong>' + d.school + '</strong></td>' +
+      '<td><code>' + (d.school_code || '—') + '</code></td>' +
+      '<td>' + d.major + '</td>' +
+      '<td><code>' + (d.specialty_code || '—') + '</code></td>' +
+      '<td><strong>' + (d.score_min > 0 ? d.score_min + ' 分' : '—') + '</strong></td>' +
+      '<td style="text-align:center;"><input type="checkbox" data-key="' + d._key + '" ' + isChk + '></td>' +
+      '<td><div class="sort-arrows"><button data-dir="-1" title="上移">▲</button><button data-dir="1" title="下移">▼</button></div></td>' +
+    '</tr>';
+  }
+  tbody.innerHTML = rows;
+
+  document.getElementById('allPageNote').textContent = '第 ' + allSchoolsPage + ' 页 / 共 ' + totalPages + ' 页';
+  document.getElementById('allPageInfo').textContent = allSchoolsPage + ' / ' + totalPages;
+  document.getElementById('allPrevBtn').disabled = allSchoolsPage <= 1;
+  document.getElementById('allNextBtn').disabled = allSchoolsPage >= totalPages;
+  allSchoolsUpdateCheckedCount();
 }
 
-function prevSchoolPage() { if (schoolPage > 1) { schoolPage--; renderSchoolTable(); } }
-function nextSchoolPage() {
-  const totalPages = Math.ceil(schoolFiltered.length / schoolPageSize) || 1;
-  if (schoolPage < totalPages) { schoolPage++; renderSchoolTable(); }
+function allSchoolsUpdateCheckedCount() {
+  document.getElementById('allCheckedCount').textContent = '已勾选 ' + Object.keys(allSchoolsChecked).length + ' 条';
 }
 
-document.addEventListener('change', e => {
-  if (['schoolFilterMajor','schoolFilterProvince'].includes(e.target.id)) applySchoolFilters();
+// 事件委托：勾选
+document.getElementById('allTableBody').addEventListener('change', function(e) {
+  if (e.target.type === 'checkbox') {
+    var key = e.target.dataset.key;
+    if (e.target.checked) { allSchoolsChecked[key] = true; }
+    else { delete allSchoolsChecked[key]; }
+    localStorage.setItem('all_schools_checked', JSON.stringify(allSchoolsChecked));
+    allSchoolsUpdateCheckedCount();
+  }
 });
-document.addEventListener('input', e => {
-  if (e.target.id === 'schoolFilterSearch') applySchoolFilters();
+
+// 事件委托：排序按钮
+document.getElementById('allTableBody').addEventListener('click', function(e) {
+  if (e.target.tagName === 'BUTTON' && e.target.dataset.dir) {
+    var dir = parseInt(e.target.dataset.dir);
+    var tr = e.target.closest('tr');
+    var tbody = tr.parentElement;
+    var children = tbody.children;
+    var idx = Array.prototype.indexOf.call(children, tr);
+    var swapIdx = idx + dir;
+    if (swapIdx < 0 || swapIdx >= children.length) return;
+    if (dir === -1) tbody.insertBefore(tr, children[swapIdx]);
+    else tbody.insertBefore(tr, children[swapIdx].nextSibling || null);
+  }
+});
+
+// 筛选
+document.getElementById('allFilterMajor').addEventListener('change', allSchoolsApplyFilters);
+document.getElementById('allFilterChecked').addEventListener('change', allSchoolsApplyFilters);
+document.getElementById('allFilterSchool').addEventListener('input', allSchoolsApplyFilters);
+
+// 分页
+document.getElementById('allPrevBtn').addEventListener('click', function() {
+  if (allSchoolsPage > 1) { allSchoolsPage--; allSchoolsRenderTable(); }
+});
+document.getElementById('allNextBtn').addEventListener('click', function() {
+  var tp = Math.ceil(allSchoolsFiltered.length / allSchoolsPageSize) || 1;
+  if (allSchoolsPage < tp) { allSchoolsPage++; allSchoolsRenderTable(); }
+});
+
+// 保存到可选列表
+document.getElementById('allSaveBtn').addEventListener('click', function() {
+  var out = [];
+  for (var i = 0; i < allSchoolsData.length; i++) {
+    if (allSchoolsChecked[allSchoolsData[i]._key]) {
+      out.push({
+        school_code: allSchoolsData[i].school_code,
+        school_name: allSchoolsData[i].school,
+        specialty_code: allSchoolsData[i].specialty_code,
+        specialty_name: allSchoolsData[i].major,
+        min_score: allSchoolsData[i].score_min
+      });
+    }
+  }
+  if (!out.length) { alert('请先勾选至少一所学校'); return; }
+  out.sort(function(a, b) { return b.min_score - a.min_score; });
+
+  function download(name, content, type) {
+    var b = new Blob([content], { type: type });
+    var u = URL.createObjectURL(b);
+    var a = document.createElement('a');
+    a.href = u; a.download = name; a.click();
+    URL.revokeObjectURL(u);
+  }
+  download('selectable_schools.json', JSON.stringify(out, null, 2), 'application/json;charset=utf-8');
+  download('selectable_schools.js', 'const SELECTABLE_SCHOOLS = {"schools":' + JSON.stringify(out) + '};', 'application/javascript;charset=utf-8');
+  alert('已导出 ' + out.length + ' 条。请覆盖到 data/ 目录');
 });
 
 // ======== 筛选方案页面 ========
-// 当前编辑的专业和数据
-let planCurrentMajor = '';
-let planSchools = {};  // { '生物工程': [...], ... }
-// 策略标记存储: {'生物工程': { 'school|major|batch': 'rush'|'steady'|'safe'|'ignore', ... }}
-let planStrategies = {};
+let planAllData = [];
+let planChecked = {};  // { 'school|major': true }
+
+// 类别判定：冲 510-529, 稳 504-509, 保 479-503
+function getCategory(score) {
+  if (score >= 510) return '冲';
+  if (score >= 504) return '稳';
+  return '保';
+}
+
+function getCategoryTag(cat) {
+  if (cat === '冲') return '<span class="tag-rush">🚀 冲</span>';
+  if (cat === '稳') return '<span class="tag-steady">⚖️ 稳</span>';
+  return '<span class="tag-safe">🛡️ 保</span>';
+}
 
 function initPlanningPage() {
-  renderMajorTabs();
-  showPlanningMajorList();
-  loadSavedPlans();
-}
-
-function renderMajorTabs() {
-  const container = document.getElementById('planningMajorTabs');
-  container.innerHTML = MAJORS.map(m => `
-    <button class="major-tab" onclick="openPlanningMajor('${m}')">
-      ${m} <span class="count" id="majorCount_${m}">(0)</span>
-    </button>
-  `).join('');
-}
-
-function showPlanningMajorList() {
-  document.getElementById('planningMajorList').style.display = 'block';
-  document.getElementById('planningMajorView').style.display = 'none';
-  document.getElementById('planningCurrentMajor').textContent = '所有专业';
-  loadSavedPlans();
-}
-
-function loadSavedPlans() {
-  // 从localStorage读取已保存的标记（以后可改为从data/main/ 加载）
-  const saved = localStorage.getItem('volunteer_plan_strategies');
-  if (saved) {
-    try { planStrategies = JSON.parse(saved); } catch(e) { planStrategies = {}; }
-  }
-  // 统计每个专业已有标记的学校数
-  MAJORS.forEach(m => {
-    const key = m;
-    const count = planStrategies[key] ? Object.keys(planStrategies[key]).length : 0;
-    const el = document.getElementById('majorCount_' + m);
-    if (el) el.textContent = `(${count})`;
-  });
-}
-
-function openPlanningMajor(major) {
-  planCurrentMajor = major;
-  document.getElementById('planningMajorList').style.display = 'none';
-  document.getElementById('planningMajorView').style.display = 'block';
-  document.getElementById('planningCurrentMajor').textContent = major;
-
-  // 收集该专业的所有学校（去重：同一学校同一批次同一专业只保留一条）
-  const allData = [...(DATA_SOURCE.schools || [])];
-  const schools = allData.filter(d => d.major === major && !d.school.includes('★'));
+  const allData = (DATA_SOURCE.schools || []).map(mapFields);
   // 去重
   const seen = new Set();
-  const unique = [];
-  schools.forEach(d => {
-    const key = d.school + '|' + d.major + '|' + d.batch;
+  planAllData = [];
+  allData.forEach(d => {
+    const key = d.school + '|' + d.major;
     if (!seen.has(key)) {
       seen.add(key);
-      unique.push(d);
+      d.category = getCategory(d.score_min);
+      d._key = key;
+      planAllData.push(d);
     }
   });
-  // 按批次和省份排序
-  planSchools[major] = unique.sort((a, b) => {
-    if (a.batch !== b.batch) return a.batch === '一本' ? -1 : 1;
-    return a.province.localeCompare(b.province);
-  });
+  // 默认按 min_score 降序
+  planAllData.sort((a, b) => b.score_min - a.score_min);
 
-  // 初始化省份筛选
-  const provinces = [...new Set(unique.map(d => d.province))].sort();
-  document.getElementById('planProvinceFilter').innerHTML =
-    '<option value="all">全部省份</option>' + provinces.map(p => `<option value="${p}">${p}</option>`).join('');
+  // 初始化筛选
+  const majors = [...new Set(planAllData.map(d => d.major))].sort();
+  document.getElementById('planFilterMajor').innerHTML =
+    '<option value="all">全部专业</option>' + majors.map(m => `<option value="${m}">${m}</option>`).join('');
+
+  // 加载已保存的勾选状态
+  const saved = localStorage.getItem('volunteer_plan_checked');
+  if (saved) {
+    try { planChecked = JSON.parse(saved); } catch(e) { planChecked = {}; }
+  }
 
   renderPlanTable();
 }
 
 function renderPlanTable() {
-  const major = planCurrentMajor;
-  let schools = planSchools[major] || [];
-  if (!schools.length) {
-    document.getElementById('planTableBody').innerHTML =
-      '<tr><td colspan="8" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>';
-    return;
-  }
+  const major = document.getElementById('planFilterMajor').value;
+  const school = document.getElementById('planFilterSchool').value.trim().toLowerCase();
+  const checkFilter = document.getElementById('planFilterChecked').value;
 
-  // 应用筛选
-  const provFilter = document.getElementById('planProvinceFilter')?.value || 'all';
-  let filtered = schools.filter(d => {
-    if (provFilter !== 'all' && d.province !== provFilter) return false;
+  let filtered = planAllData.filter(d => {
+    if (major !== 'all' && d.major !== major) return false;
+    if (school && !d.school.toLowerCase().includes(school)) return false;
+    if (checkFilter === 'checked' && !planChecked[d._key]) return false;
+    if (checkFilter === 'unchecked' && planChecked[d._key]) return false;
     return true;
   });
 
   const tbody = document.getElementById('planTableBody');
-  const strategies = planStrategies[major] || {};
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">暂无匹配记录</td></tr>';
+    updateCheckedCount();
+    return;
+  }
 
   tbody.innerHTML = filtered.map((d, idx) => {
-    const key = d.school + '|' + d.major + '|' + d.batch;
-    const st = strategies[key] || '';
-    const stOpts = ['','rush','steady','safe','ignore'].map(v =>
-      `<option value="${v}" ${st === v ? 'selected' : ''}>${
-        v === '' ? '—' : v === 'rush' ? '🚀 冲' : v === 'steady' ? '⚖️ 稳' : v === 'safe' ? '🛡️ 保' : '⏭️ 忽略'
-      }</option>`
-    ).join('');
-
+    const checked = planChecked[d._key] ? 'checked' : '';
     return `<tr>
       <td style="text-align:center;color:#999;">${idx + 1}</td>
       <td><strong>${d.school}</strong></td>
-      <td><span class="batch-badge">${d.province}</span></td>
       <td>${d.major}</td>
-      <td><span class="${d.batch === '一本' ? 'tag-rush' : 'tag-safe'}">${d.batch}</span></td>
-      <td>${d.score_min > 0 ? d.score_min + ' 分' : '—'}</td>
-      <td>
-        <select class="strategy-select" data-major="${major}" data-school="${d.school}" data-major-name="${d.major}" data-batch="${d.batch}" onchange="updateStrategy(this)">
-          ${stOpts}
-        </select>
+      <td><strong>${d.score_min > 0 ? d.score_min + ' 分' : '—'}</strong></td>
+      <td>${getCategoryTag(d.category)}</td>
+      <td style="text-align:center;">
+        <input type="checkbox" class="plan-checkbox" data-key="${d._key}" ${checked} onchange="toggleCheck(this)">
       </td>
       <td>
         <div class="sort-arrows">
-          <button onclick="moveRow(this, -1)" title="上移">▲</button>
-          <button onclick="moveRow(this, 1)" title="下移">▼</button>
+          <button onclick="movePlanRow(this, -1)" title="上移">▲</button>
+          <button onclick="movePlanRow(this, 1)" title="下移">▼</button>
         </div>
       </td>
     </tr>`;
   }).join('');
+
+  updateCheckedCount();
 }
 
-function updateStrategy(sel) {
-  const major = sel.dataset.major;
-  const school = sel.dataset.school;
-  const mn = sel.dataset.majorName;
-  const batch = sel.dataset.batch;
-  const key = school + '|' + mn + '|' + batch;
-  if (!planStrategies[major]) planStrategies[major] = {};
-  planStrategies[major][key] = sel.value;
-  // 实时保存到 localStorage
-  localStorage.setItem('volunteer_plan_strategies', JSON.stringify(planStrategies));
-  // 更新计数
-  const count = Object.keys(planStrategies[major]).length;
-  const el = document.getElementById('majorCount_' + major);
-  if (el) el.textContent = `(${count})`;
+function toggleCheck(cb) {
+  const key = cb.dataset.key;
+  if (cb.checked) {
+    planChecked[key] = true;
+  } else {
+    delete planChecked[key];
+  }
+  localStorage.setItem('volunteer_plan_checked', JSON.stringify(planChecked));
+  updateCheckedCount();
 }
 
-function moveRow(btn, direction) {
+function updateCheckedCount() {
+  const count = Object.keys(planChecked).length;
+  document.getElementById('planCheckedCount').textContent = `已勾选 ${count} 条`;
+}
+
+function movePlanRow(btn, direction) {
   const tr = btn.closest('tr');
   const tbody = tr.parentElement;
   const idx = Array.from(tbody.children).indexOf(tr);
   const swapIdx = idx + direction;
   if (swapIdx < 0 || swapIdx >= tbody.children.length) return;
 
-  // 交换 DOM
   if (direction === -1) {
     tbody.insertBefore(tr, tbody.children[swapIdx]);
   } else {
@@ -438,93 +447,85 @@ function moveRow(btn, direction) {
     if (td) td.textContent = i + 1;
   });
 
-  // 更新数据顺序
-  const major = planCurrentMajor;
-  const schools = planSchools[major];
-  if (schools) {
-    const newOrder = Array.from(tbody.children).map(row => {
-      const sel = row.querySelector('.strategy-select');
-      const school = sel.dataset.school;
-      const mn = sel.dataset.majorName;
-      const batch = sel.dataset.batch;
-      return schools.find(d => d.school === school && d.major === mn && d.batch === batch);
-    }).filter(Boolean);
-    planSchools[major] = newOrder;
-  }
+  // 更新 planAllData 中的顺序
+  const newOrder = Array.from(tbody.children).map(row => {
+    const cb = row.querySelector('.plan-checkbox');
+    return cb ? cb.dataset.key : null;
+  }).filter(Boolean);
+
+  const orderMap = {};
+  newOrder.forEach((key, i) => { orderMap[key] = i; });
+  planAllData.sort((a, b) => {
+    const oa = orderMap[a._key] !== undefined ? orderMap[a._key] : 9999;
+    const ob = orderMap[b._key] !== undefined ? orderMap[b._key] : 9999;
+    return oa - ob;
+  });
 }
 
 // ======== 保存筛选方案 ========
 function savePlan() {
-  const major = planCurrentMajor;
-  const schools = planSchools[major];
-  if (!schools || !schools.length) {
-    alert('⚠️ 当前专业无数据');
+  const checkedSchools = planAllData.filter(d => planChecked[d._key]);
+  if (!checkedSchools.length) {
+    alert('⚠️ 请先勾选至少一所学校');
     return;
   }
 
-  const strategies = planStrategies[major] || {};
-
-  // 构建保存数据：保留排序和策略标记
   const planData = {
-    major: major,
     version: new Date().toISOString().slice(0,10).replace(/-/g,''),
     updatedAt: new Date().toISOString(),
-    schools: schools.map((d, idx) => {
-      const key = d.school + '|' + d.major + '|' + d.batch;
-      return {
-        rank: idx + 1,
-        school: d.school,
-        province: d.province,
-        city: d.city,
-        major: d.major,
-        batch: d.batch,
-        score_min: d.score_min,
-        ratio: d.ratio,
-        note: d.note,
-        strategy: strategies[key] || ''
-      };
-    })
+    schools: checkedSchools.map((d, idx) => ({
+      rank: idx + 1,
+      school: d.school,
+      school_code: d.school_code,
+      major: d.major,
+      specialty_code: d.specialty_code,
+      score_min: d.score_min,
+      category: d.category
+    }))
   };
 
-  // 保存到 localStorage（模拟保存到 data/main/）
-  const storageKey = 'volunteer_plan_' + major;
-  localStorage.setItem(storageKey, JSON.stringify(planData));
+  localStorage.setItem('volunteer_final_plan', JSON.stringify(planData));
 
-  // 生成可下载的JSON
-  const filename = `${SAVED_DIR_PREFIX}${major}-${planData.version}.json`;
+  const filename = `志愿方案_${planData.version}.json`;
   const blob = new Blob([JSON.stringify(planData, null, 2)], { type: 'application/json;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = filename.replace('data/main/', '');
+  a.download = filename;
   a.click();
   URL.revokeObjectURL(url);
 
-  alert(`✅ 方案已保存：${filename}\n（同时已保存到浏览器本地）`);
+  alert(`✅ 方案已保存：${filename}（${checkedSchools.length} 条）`);
 }
 
 // ======== 导出TXT方案 ========
 function exportPlanTxt() {
-  const major = planCurrentMajor;
-  const schools = planSchools[major];
-  if (!schools || !schools.length) return;
+  const checkedSchools = planAllData.filter(d => planChecked[d._key]);
+  if (!checkedSchools.length) {
+    alert('⚠️ 请先勾选至少一所学校');
+    return;
+  }
 
-  const strategies = planStrategies[major] || {};
   const ts = new Date().toLocaleString();
+  const rush = checkedSchools.filter(d => d.category === '冲');
+  const steady = checkedSchools.filter(d => d.category === '稳');
+  const safe = checkedSchools.filter(d => d.category === '保');
 
   const lines = [
     '══════════════════════════════════',
-    `   志愿填报助手 — 筛选方案（${major}）`,
+    '   志愿填报助手 — 筛选方案',
     `   考生分数：${CONFIG.student.score} 分`,
     `   生成时间：${ts}`,
     '══════════════════════════════════',
     '',
-    ...schools.map((d, idx) => {
-      const key = d.school + '|' + d.major + '|' + d.batch;
-      const st = strategies[key] || '—';
-      const stLabel = st === 'rush' ? '🚀 冲刺' : st === 'steady' ? '⚖️ 稳妥' : st === 'safe' ? '🛡️ 保底' : st === 'ignore' ? '⏭️ 忽略' : '—';
-      return `${String(idx + 1).padStart(2)}. ${d.school} | ${d.major} | ${d.batch} | ${d.score_min > 0 ? d.score_min + '分' : '—'} | ${stLabel}`;
-    }),
+    `【🚀 冲】（${rush.length} 项）`,
+    ...rush.map((d, i) => `  ${i + 1}. ${d.school} | ${d.major} | ${d.score_min}分`),
+    '',
+    `【⚖️ 稳】（${steady.length} 项）`,
+    ...steady.map((d, i) => `  ${i + 1}. ${d.school} | ${d.major} | ${d.score_min}分`),
+    '',
+    `【🛡️ 保】（${safe.length} 项）`,
+    ...safe.map((d, i) => `  ${i + 1}. ${d.school} | ${d.major} | ${d.score_min}分`),
     '',
     '⚠️ 以上为 AI 辅助推荐，请结合招生计划最终确认'
   ].join('\n');
@@ -533,55 +534,47 @@ function exportPlanTxt() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `志愿方案_${major}_${CONFIG.student.score}分.txt`;
+  a.download = `志愿方案_${CONFIG.student.score}分.txt`;
   a.click();
   URL.revokeObjectURL(url);
-}
-
-// ======== 导出JSON数据 ========
-function exportPlanJSON() {
-  savePlan(); // 复用保存逻辑
 }
 
 // ======== 志愿方案页面 ========
 function loadPlanSummary() {
   const container = document.getElementById('planSummary');
 
-  // 从 localStorage 读取所有已保存的plan
   let rushItems = [];
   let steadyItems = [];
   let safeItems = [];
 
-  MAJORS.forEach(m => {
-    const key = 'volunteer_plan_' + m;
-    const saved = localStorage.getItem(key);
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        (data.schools || []).forEach(s => {
-          if (s.strategy === 'rush') rushItems.push(s);
-          else if (s.strategy === 'steady') steadyItems.push(s);
-          else if (s.strategy === 'safe') safeItems.push(s);
-        });
-      } catch(e) {}
-    }
-  });
+  // 从筛选方案的勾选数据中加载
+  const saved = localStorage.getItem('volunteer_final_plan');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      (data.schools || []).forEach(s => {
+        if (s.category === '冲') rushItems.push(s);
+        else if (s.category === '稳') steadyItems.push(s);
+        else if (s.category === '保') safeItems.push(s);
+      });
+    } catch(e) {}
+  }
 
   container.innerHTML = `
     <div class="settings-card">
-      <p>📊 共加载 <strong>${rushItems.length + steadyItems.length + safeItems.length}</strong> 条排序方案</p>
+      <p>📊 共加载 <strong>${rushItems.length + steadyItems.length + safeItems.length}</strong> 条志愿方案</p>
       <p style="font-size:13px;color:#666;margin-top:4px;">
         🚀 冲刺 ${rushItems.length} 项 · ⚖️ 稳妥 ${steadyItems.length} 项 · 🛡️ 保底 ${safeItems.length} 项
       </p>
     </div>
   `;
 
-  renderPlanList('planRushList', rushItems, '🚀 冲刺');
-  renderPlanList('planSteadyList', steadyItems, '⚖️ 稳妥');
-  renderPlanList('planSafeList', safeItems, '🛡️ 保底');
+  renderPlanList('planRushList', rushItems);
+  renderPlanList('planSteadyList', steadyItems);
+  renderPlanList('planSafeList', safeItems);
 }
 
-function renderPlanList(id, items, label) {
+function renderPlanList(id, items) {
   const el = document.getElementById(id);
   if (!items.length) {
     el.innerHTML = '<p class="plan-empty">暂无</p>';
@@ -591,7 +584,7 @@ function renderPlanList(id, items, label) {
     <div class="plan-item">
       <div class="plan-item-info">
         <span class="plan-item-school">${i + 1}. ${s.school}</span>
-        <span class="plan-item-detail">${s.major} · ${s.batch} · ${s.province}${s.note ? ' · ' + s.note : ''}</span>
+        <span class="plan-item-detail">${s.major}</span>
       </div>
       <span class="plan-item-score">${s.score_min > 0 ? s.score_min + '分' : '—'}</span>
     </div>
@@ -601,19 +594,17 @@ function renderPlanList(id, items, label) {
 // ======== 导出最终方案 ========
 function exportFinalPlan() {
   let rushItems = [], steadyItems = [], safeItems = [];
-  MAJORS.forEach(m => {
-    const saved = localStorage.getItem('volunteer_plan_' + m);
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        (data.schools || []).forEach(s => {
-          if (s.strategy === 'rush') rushItems.push(s);
-          else if (s.strategy === 'steady') steadyItems.push(s);
-          else if (s.strategy === 'safe') safeItems.push(s);
-        });
-      } catch(e) {}
-    }
-  });
+  const saved = localStorage.getItem('volunteer_final_plan');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      (data.schools || []).forEach(s => {
+        if (s.category === '冲') rushItems.push(s);
+        else if (s.category === '稳') steadyItems.push(s);
+        else if (s.category === '保') safeItems.push(s);
+      });
+    } catch(e) {}
+  }
 
   const ts = new Date().toLocaleString();
   const lines = [
@@ -625,13 +616,13 @@ function exportFinalPlan() {
     '══════════════════════════════════',
     '',
     `【🚀 冲刺志愿】（${rushItems.length} 项）`,
-    ...rushItems.map((s, i) => `  ${i + 1}. ${s.school} | ${s.major} | ${s.batch} | ${s.province}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}`),
+    ...rushItems.map((s, i) => `  ${i + 1}. ${s.school} | ${s.major}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}`),
     '',
     `【⚖️ 稳妥志愿】（${steadyItems.length} 项）`,
-    ...steadyItems.map((s, i) => `  ${i + 1}. ${s.school} | ${s.major} | ${s.batch} | ${s.province}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}`),
+    ...steadyItems.map((s, i) => `  ${i + 1}. ${s.school} | ${s.major}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}`),
     '',
     `【🛡️ 保底志愿】（${safeItems.length} 项）`,
-    ...safeItems.map((s, i) => `  ${i + 1}. ${s.school} | ${s.major} | ${s.batch} | ${s.province}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}`),
+    ...safeItems.map((s, i) => `  ${i + 1}. ${s.school} | ${s.major}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}`),
     '',
     '⚠️ 以上为 AI 辅助推荐，请结合招生计划最终确认'
   ].join('\n');
@@ -647,9 +638,12 @@ function exportFinalPlan() {
 
 // ======== 监听筛选方案页面的筛选变化 ========
 document.addEventListener('change', e => {
-  if (['planProvinceFilter'].includes(e.target.id)) {
+  if (['planFilterMajor', 'planFilterChecked'].includes(e.target.id)) {
     renderPlanTable();
   }
+});
+document.addEventListener('input', e => {
+  if (e.target.id === 'planFilterSchool') renderPlanTable();
 });
 
 // ======== 初始加载 ========
@@ -662,7 +656,7 @@ loadSettings();
     acc[k] = v;
     return acc;
   }, {});
-  if (cookies['auth_token'] === 'alexia!2026$') {
+  if (cookies['auth_token'] === AUTH_TOKEN) {
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     initApp();
