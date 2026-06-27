@@ -6,7 +6,7 @@ const AUTH_PASSWORD = (function() {
   var m = location.hash.match(/pwd=([^&]+)/);
   if (m) return m[1];
   // 否则使用内嵌配置（部署时替换此值）
-  return '__AUTH_PASSWORD_PLACEHOLDER__';
+  return 'alexia!2026$';
 })();
 const AUTH_TOKEN = AUTH_PASSWORD;
 
