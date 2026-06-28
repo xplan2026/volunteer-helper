@@ -309,8 +309,8 @@
   <!-- Supabase 环境变量注入：构建时由 CI 替换占位符 -->
   <!-- 若未注入，supabase-client.js 会使用兜底值 -->
   <script>
-    window.__SUPABASE_URL__ = '<SUPABASE_URL>';
-    window.__SUPABASE_ANON_KEY__ = '<SUPABASE_ANON_KEY>';
+    window.__SUPABASE_URL__ = '__SUPABASE_URL__';
+    window.__SUPABASE_ANON_KEY__ = '__SUPABASE_ANON_KEY__';
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/supabase-client.js"></script>
