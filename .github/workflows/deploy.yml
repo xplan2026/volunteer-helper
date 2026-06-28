@@ -51,6 +51,8 @@ jobs:
               exit 1
             fi
             echo "✅ Supabase 环境变量已注入"
+            echo "--- 验证：部署前检查 index.html 中的 Supabase 配置 ---"
+            grep -n "SUPABASE" index.html || echo "⚠️ 未找到 SUPABASE 相关行"
           fi
 
       - name: Setup Pages
