@@ -181,6 +181,50 @@ const SupabaseAPI = {
     return true;
   },
 
+  // ======== 招生人数编辑 ========
+  getEnrollmentEdits: async function() {
+    const sb = getSupabase();
+    if (!sb) return null;
+    const { data, error } = await sb.from('volunteer_enrollment_edits').select('key,value');
+    if (error) { console.error('获取招生人数编辑失败:', error); return null; }
+    var result = {};
+    for (var i = 0; i < data.length; i++) { result[data[i].key] = data[i].value; }
+    return result;
+  },
+
+  setEnrollmentEdit: async function(key, value) {
+    const sb = getSupabase();
+    if (!sb) return null;
+    const { error } = await sb.from('volunteer_enrollment_edits').upsert(
+      { key: key, value: value },
+      { onConflict: 'key' }
+    );
+    if (error) { console.error('保存招生人数编辑失败:', error); return false; }
+    return true;
+  },
+
+  // ======== 特殊要求编辑 ========
+  getSpecialReqEdits: async function() {
+    const sb = getSupabase();
+    if (!sb) return null;
+    const { data, error } = await sb.from('volunteer_specialreq_edits').select('key,value');
+    if (error) { console.error('获取特殊要求编辑失败:', error); return null; }
+    var result = {};
+    for (var i = 0; i < data.length; i++) { result[data[i].key] = data[i].value; }
+    return result;
+  },
+
+  setSpecialReqEdit: async function(key, value) {
+    const sb = getSupabase();
+    if (!sb) return null;
+    const { error } = await sb.from('volunteer_specialreq_edits').upsert(
+      { key: key, value: value },
+      { onConflict: 'key' }
+    );
+    if (error) { console.error('保存特殊要求编辑失败:', error); return false; }
+    return true;
+  },
+
   // ======== 设置 ========
   getSettings: async function() {
     const sb = getSupabase();

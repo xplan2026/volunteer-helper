@@ -158,6 +158,8 @@ function mapFields(d) {
     score_avg: 0,
     plan_count: 0,
     ratio: d.ratio || 0,
+    enrollment_plan: d.enrollment_plan || '',
+    special_requirement: d.special_requirement || '',
     note: ''
   };
 }
@@ -201,6 +203,74 @@ async function saveRatioEdit(key, value) {
   }
   // 回退 localStorage
   localStorage.setItem('volunteer_ratio_edits', JSON.stringify(_ratioEditsCache));
+}
+
+// ======== 招生人数编辑管理 ========
+let _enrollmentEditsCache = null;
+
+async function loadEnrollmentEdits() {
+  if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
+    var remote = await SupabaseAPI.getEnrollmentEdits();
+    if (remote !== null) { _enrollmentEditsCache = remote; return remote; }
+  }
+  var saved = localStorage.getItem('volunteer_enrollment_edits');
+  if (saved) {
+    try { _enrollmentEditsCache = JSON.parse(saved); return _enrollmentEditsCache; } catch(e) {}
+  }
+  _enrollmentEditsCache = {};
+  return {};
+}
+
+function loadEnrollmentEditsSync() {
+  return _enrollmentEditsCache || {};
+}
+
+async function saveEnrollmentEdit(key, value) {
+  if (!_enrollmentEditsCache) _enrollmentEditsCache = {};
+  if (value === '' || value === null || value === undefined) {
+    delete _enrollmentEditsCache[key];
+  } else {
+    _enrollmentEditsCache[key] = value;
+  }
+  if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
+    await SupabaseAPI.setEnrollmentEdit(key, value === '' || value === null || value === undefined ? null : value);
+    return;
+  }
+  localStorage.setItem('volunteer_enrollment_edits', JSON.stringify(_enrollmentEditsCache));
+}
+
+// ======== 特殊要求编辑管理 ========
+let _specialReqEditsCache = null;
+
+async function loadSpecialReqEdits() {
+  if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
+    var remote = await SupabaseAPI.getSpecialReqEdits();
+    if (remote !== null) { _specialReqEditsCache = remote; return remote; }
+  }
+  var saved = localStorage.getItem('volunteer_specialreq_edits');
+  if (saved) {
+    try { _specialReqEditsCache = JSON.parse(saved); return _specialReqEditsCache; } catch(e) {}
+  }
+  _specialReqEditsCache = {};
+  return {};
+}
+
+function loadSpecialReqEditsSync() {
+  return _specialReqEditsCache || {};
+}
+
+async function saveSpecialReqEdit(key, value) {
+  if (!_specialReqEditsCache) _specialReqEditsCache = {};
+  if (value === '' || value === null || value === undefined) {
+    delete _specialReqEditsCache[key];
+  } else {
+    _specialReqEditsCache[key] = value;
+  }
+  if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
+    await SupabaseAPI.setSpecialReqEdit(key, value === '' || value === null || value === undefined ? null : value);
+    return;
+  }
+  localStorage.setItem('volunteer_specialreq_edits', JSON.stringify(_specialReqEditsCache));
 }
 
 // 通过学校代码和专业代码匹配 ratio（优先 Supabase，回退 fetch）
@@ -691,8 +761,8 @@ async function initPlanningPage() {
     }
   }
 
-  // 预加载投档率编辑缓存
-  await loadRatioEdits();
+  // 预加载投档率/招生人数/特殊要求编辑缓存
+  await Promise.all([loadRatioEdits(), loadEnrollmentEdits(), loadSpecialReqEdits()]);
 
   // 从 Supabase 加载投档率数据（回退本地 JSON）
   try {
@@ -722,18 +792,22 @@ function renderPlanTable() {
 
   const tbody = document.getElementById('planTableBody');
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">暂无匹配记录</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="12" style="text-align:center;color:#999;padding:40px;">暂无匹配记录</td></tr>';
     updateCheckedCount();
     return;
   }
 
-  // 加载投档率编辑记录
+  // 加载投档率编辑记录 + 招生人数编辑记录 + 特殊要求编辑记录
   const ratioEdits = loadRatioEditsSync();
+  const enrollmentEdits = loadEnrollmentEditsSync();
+  const specialReqEdits = loadSpecialReqEditsSync();
 
   tbody.innerHTML = filtered.map((d, idx) => {
     const checked = planChecked[d._key] ? 'checked' : '';
     const ratioKey = d.school_code + '|' + d.specialty_code;
     const savedRatio = ratioEdits[ratioKey] !== undefined ? ratioEdits[ratioKey] : (d.ratio > 0 ? (d.ratio * 100).toFixed(0) : '');
+    const savedEnrollment = enrollmentEdits[ratioKey] !== undefined ? enrollmentEdits[ratioKey] : (d.enrollment_plan || '');
+    const savedSpecialReq = specialReqEdits[ratioKey] !== undefined ? specialReqEdits[ratioKey] : (d.special_requirement || '');
     return `<tr>
       <td style="text-align:center;color:#999;">${idx + 1}</td>
       <td><strong>${d.school}</strong></td>
@@ -743,6 +817,12 @@ function renderPlanTable() {
       <td><strong>${d.score_min > 0 ? d.score_min + ' 分' : '—'}</strong></td>
       <td style="text-align:center;">
         <input type="text" class="ratio-input" data-key="${ratioKey}" value="${savedRatio}" placeholder="—" style="width:60px;text-align:center;padding:4px;border:1px solid #e0e0e0;border-radius:4px;font-size:13px;">
+      </td>
+      <td style="text-align:center;">
+        <input type="text" class="enrollment-input" data-key="${ratioKey}" value="${savedEnrollment}" placeholder="—" style="width:60px;text-align:center;padding:4px;border:1px solid #e0e0e0;border-radius:4px;font-size:13px;">
+      </td>
+      <td style="text-align:center;">
+        <input type="text" class="specialreq-input" data-key="${ratioKey}" value="${savedSpecialReq}" placeholder="—" style="width:80px;text-align:center;padding:4px;border:1px solid #e0e0e0;border-radius:4px;font-size:12px;">
       </td>
       <td>${getCategoryTag(d.category)}</td>
       <td style="text-align:center;">
@@ -828,6 +908,8 @@ async function savePlan() {
   }
 
   const ratioEdits = loadRatioEditsSync();
+  const enrollmentEdits = loadEnrollmentEditsSync();
+  const specialReqEdits = loadSpecialReqEditsSync();
 
   const planData = {
     version: new Date().toISOString().slice(0,10).replace(/-/g,''),
@@ -835,6 +917,8 @@ async function savePlan() {
     schools: checkedSchools.map((d, idx) => {
       const ratioKey = d.school_code + '|' + d.specialty_code;
       const editedRatio = ratioEdits[ratioKey] !== undefined ? ratioEdits[ratioKey] : (d.ratio > 0 ? (d.ratio * 100).toFixed(0) : '');
+      const editedEnrollment = enrollmentEdits[ratioKey] !== undefined ? enrollmentEdits[ratioKey] : (d.enrollment_plan || '');
+      const editedSpecialReq = specialReqEdits[ratioKey] !== undefined ? specialReqEdits[ratioKey] : (d.special_requirement || '');
       return {
         rank: idx + 1,
         school: d.school,
@@ -843,6 +927,8 @@ async function savePlan() {
         specialty_code: d.specialty_code,
         score_min: d.score_min,
         ratio: editedRatio,
+        enrollment_plan: editedEnrollment,
+        special_requirement: editedSpecialReq,
         category: d.category
       };
     })
@@ -906,6 +992,19 @@ function exportPlanTxt() {
   const safe = checkedSchools.filter(d => d.category === '保');
 
   const ratioEdits = loadRatioEditsSync();
+  const enrollmentEdits = loadEnrollmentEditsSync();
+  const specialReqEdits = loadSpecialReqEditsSync();
+
+  function formatExportLine(d, i) {
+    const ratioKey = d.school_code + '|' + d.specialty_code;
+    const r = ratioEdits[ratioKey] !== undefined ? ratioEdits[ratioKey] : (d.ratio > 0 ? (d.ratio * 100).toFixed(0) : '—');
+    const enr = enrollmentEdits[ratioKey] !== undefined ? enrollmentEdits[ratioKey] : (d.enrollment_plan || '—');
+    const sr = specialReqEdits[ratioKey] !== undefined ? specialReqEdits[ratioKey] : (d.special_requirement || '—');
+    var line = `  ${i + 1}. ${d.school} | ${d.major} | ${d.score_min}分 | 投档率:${r}%`;
+    if (enr !== '—') line += ` | 招生:${enr}`;
+    if (sr !== '—') line += ` | 要求:${sr}`;
+    return line;
+  }
 
   const lines = [
     '══════════════════════════════════',
@@ -915,25 +1014,13 @@ function exportPlanTxt() {
     '══════════════════════════════════',
     '',
     `【🚀 冲】（${rush.length} 项）`,
-    ...rush.map((d, i) => {
-      const ratioKey = d.school_code + '|' + d.specialty_code;
-      const r = ratioEdits[ratioKey] !== undefined ? ratioEdits[ratioKey] : (d.ratio > 0 ? (d.ratio * 100).toFixed(0) : '—');
-      return `  ${i + 1}. ${d.school} | ${d.major} | ${d.score_min}分 | 投档率:${r}%`;
-    }),
+    ...rush.map(formatExportLine),
     '',
     `【⚖️ 稳】（${steady.length} 项）`,
-    ...steady.map((d, i) => {
-      const ratioKey = d.school_code + '|' + d.specialty_code;
-      const r = ratioEdits[ratioKey] !== undefined ? ratioEdits[ratioKey] : (d.ratio > 0 ? (d.ratio * 100).toFixed(0) : '—');
-      return `  ${i + 1}. ${d.school} | ${d.major} | ${d.score_min}分 | 投档率:${r}%`;
-    }),
+    ...steady.map(formatExportLine),
     '',
     `【🛡️ 保】（${safe.length} 项）`,
-    ...safe.map((d, i) => {
-      const ratioKey = d.school_code + '|' + d.specialty_code;
-      const r = ratioEdits[ratioKey] !== undefined ? ratioEdits[ratioKey] : (d.ratio > 0 ? (d.ratio * 100).toFixed(0) : '—');
-      return `  ${i + 1}. ${d.school} | ${d.major} | ${d.score_min}分 | 投档率:${r}%`;
-    }),
+    ...safe.map(formatExportLine),
     '',
     '⚠️ 以上为 AI 辅助推荐，请结合招生计划最终确认'
   ].join('\n');
@@ -1122,6 +1209,8 @@ function renderPlanTableDetail(id, items, planId) {
         <th>专业代码</th>
         <th>最低分</th>
         <th>投档率</th>
+        <th>招生人数</th>
+        <th>特殊要求</th>
         <th style="width:60px;">删除</th>
       </tr>
     </thead>
@@ -1129,6 +1218,8 @@ function renderPlanTableDetail(id, items, planId) {
 
   items.forEach((s, i) => {
     const ratioDisplay = s.ratio && s.ratio !== '' ? s.ratio + '%' : '—';
+    const enrollmentDisplay = s.enrollment_plan && s.enrollment_plan !== '' ? s.enrollment_plan : '—';
+    const specialReqDisplay = s.special_requirement && s.special_requirement !== '' ? s.special_requirement : '—';
     html += `<tr>
       <td style="text-align:center;color:#999;">${i + 1}</td>
       <td><strong>${s.school}</strong></td>
@@ -1137,6 +1228,8 @@ function renderPlanTableDetail(id, items, planId) {
       <td><code>${s.specialty_code || '—'}</code></td>
       <td><strong>${s.score_min > 0 ? s.score_min + ' 分' : '—'}</strong></td>
       <td style="text-align:center;">${ratioDisplay}</td>
+      <td style="text-align:center;">${enrollmentDisplay}</td>
+      <td style="text-align:center;font-size:12px;">${specialReqDisplay}</td>
       <td style="text-align:center;">
         <button class="btn btn-small btn-danger" onclick="deletePlanItem('${planId}', ${i}, '${id}')" title="从方案中移除" style="padding:2px 8px;font-size:11px;">✕</button>
       </td>
@@ -1221,6 +1314,16 @@ async function exportFinalPlan() {
   });
 
   const ts = new Date().toLocaleString();
+
+  function formatFinalLine(s, i) {
+    var line = `  ${i + 1}. ${s.school} | ${s.major}`;
+    if (s.score_min > 0) line += ' | ' + s.score_min + '分';
+    if (s.ratio && s.ratio !== '') line += ' | 投档率:' + s.ratio + '%';
+    if (s.enrollment_plan && s.enrollment_plan !== '') line += ' | 招生:' + s.enrollment_plan;
+    if (s.special_requirement && s.special_requirement !== '') line += ' | 要求:' + s.special_requirement;
+    return line;
+  }
+
   const lines = [
     '══════════════════════════════════',
     '   志愿填报助手 — 最终志愿方案',
@@ -1231,22 +1334,13 @@ async function exportFinalPlan() {
     '══════════════════════════════════',
     '',
     `【🚀 冲刺志愿】（${rushItems.length} 项）`,
-    ...rushItems.map((s, i) => {
-      const r = s.ratio ? ' | 投档率:' + s.ratio + '%' : '';
-      return `  ${i + 1}. ${s.school} | ${s.major}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}${r}`;
-    }),
+    ...rushItems.map(formatFinalLine),
     '',
     `【⚖️ 稳妥志愿】（${steadyItems.length} 项）`,
-    ...steadyItems.map((s, i) => {
-      const r = s.ratio ? ' | 投档率:' + s.ratio + '%' : '';
-      return `  ${i + 1}. ${s.school} | ${s.major}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}${r}`;
-    }),
+    ...steadyItems.map(formatFinalLine),
     '',
     `【🛡️ 保底志愿】（${safeItems.length} 项）`,
-    ...safeItems.map((s, i) => {
-      const r = s.ratio ? ' | 投档率:' + s.ratio + '%' : '';
-      return `  ${i + 1}. ${s.school} | ${s.major}${s.score_min > 0 ? ' | ' + s.score_min + '分' : ''}${r}`;
-    }),
+    ...safeItems.map(formatFinalLine),
     '',
     '⚠️ 以上为 AI 辅助推荐，请结合招生计划最终确认'
   ].join('\n');
@@ -1279,6 +1373,24 @@ document.addEventListener('input', e => {
     // 异步保存
     saveRatioEdit(key, val);
   }
+  // 招生人数输入框
+  if (e.target.classList.contains('enrollment-input')) {
+    var key2 = e.target.dataset.key;
+    var val2 = e.target.value;
+    if (!_enrollmentEditsCache) _enrollmentEditsCache = {};
+    if (val2 === '' || val2 === null) { delete _enrollmentEditsCache[key2]; }
+    else { _enrollmentEditsCache[key2] = val2; }
+    saveEnrollmentEdit(key2, val2);
+  }
+  // 特殊要求输入框
+  if (e.target.classList.contains('specialreq-input')) {
+    var key3 = e.target.dataset.key;
+    var val3 = e.target.value;
+    if (!_specialReqEditsCache) _specialReqEditsCache = {};
+    if (val3 === '' || val3 === null) { delete _specialReqEditsCache[key3]; }
+    else { _specialReqEditsCache[key3] = val3; }
+    saveSpecialReqEdit(key3, val3);
+  }
 });
 
 // ======== 数据导出/导入（跨设备迁移） ========
@@ -1290,6 +1402,8 @@ const DATA_KEYS = [
   'volunteer_current_plan_id',
   'volunteer_plan_checked',
   'volunteer_ratio_edits',
+  'volunteer_enrollment_edits',
+  'volunteer_specialreq_edits',
   'all_schools_checked',
   'volunteer_settings'
 ];
