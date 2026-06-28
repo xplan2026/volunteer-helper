@@ -87,8 +87,11 @@ function getDefaultSettings() {
 function applySettingsUI(s) {
   document.getElementById('settingExcluded').value = s.excluded || getDefaultSettings().excluded;
   document.getElementById('settingRatio').value = s.ratio || getDefaultSettings().ratio;
-  document.getElementById('settingScoreMin').value = s.scoreMin || getDefaultSettings().scoreMin;
-  document.getElementById('settingScoreMax').value = s.scoreMax || getDefaultSettings().scoreMax;
+  // 兼容新旧字段名
+  var scoreMinEl = document.getElementById('settingScoreMin') || document.getElementById('settingErbenMin');
+  var scoreMaxEl = document.getElementById('settingScoreMax') || document.getElementById('settingErbenMax');
+  if (scoreMinEl) scoreMinEl.value = s.scoreMin || getDefaultSettings().scoreMin;
+  if (scoreMaxEl) scoreMaxEl.value = s.scoreMax || getDefaultSettings().scoreMax;
   document.getElementById('settingMajors').value = s.majors || getDefaultSettings().majors;
 }
 
@@ -96,8 +99,8 @@ async function saveSettings() {
   var data = {
     excluded: document.getElementById('settingExcluded').value,
     ratio: parseFloat(document.getElementById('settingRatio').value),
-    scoreMin: parseInt(document.getElementById('settingScoreMin').value),
-    scoreMax: parseInt(document.getElementById('settingScoreMax').value),
+    scoreMin: parseInt((document.getElementById('settingScoreMin') || document.getElementById('settingErbenMin')).value),
+    scoreMax: parseInt((document.getElementById('settingScoreMax') || document.getElementById('settingErbenMax')).value),
     majors: document.getElementById('settingMajors').value
   };
 
@@ -115,8 +118,10 @@ function resetSettings() {
   var d = getDefaultSettings();
   document.getElementById('settingExcluded').value = d.excluded;
   document.getElementById('settingRatio').value = d.ratio;
-  document.getElementById('settingScoreMin').value = d.scoreMin;
-  document.getElementById('settingScoreMax').value = d.scoreMax;
+  var scoreMinEl = document.getElementById('settingScoreMin') || document.getElementById('settingErbenMin');
+  var scoreMaxEl = document.getElementById('settingScoreMax') || document.getElementById('settingErbenMax');
+  if (scoreMinEl) scoreMinEl.value = d.scoreMin;
+  if (scoreMaxEl) scoreMaxEl.value = d.scoreMax;
   document.getElementById('settingMajors').value = d.majors;
   saveSettings();
 }
