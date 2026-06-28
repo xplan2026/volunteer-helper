@@ -24,8 +24,20 @@ jobs:
 
       - name: Inject Supabase env vars
         run: |
-          sed -i "s|<SUPABASE_URL>|${{ secrets.SUPABASE_URL }}|g" index.html
-          sed -i "s|<SUPABASE_ANON_KEY>|${{ secrets.SUPABASE_ANON_KEY }}|g" index.html
+          SUPABASE_URL="${{ secrets.SUPABASE_URL }}"
+          SUPABASE_ANON_KEY="${{ secrets.SUPABASE_ANON_KEY }}"
+          if [ -z "$SUPABASE_URL" ] || [ "$SUPABASE_URL" = "" ]; then
+            echo "❌ SUPABASE_URL secret 为空或未配置！请检查 GitHub Secrets。"
+            exit 1
+          fi
+          echo "SUPABASE_URL length: ${#SUPABASE_URL}"
+          sed -i "s@<SUPABASE_URL>@${SUPABASE_URL}@g" index.html
+          sed -i "s@<SUPABASE_ANON_KEY>@${SUPABASE_ANON_KEY}@g" index.html
+          # 验证替换结果
+          if grep -q '<SUPABASE_URL>' index.html; then
+            echo "❌ SUPABASE_URL 替换失败！"
+            exit 1
+          fi
           echo "✅ Supabase 环境变量已注入"
 
       - name: Setup Pages
