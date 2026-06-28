@@ -215,6 +215,7 @@ async function loadAllSelectableRatios() {
     } catch(e) { console.warn('Supabase 加载 ratio 失败，回退本地:', e); }
   }
 
+  console.log('[initAllSchoolsPage] 回退到 fetch 本地 JSON...');
   // 回退：fetch 本地 JSON
   try {
     var r = await fetch('data_bak/all_selectable_schools.json');
@@ -245,6 +246,7 @@ let allSchoolsLoaded = false;
 let allSchoolsTotalCount = 0; // Supabase 模式下的总数
 
 async function initAllSchoolsPage() {
+  console.log('[initAllSchoolsPage] SupabaseAPI:', SupabaseAPI ? 'exists' : 'undefined', SupabaseAPI ? 'isAvailable:' + SupabaseAPI.isAvailable() : '');
   if (allSchoolsLoaded) {
     allSchoolsApplyFilters();
     return;
@@ -252,8 +254,10 @@ async function initAllSchoolsPage() {
 
   // 尝试 Supabase 加载专业列表 + 勾选状态
   if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
+    console.log('[initAllSchoolsPage] 尝试 Supabase 模式...');
     try {
       // 并行加载
+      console.time('[initAllSchoolsPage] Supabase 请求');
       var [specialties, checked] = await Promise.all([
         SupabaseAPI.getSpecialties(),
         SupabaseAPI.getCheckedState('all_schools_checked')
@@ -271,15 +275,18 @@ async function initAllSchoolsPage() {
         allSchoolsChecked = checked;
       }
 
+      console.log('[initAllSchoolsPage] Supabase 成功，specialties:', specialties ? specialties.length : 'null', 'checked keys:', checked ? Object.keys(checked).length : 'null');
       // Supabase 模式下，数据按需分页加载
       allSchoolsLoaded = true;
       allSchoolsApplyFilters(); // 内部会调用 Supabase 分页查询
       return;
+      console.timeEnd('[initAllSchoolsPage] Supabase 请求');
     } catch(e) {
       console.warn('Supabase 加载失败，回退到本地 JSON:', e);
     }
   }
 
+  console.log('[initAllSchoolsPage] 回退到 fetch 本地 JSON...');
   // 回退：fetch 本地 JSON
   fetch('data_bak/available_selectable_schools.json')
     .then(function(r) { return r.json(); })
@@ -335,7 +342,9 @@ async function allSchoolsApplyFilters() {
     if (major !== 'all') filters.specialty = major;
     if (school) filters.school = school;
 
+    console.log('[allSchoolsApplyFilters] 查询 Supabase:', JSON.stringify(filters));
     var result = await SupabaseAPI.getAvailableSchools(filters);
+    console.log('[allSchoolsApplyFilters] result:', result ? result.data.length + '条, 总数:' + result.count : 'null');
     if (result !== null) {
       allSchoolsFiltered = (result.data || []).map(function(d) {
         return {
