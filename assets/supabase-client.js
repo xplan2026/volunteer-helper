@@ -21,10 +21,21 @@ const SUPABASE_CONFIG = {
   anonKey: window.__SUPABASE_ANON_KEY__ || 'YOUR_ANON_KEY'
 };
 
+// 检测占位符是否已被替换为真实凭据
+function isPlaceholderInjected() {
+  var url = SUPABASE_CONFIG.url;
+  // 占位符未被替换（仍是 __SUPABASE_URL__）或为兜底值，说明 CI 未注入真实凭据
+  return url.indexOf('__SUPABASE_URL__') === -1 && url.indexOf('YOUR_PROJECT_ID') === -1;
+}
+
 let _sb = null;
 
 function getSupabase() {
   if (_sb) return _sb;
+  if (!isPlaceholderInjected()) {
+    console.warn('⚠️ Supabase 凭据未注入，回退到 localStorage 模式');
+    return null;
+  }
   if (!window.supabase || !window.supabase.createClient) {
     console.warn('⚠️ Supabase SDK 未加载，回退到 localStorage 模式');
     return null;
