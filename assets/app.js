@@ -475,11 +475,14 @@ document.getElementById('allFilterSchool').addEventListener('input', allSchoolsA
 
 // 分页
 document.getElementById('allPrevBtn').addEventListener('click', function() {
-  if (allSchoolsPage > 1) { allSchoolsPage--; allSchoolsRenderTable(); }
+  if (allSchoolsPage > 1) { allSchoolsPage--; allSchoolsApplyFilters(); }
 });
 document.getElementById('allNextBtn').addEventListener('click', function() {
-  var tp = Math.ceil(allSchoolsFiltered.length / allSchoolsPageSize) || 1;
-  if (allSchoolsPage < tp) { allSchoolsPage++; allSchoolsRenderTable(); }
+  var useSupabase = SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable();
+  var totalPages = useSupabase
+    ? Math.ceil(allSchoolsTotalCount / allSchoolsPageSize) || 1
+    : Math.ceil(allSchoolsFiltered.length / allSchoolsPageSize) || 1;
+  if (allSchoolsPage < totalPages) { allSchoolsPage++; allSchoolsApplyFilters(); }
 });
 
 // 保存到可选列表
