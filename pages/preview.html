@@ -34,6 +34,26 @@ tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .col-dropdown label:hover { background: #f5f5f5; }
 .col-dropdown input[type=checkbox] { accent-color: #1677ff; }
 .page-info { font-size: 12px; color: #999; }
+/* 搜索弹窗 */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 300; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal-box { background: #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.18); width: 95vw; max-width: 1400px; max-height: 90vh; display: flex; flex-direction: column; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #f0f0f0; }
+.modal-header h2 { font-size: 17px; }
+.modal-header .result-count { font-size: 13px; color: #666; }
+.modal-header .result-count span { font-weight: 600; color: #1677ff; }
+.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: #999; padding: 4px 8px; border-radius: 4px; }
+.modal-close:hover { color: #333; background: #f0f0f0; }
+.modal-body { overflow: auto; padding: 12px 24px 24px; flex: 1; }
+.modal-body table { width: 100%; font-size: 13px; }
+.modal-body thead th { background: #fafafa; position: sticky; top: 0; z-index: 10; }
+.modal-body tbody td { max-width: 260px; }
+.modal-body tbody td a { color: #1677ff; text-decoration: none; }
+.modal-body tbody td a:hover { text-decoration: underline; }
+.search-btn { padding: 6px 16px; border: 1px solid #1677ff; border-radius: 6px; background: #1677ff; color: #fff; font-size: 13px; cursor: pointer; transition: all .2s; }
+.search-btn:hover { background: #4096ff; border-color: #4096ff; }
+.search-row { display: flex; gap: 6px; align-items: center; }
+.search-row input { flex: 1; }
 </style>
 </head>
 <body>
@@ -45,7 +65,10 @@ tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
       <button onclick="toggleColDropdown()">列显示 ▾</button>
       <div class="col-dropdown" id="colDropdown"></div>
     </div>
-    <input id="searchInput" placeholder="搜索院校/专业..." oninput="renderTable()">
+    <div class="search-row">
+      <input id="searchInput" placeholder="搜索院校/专业..." onkeydown="if(event.key==='Enter') openSearchModal()">
+      <button class="search-btn" onclick="openSearchModal()">🔍 搜索</button>
+    </div>
     <select id="pageSize" onchange="renderTable()">
       <option value="50">50条/页</option>
       <option value="100" selected>100条/页</option>
@@ -65,6 +88,41 @@ tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
   </table>
 </div>
 
+<!-- 搜索结果弹窗 -->
+<div class="modal-overlay" id="searchModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>🔍 搜索结果</h2>
+      <div class="result-count">找到 <span id="resultCount">0</span> 条匹配记录</div>
+      <button class="modal-close" onclick="closeSearchModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <table>
+        <thead>
+          <tr>
+            <th>院校名称</th>
+            <th>院校代码</th>
+            <th>专业名称</th>
+            <th>专业代码</th>
+            <th>专业全称</th>
+            <th>专业备注</th>
+            <th>最低分</th>
+            <th>录取规则</th>
+            <th>计划人数</th>
+            <th>学费</th>
+            <th>招生章程</th>
+            <th>隶属单位</th>
+            <th>类型</th>
+            <th>所在省+城市</th>
+            <th>更名合并转设</th>
+          </tr>
+        </thead>
+        <tbody id="searchResultBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <script>
 let allData = [];
 let filteredData = [];
@@ -77,7 +135,7 @@ let allCols = [];
 const NUM_COLS = new Set(["年份","院校代码","专业代码","计划人数","学制","学费","录取人数1","最低分1","最低位次1","平均分1","平均位次1","最高分1","最高位次1","计划人数结果1","录取人数2","最低分2","最低位次2","平均分2","平均位次2","最高分2","最高位次2","计划人数结果2","录取人数3","最低分3","最低位次3","平均分3","平均位次3","最高分3","最高位次3","计划人数结果3","院校排名","软科排名"]);
 
 async function init() {
-  const resp = await fetch("../data_bak/物理类·2026在渝招生计划.json");
+  const resp = await fetch("../data_bak/物理类-2026在渝招生计划.json");
   allData = await resp.json();
   allCols = Object.keys(allData[0]);
   visibleCols = new Set(allCols);
@@ -162,6 +220,67 @@ function nextPage() {
   const maxPage = ps === 0 ? 1 : Math.ceil(filteredData.length / ps);
   if (currentPage < maxPage - 1) { currentPage++; renderTable(); }
 }
+
+// ========== 搜索弹窗 ==========
+const SEARCH_RESULT_COLS = [
+  "院校名称","院校代码","专业名称","专业代码",
+  "专业全称","专业备注","最低分1","录取规则",
+  "计划人数","学费","招生章程","隶属单位",
+  "类型","所在省+城市","更名合并转设"
+];
+
+function openSearchModal() {
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  if (!q) { alert("请输入搜索关键词"); return; }
+
+  const results = allData.filter(r =>
+    Object.values(r).some(v => String(v).toLowerCase().includes(q))
+  );
+
+  document.getElementById("resultCount").textContent = results.length;
+
+  const tbody = document.getElementById("searchResultBody");
+  if (results.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="${SEARCH_RESULT_COLS.length}" style="text-align:center;color:#999;padding:40px;">无匹配结果</td></tr>`;
+  } else {
+    tbody.innerHTML = results.map(r =>
+      "<tr>" + SEARCH_RESULT_COLS.map(col => {
+        let v = r[col];
+        if (col === "所在省+城市") {
+          v = [r["所在省"], r["城市"]].filter(Boolean).join(" ");
+        }
+        if (col === "招生章程" && v) {
+          v = `<a href="${v}" target="_blank" title="${v}">查看章程</a>`;
+        }
+        if (col === "最低分1") {
+          // 取三年最低分，显示格式：2025:xxx / 2024:xxx / 2023:xxx
+          const scores = [];
+          if (r["最低分1"] != null) scores.push("25:" + r["最低分1"]);
+          if (r["最低分2"] != null) scores.push("24:" + r["最低分2"]);
+          if (r["最低分3"] != null) scores.push("23:" + r["最低分3"]);
+          v = scores.length > 0 ? scores.join(" / ") : "";
+        }
+        return `<td>${v !== undefined && v !== null ? v : ""}</td>`;
+      }).join("") + "</tr>"
+    ).join("");
+  }
+
+  document.getElementById("searchModal").classList.add("show");
+}
+
+function closeSearchModal() {
+  document.getElementById("searchModal").classList.remove("show");
+}
+
+// 点击遮罩关闭
+document.addEventListener("click", e => {
+  if (e.target === document.getElementById("searchModal")) closeSearchModal();
+});
+
+// ESC 关闭
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeSearchModal();
+});
 
 init();
 </script>
