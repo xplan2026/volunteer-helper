@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>物理类·2026在渝招生计划 预览</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #f0f2f5; color: #333; }
+.header { background: #fff; padding: 16px 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 100; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.header h1 { font-size: 18px; white-space: nowrap; }
+.stats { font-size: 13px; color: #666; }
+.stats span { font-weight: 600; color: #1677ff; }
+.toolbar { display: flex; gap: 8px; align-items: center; flex: 1; justify-content: flex-end; flex-wrap: wrap; }
+.toolbar input { padding: 6px 10px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; width: 200px; outline: none; }
+.toolbar input:focus { border-color: #1677ff; box-shadow: 0 0 0 2px rgba(22,119,255,0.1); }
+.toolbar select { padding: 6px 8px; border: 1px solid #d9d9d9; border-radius: 6px; font-size: 13px; outline: none; background: #fff; }
+.toolbar button { padding: 6px 12px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; font-size: 13px; cursor: pointer; transition: all .2s; }
+.toolbar button:hover { border-color: #1677ff; color: #1677ff; }
+.table-wrap { margin: 16px; overflow: auto; background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); max-height: calc(100vh - 100px); }
+table { border-collapse: collapse; width: max-content; min-width: 100%; font-size: 13px; }
+thead { position: sticky; top: 0; z-index: 10; }
+thead th { background: #fafafa; font-weight: 600; white-space: nowrap; padding: 10px 8px; border-bottom: 2px solid #e8e8e8; text-align: left; cursor: pointer; user-select: none; }
+thead th:hover { background: #f0f0f0; }
+thead th .sort-icon { margin-left: 4px; font-size: 11px; opacity: 0.4; }
+thead th.sorted .sort-icon { opacity: 1; color: #1677ff; }
+tbody td { padding: 7px 8px; border-bottom: 1px solid #f0f0f0; white-space: nowrap; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+tbody tr:hover { background: #e6f4ff; }
+tbody td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.col-select { position: relative; display: inline-block; }
+.col-dropdown { display: none; position: absolute; top: 100%; right: 0; background: #fff; border: 1px solid #e8e8e8; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); max-height: 400px; overflow-y: auto; min-width: 220px; z-index: 200; padding: 8px 0; }
+.col-dropdown.show { display: block; }
+.col-dropdown label { display: flex; align-items: center; gap: 6px; padding: 5px 12px; font-size: 13px; cursor: pointer; }
+.col-dropdown label:hover { background: #f5f5f5; }
+.col-dropdown input[type=checkbox] { accent-color: #1677ff; }
+.page-info { font-size: 12px; color: #999; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>物理类·2026在渝招生计划</h1>
+  <div class="stats">共 <span id="total">0</span> 条，当前显示 <span id="shown">0</span> 条</div>
+  <div class="toolbar">
+    <div class="col-select">
+      <button onclick="toggleColDropdown()">列显示 ▾</button>
+      <div class="col-dropdown" id="colDropdown"></div>
+    </div>
+    <input id="searchInput" placeholder="搜索院校/专业..." oninput="renderTable()">
+    <select id="pageSize" onchange="renderTable()">
+      <option value="50">50条/页</option>
+      <option value="100" selected>100条/页</option>
+      <option value="200">200条/页</option>
+      <option value="500">500条/页</option>
+      <option value="0">全部</option>
+    </select>
+    <button onclick="prevPage()">◀</button>
+    <span class="page-info" id="pageInfo">第 1 页</span>
+    <button onclick="nextPage()">▶</button>
+  </div>
+</div>
+<div class="table-wrap">
+  <table id="table">
+    <thead id="thead"></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<script>
+let allData = [];
+let filteredData = [];
+let currentPage = 0;
+let sortKey = null;
+let sortAsc = true;
+let visibleCols = new Set();
+let allCols = [];
+
+const NUM_COLS = new Set(["年份","院校代码","专业代码","计划人数","学制","学费","录取人数1","最低分1","最低位次1","平均分1","平均位次1","最高分1","最高位次1","计划人数结果1","录取人数2","最低分2","最低位次2","平均分2","平均位次2","最高分2","最高位次2","计划人数结果2","录取人数3","最低分3","最低位次3","平均分3","平均位次3","最高分3","最高位次3","计划人数结果3","院校排名","软科排名"]);
+
+async function init() {
+  const resp = await fetch("../data_bak/物理类·2026在渝招生计划.json");
+  allData = await resp.json();
+  allCols = Object.keys(allData[0]);
+  visibleCols = new Set(allCols);
+  document.getElementById("total").textContent = allData.length;
+  buildColDropdown();
+  applyFilter();
+}
+
+function buildColDropdown() {
+  const dd = document.getElementById("colDropdown");
+  dd.innerHTML = allCols.map(c => `
+    <label><input type="checkbox" checked onchange="toggleCol('${c}', this.checked)"> ${c}</label>
+  `).join("");
+}
+
+function toggleCol(col, show) {
+  if (show) visibleCols.add(col); else visibleCols.delete(col);
+  renderTable();
+}
+
+function toggleColDropdown() {
+  document.getElementById("colDropdown").classList.toggle("show");
+}
+document.addEventListener("click", e => {
+  if (!e.target.closest(".col-select")) document.getElementById("colDropdown").classList.remove("show");
+});
+
+function applyFilter() {
+  const q = document.getElementById("searchInput").value.toLowerCase();
+  filteredData = allData.filter(r => {
+    if (!q) return true;
+    return Object.values(r).some(v => String(v).toLowerCase().includes(q));
+  });
+  if (sortKey) {
+    filteredData.sort((a,b) => {
+      let va = a[sortKey], vb = b[sortKey];
+      if (NUM_COLS.has(sortKey)) { va = Number(va)||0; vb = Number(vb)||0; }
+      else { va = String(va); vb = String(vb); }
+      return (va < vb ? -1 : va > vb ? 1 : 0) * (sortAsc ? 1 : -1);
+    });
+  }
+  currentPage = 0;
+  document.getElementById("shown").textContent = filteredData.length;
+  renderTable();
+}
+
+function renderTable() {
+  const ps = parseInt(document.getElementById("pageSize").value);
+  const slice = ps === 0 ? filteredData : filteredData.slice(currentPage * ps, (currentPage + 1) * ps);
+  const maxPage = ps === 0 ? 1 : Math.ceil(filteredData.length / ps);
+  if (currentPage >= maxPage) currentPage = Math.max(0, maxPage - 1);
+
+  // thead
+  const cols = allCols.filter(c => visibleCols.has(c));
+  document.getElementById("thead").innerHTML = "<tr>" + cols.map(c => {
+    const cls = sortKey === c ? " sorted" : "";
+    const icon = sortKey === c ? (sortAsc ? "▲" : "▼") : "⇅";
+    return `<th class="${cls}" onclick="sortBy('${c}')">${c}<span class="sort-icon">${icon}</span></th>`;
+  }).join("") + "</tr>";
+
+  // tbody
+  document.getElementById("tbody").innerHTML = slice.map(r =>
+    "<tr>" + cols.map(c => {
+      const v = r[c];
+      const cls = NUM_COLS.has(c) ? " class='num'" : "";
+      return `<td${cls}>${v !== undefined && v !== null ? v : ""}</td>`;
+    }).join("") + "</tr>"
+  ).join("");
+
+  document.getElementById("pageInfo").textContent = `第 ${currentPage + 1}/${maxPage || 1} 页`;
+}
+
+function sortBy(key) {
+  if (sortKey === key) sortAsc = !sortAsc;
+  else { sortKey = key; sortAsc = true; }
+  applyFilter();
+}
+
+function prevPage() { if (currentPage > 0) { currentPage--; renderTable(); } }
+function nextPage() {
+  const ps = parseInt(document.getElementById("pageSize").value);
+  const maxPage = ps === 0 ? 1 : Math.ceil(filteredData.length / ps);
+  if (currentPage < maxPage - 1) { currentPage++; renderTable(); }
+}
+
+init();
+</script>
+</body>
+</html>
