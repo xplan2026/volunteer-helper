@@ -38,13 +38,12 @@
 
 | 文件 | 说明 |
 |------|------|
-| `data/resource.json` | 2025 年重庆市本科批物理类投档线原始数据（约 1.1 万条） |
 | `data/all_selectable_schools.json` | 经地区剔除后的全部可选学校（2849 条） |
-| `data/selectable_schools.json` | 进一步按专业筛选后的精选学校 |
+| `data/available_selectable_schools.json` | 备选学校 = all 排除 selected 的差集（2775 条） |
+| `data/selectable_schools.json` | 已选学校（主页加载） |
 | `data/selectable_schools.js` | 同上，JS 格式供页面直接加载 |
 | `data/main/` | 用户保存的筛选方案（git 忽略） |
-| `data/generate_schools.py` | 数据筛选/匹配脚本 |
-| `data/new/` | 数据处理中间步骤文件（不纳入目录展示） |
+| `data/DATA_RESOURCE_BAK.tar.gz` | 原始数据与中间步骤备份 |
 
 ## 使用流程
 
@@ -56,11 +55,35 @@
 
 ## 部署
 
-### Cloudflare Pages + GitHub Pages
+### Cloudflare Pages + GitHub Pages（静态模式）
 
 1. 推送此仓库到 `github.com/xplan2026/volunteer-helper`
 2. Cloudflare Pages 连接 GitHub 仓库
 3. 设置自定义域名（可选）
+
+### Supabase 云同步（可选增强）
+
+启用后数据将自动同步到云端，多设备共享，无需手动导出/导入：
+
+1. 在 [supabase.com](https://supabase.com) 创建免费项目，获取 `Project URL` 和 `anon public key`
+2. 在 Supabase SQL Editor 中执行 `supabase/schema.sql` 建表
+3. 在项目根目录 `.env` 文件中配置：
+   ```env
+   SUPABASE_URL=https://xxx.supabase.co
+   SUPABASE_ANON_KEY=eyJhbGciOi...
+   SUPABASE_SERVICE_KEY=your_service_role_key
+   ```
+4. 运行数据导入脚本：
+   ```bash
+   npm install @supabase/supabase-js
+   node supabase/import_data.js
+   ```
+5. **环境变量注入**：前端 JS 无法直接读取 `.env`，需在构建/部署时注入：
+   - **GitHub Actions**：在 workflow 中将 `SUPABASE_URL` 和 `SUPABASE_ANON_KEY` 替换 `index.html` 中的 `<SUPABASE_URL>` / `<SUPABASE_ANON_KEY>` 占位符
+   - **本地测试**：手动将 `index.html` 中的占位符替换为实际值，或将 `supabase-client.js` 中的兜底值替换为实际值
+6. 部署后页面自动检测 Supabase，优先使用云端存储，不可用时回退 localStorage
+
+> 详细方案见 [docs/supabase改造方案.md](docs/supabase改造方案.md)
 
 ### 访问控制
 

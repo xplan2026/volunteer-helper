@@ -144,11 +144,10 @@
                   </div>
                   <div class="dir-item dir-dir">📁 data/</div>
                   <div class="dir-children">
-                    <div class="dir-item dir-file">selectable_schools.js <span class="dir-desc">筛选后的可选学校（主页加载）</span></div>
-                    <div class="dir-item dir-file">selectable_schools.json <span class="dir-desc">同上（JSON格式）</span></div>
+                    <div class="dir-item dir-file">available_selectable_schools.json <span class="dir-desc">备选学校（已排除已选，2775条）</span></div>
+                    <div class="dir-item dir-file">selectable_schools.json <span class="dir-desc">已选学校（主页加载）</span></div>
+                    <div class="dir-item dir-file">selectable_schools.js <span class="dir-desc">同上（JS格式）</span></div>
                     <div class="dir-item dir-file">all_selectable_schools.json <span class="dir-desc">全部可选学校源数据（2849条）</span></div>
-                    <div class="dir-item dir-file">resource.json <span class="dir-desc">2025年原始投档线数据</span></div>
-                    <div class="dir-item dir-file">generate_schools.py <span class="dir-desc">数据筛选/匹配脚本</span></div>
                     <div class="dir-item dir-dir">main/</div>
                     <div class="dir-children">
                       <div class="dir-item dir-file">.gitkeep <span class="dir-desc">保存的筛选方案</span></div>
@@ -170,7 +169,7 @@
         <section id="page-allschools" class="page">
           <h2>📋 所有可选学校</h2>
           <div class="tip-box">
-            从全部 2849 条源数据中勾选学校，点击 <strong>💾 保存到可选列表</strong> 将其同步到 selectable_schools.json。
+            从备选学校中勾选学校，点击 <strong>💾 保存到可选列表</strong> 将其追加到 selectable_schools.json。
           </div>
           <div class="filter-bar">
             <div class="filter-group">
@@ -241,15 +240,18 @@
                 <tr>
                   <th style="width:40px;">#</th>
                   <th>院校</th>
+                  <th>学校代码</th>
                   <th>专业</th>
+                  <th>专业代码</th>
                   <th>最低分</th>
+                  <th>投档率</th>
                   <th>类别</th>
                   <th style="width:50px;">勾选</th>
                   <th style="width:60px;">排序</th>
                 </tr>
               </thead>
               <tbody id="planTableBody">
-                <tr><td colspan="7" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>
+                <tr><td colspan="10" style="text-align:center;color:#999;padding:40px;">暂无数据</td></tr>
               </tbody>
             </table>
           </div>
@@ -259,25 +261,38 @@
         <section id="page-plan" class="page">
           <h2>📋 志愿方案</h2>
           <p class="page-desc">基于筛选方案中勾选的学校，按冲/稳/保分类展示志愿方案</p>
-          <div class="btn-group" style="margin-bottom:20px;">
-            <button class="btn" onclick="loadPlanSummary()">🔄 加载方案</button>
+          <div class="btn-group" style="margin-bottom:20px;flex-wrap:wrap;">
+            <button class="btn" onclick="loadPlanSummary()">🔄 刷新列表</button>
             <button class="btn btn-outline" onclick="exportFinalPlan()">📥 导出最终方案</button>
-          </div>
-          <div id="planSummary">
-            <p style="color:#999;font-size:14px;">点击「加载方案」从已保存的数据生成志愿方案</p>
+            <button class="btn btn-outline" onclick="exportAllData()">📤 导出全部数据</button>
+            <button class="btn btn-outline" onclick="document.getElementById('importFileInput').click()">📥 导入数据</button>
+            <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importAllData(this)">
           </div>
 
-          <div class="plan-section" id="plan-rush">
-            <h3>🚀 冲刺志愿</h3>
-            <div class="plan-list" id="planRushList"><p class="plan-empty">暂无</p></div>
+          <!-- 方案列表 -->
+          <div class="plan-section" id="plan-list-section">
+            <h3>📁 已保存方案</h3>
+            <div id="planListContainer">
+              <p class="plan-empty">点击「🔄 刷新列表」加载已保存的方案</p>
+            </div>
           </div>
-          <div class="plan-section" id="plan-steady">
-            <h3>⚖️ 稳妥志愿</h3>
-            <div class="plan-list" id="planSteadyList"><p class="plan-empty">暂无</p></div>
-          </div>
-          <div class="plan-section" id="plan-safe">
-            <h3>🛡️ 保底志愿</h3>
-            <div class="plan-list" id="planSafeList"><p class="plan-empty">暂无</p></div>
+
+          <!-- 当前选中方案的明细 -->
+          <div id="planDetailContainer" style="display:none;">
+            <div id="planDetailSummary" class="settings-card" style="margin-bottom:16px;"></div>
+
+            <div class="plan-section" id="plan-rush">
+              <h3>🚀 冲刺志愿</h3>
+              <div class="plan-list" id="planRushList"><p class="plan-empty">暂无</p></div>
+            </div>
+            <div class="plan-section" id="plan-steady">
+              <h3>⚖️ 稳妥志愿</h3>
+              <div class="plan-list" id="planSteadyList"><p class="plan-empty">暂无</p></div>
+            </div>
+            <div class="plan-section" id="plan-safe">
+              <h3>🛡️ 保底志愿</h3>
+              <div class="plan-list" id="planSafeList"><p class="plan-empty">暂无</p></div>
+            </div>
           </div>
 
           <div class="plan-tips">
@@ -293,6 +308,14 @@
     </div>
   </div>
 
+  <!-- Supabase 环境变量注入：构建时由 CI 替换占位符 -->
+  <!-- 若未注入，supabase-client.js 会使用兜底值 -->
+  <script>
+    window.__SUPABASE_URL__ = '<SUPABASE_URL>';
+    window.__SUPABASE_ANON_KEY__ = '<SUPABASE_ANON_KEY>';
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/supabase-client.js"></script>
   <script src="data/selectable_schools.js"></script>
   <script src="assets/config.js"></script>
   <script src="assets/app.js"></script>
