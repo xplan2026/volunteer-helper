@@ -34,10 +34,10 @@ jobs:
             exit 1
           fi
           echo "SUPABASE_URL length: ${#SUPABASE_URL}"
-          sed -i "s@<SUPABASE_URL>@${SUPABASE_URL}@g" index.html
-          sed -i "s@<SUPABASE_ANON_KEY>@${SUPABASE_ANON_KEY}@g" index.html
+          sed -i "s@'__SUPABASE_URL__'@'${SUPABASE_URL}'@g" index.html
+          sed -i "s@'__SUPABASE_ANON_KEY__'@'${SUPABASE_ANON_KEY}'@g" index.html
           # 验证替换结果
-          if grep -q '<SUPABASE_URL>' index.html; then
+          if grep -q '__SUPABASE_URL__' index.html; then
             echo "❌ SUPABASE_URL 替换失败！"
             exit 1
           fi
