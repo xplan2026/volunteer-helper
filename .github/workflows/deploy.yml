@@ -41,9 +41,13 @@ jobs:
             echo "SUPABASE_URL length: ${#SUPABASE_URL}"
             sed -i "s@'__SUPABASE_URL__'@'${SUPABASE_URL}'@g" index.html
             sed -i "s@'__SUPABASE_ANON_KEY__'@'${SUPABASE_ANON_KEY}'@g" index.html
-            # 验证替换结果
-            if grep -q '__SUPABASE_URL__' index.html; then
+            # 验证替换结果（精确匹配，避免 __SUPABASE_ANON_KEY__ 干扰）
+            if grep -q "'__SUPABASE_URL__'" index.html; then
               echo "❌ SUPABASE_URL 替换失败！"
+              exit 1
+            fi
+            if grep -q "'__SUPABASE_ANON_KEY__'" index.html; then
+              echo "❌ SUPABASE_ANON_KEY 替换失败！"
               exit 1
             fi
             echo "✅ Supabase 环境变量已注入"
