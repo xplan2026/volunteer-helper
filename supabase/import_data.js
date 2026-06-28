@@ -60,12 +60,12 @@ async function testConnection() {
 
 // 导入备选学校数据
 async function importAvailableSchools() {
-  const filePath = path.join(__dirname, '..', 'data', 'all_selectable_schools.json');
+  const filePath = path.join(__dirname, '..', 'data_bak', 'all_selectable_schools.json');
   const data = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
   console.log(`📦 读取到 ${data.length} 条备选学校数据`);
 
   // 排除已在 selectable_schools.json 中的数据
-  const selectedPath = path.join(__dirname, '..', 'data', 'selectable_schools.json');
+  const selectedPath = path.join(__dirname, '..', 'data_bak', 'selectable_schools.json');
   let selectedKeys = new Set();
   if (fs.existsSync(selectedPath)) {
     const selected = JSON.parse(fs.readFileSync(selectedPath, 'utf-8'));
@@ -105,7 +105,7 @@ async function importAvailableSchools() {
 
 // 导入已选学校数据
 async function importSelectableSchools() {
-  const filePath = path.join(__dirname, '..', 'data', 'selectable_schools.json');
+  const filePath = path.join(__dirname, '..', 'data_bak', 'selectable_schools.json');
   if (!fs.existsSync(filePath)) {
     console.log('⚠️ selectable_schools.json 不存在，跳过');
     return;

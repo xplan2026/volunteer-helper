@@ -38,12 +38,11 @@
 
 | 文件 | 说明 |
 |------|------|
-| `data/all_selectable_schools.json` | 经地区剔除后的全部可选学校（2849 条） |
-| `data/available_selectable_schools.json` | 备选学校 = all 排除 selected 的差集（2775 条） |
-| `data/selectable_schools.json` | 已选学校（主页加载） |
-| `data/selectable_schools.js` | 同上，JS 格式供页面直接加载 |
-| `data/main/` | 用户保存的筛选方案（git 忽略） |
-| `data/DATA_RESOURCE_BAK.tar.gz` | 原始数据与中间步骤备份 |
+| `data_bak/all_selectable_schools.json` | 经地区剔除后的全部可选学校（2849 条，已迁移到 Supabase） |
+| `data_bak/available_selectable_schools.json` | 备选学校 = all 排除 selected 的差集（2775 条，已迁移到 Supabase） |
+| `data_bak/selectable_schools.json` | 已选学校（已迁移到 Supabase） |
+| `data_bak/selectable_schools.js` | 同上，JS 格式（已迁移到 Supabase） |
+| `data_bak/DATA_RESOURCE_BAK.tar.gz` | 原始数据与中间步骤备份 |
 
 ## 使用流程
 

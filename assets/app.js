@@ -13,7 +13,7 @@ const AUTH_TOKEN = AUTH_PASSWORD;
 function checkPassword() {
   const pw = document.getElementById('passwordInput').value;
   if (pw === AUTH_PASSWORD) {
-    document.cookie = 'auth_token=' + encodeURIComponent(AUTH_TOKEN) + '; path=/; max-age=' + (7*24*60*60);
+    document.cookie = 'auth_token=' + AUTH_TOKEN + '; path=/; max-age=' + (7*24*60*60);
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     initApp();
@@ -25,8 +25,8 @@ document.getElementById('passwordInput')?.addEventListener('keydown', e => { if 
 
 // ======== 全局常量 ========
 const MAJORS = ['生物工程','制药工程','通信工程','材料科学与工程'];
-const DATA_SOURCE = SELECTABLE_SCHOOLS;
-const SAVED_DIR_PREFIX = 'data/main/';
+// SELECTABLE_SCHOOLS 来自 data_bak/selectable_schools.js（仅本地回退时使用）
+const DATA_SOURCE = typeof SELECTABLE_SCHOOLS !== 'undefined' ? SELECTABLE_SCHOOLS : { schools: [] };
 
 // ======== 应用初始化 ========
 function initApp() {
@@ -198,23 +198,35 @@ async function saveRatioEdit(key, value) {
   localStorage.setItem('volunteer_ratio_edits', JSON.stringify(_ratioEditsCache));
 }
 
-// 通过学校代码和专业代码从 all_selectable_schools.json 匹配 ratio
+// 通过学校代码和专业代码匹配 ratio（优先 Supabase，回退 fetch）
 let allSelectableRatios = null;  // { 'school_code|specialty_code': ratio }
 
-function loadAllSelectableRatios() {
-  if (allSelectableRatios) return Promise.resolve(allSelectableRatios);
-  return fetch('data/all_selectable_schools.json')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      allSelectableRatios = {};
-      for (var i = 0; i < data.length; i++) {
-        var d = data[i];
-        var key = d.school_code + '|' + d.specialty_code;
-        allSelectableRatios[key] = d.ratio;
+async function loadAllSelectableRatios() {
+  if (allSelectableRatios) return allSelectableRatios;
+
+  // 尝试 Supabase
+  if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
+    try {
+      var remote = await SupabaseAPI.getAllRatios();
+      if (remote !== null && Object.keys(remote).length > 0) {
+        allSelectableRatios = remote;
+        return allSelectableRatios;
       }
-      return allSelectableRatios;
-    })
-    .catch(function() { return {}; });
+    } catch(e) { console.warn('Supabase 加载 ratio 失败，回退本地:', e); }
+  }
+
+  // 回退：fetch 本地 JSON
+  try {
+    var r = await fetch('data_bak/all_selectable_schools.json');
+    var data = await r.json();
+    allSelectableRatios = {};
+    for (var i = 0; i < data.length; i++) {
+      var d = data[i];
+      var key = d.school_code + '|' + d.specialty_code;
+      allSelectableRatios[key] = d.ratio;
+    }
+    return allSelectableRatios;
+  } catch(e) { return {}; }
 }
 
 function findRatioFromSelectable(schoolCode, specialtyCode) {
@@ -269,7 +281,7 @@ async function initAllSchoolsPage() {
   }
 
   // 回退：fetch 本地 JSON
-  fetch('data/available_selectable_schools.json')
+  fetch('data_bak/available_selectable_schools.json')
     .then(function(r) { return r.json(); })
     .then(function(data) {
       allSchoolsData = data.map(function(d) {
@@ -458,36 +470,57 @@ document.getElementById('allNextBtn').addEventListener('click', function() {
 
 // 保存到可选列表
 document.getElementById('allSaveBtn').addEventListener('click', async function() {
-  var selected = [];      // 被选走的数据
-  var selectedKeys = [];  // 用于从 available 中删除
-  for (var i = 0; i < allSchoolsData.length; i++) {
-    if (allSchoolsChecked[allSchoolsData[i]._key]) {
-      selected.push({
-        school_code: allSchoolsData[i].school_code,
-        school_name: allSchoolsData[i].school,
-        specialty_code: allSchoolsData[i].specialty_code,
-        specialty_name: allSchoolsData[i].major,
-        min_score: allSchoolsData[i].score_min
-      });
-      selectedKeys.push({
-        school_code: allSchoolsData[i].school_code,
-        specialty_code: allSchoolsData[i].specialty_code
-      });
-    }
-  }
-  if (!selected.length) { alert('请先勾选至少一所学校'); return; }
-  selected.sort(function(a, b) { return b.min_score - a.min_score; });
+  var checkedKeys = Object.keys(allSchoolsChecked).filter(function(k) { return allSchoolsChecked[k]; });
+  if (!checkedKeys.length) { alert('请先勾选至少一所学校'); return; }
 
-  // 尝试 Supabase：直接写入数据库
+  // Supabase 模式：从数据库分页获取勾选数据的完整信息
   if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
     try {
+      // 收集所有勾选的学校数据（分页遍历 available_schools 表）
+      var selected = [];
+      var selectedKeys = [];
+      var pageSize = 100;
+      var page = 0;
+      var hasMore = true;
+
+      while (hasMore) {
+        var result = await SupabaseAPI.getAvailableSchools({ limit: pageSize, offset: page * pageSize });
+        if (!result || !result.data || result.data.length === 0) {
+          hasMore = false;
+          break;
+        }
+        for (var i = 0; i < result.data.length; i++) {
+          var d = result.data[i];
+          var key = d.school_code + '|' + d.specialty_code;
+          if (allSchoolsChecked[key]) {
+            selected.push({
+              school_code: d.school_code,
+              school_name: d.school_name,
+              specialty_code: d.specialty_code,
+              specialty_name: d.specialty_name,
+              min_score: d.min_score
+            });
+            selectedKeys.push({
+              school_code: d.school_code,
+              specialty_code: d.specialty_code
+            });
+          }
+        }
+        if (result.data.length < pageSize) hasMore = false;
+        page++;
+      }
+
+      if (!selected.length) { alert('⚠️ 未找到匹配的勾选数据，请刷新后重试'); return; }
+      selected.sort(function(a, b) { return b.min_score - a.min_score; });
+
+      // 并行执行：写入 selectable_schools + 从 available_schools 删除
       var [addOk, removeOk] = await Promise.all([
         SupabaseAPI.addSelectableSchools(selected),
         SupabaseAPI.removeFromAvailable(selectedKeys)
       ]);
 
       if (addOk && removeOk) {
-        // 清除勾选缓存
+        // 清除勾选状态
         allSchoolsChecked = {};
         localStorage.setItem('all_schools_checked', JSON.stringify(allSchoolsChecked));
         await SupabaseAPI.setCheckedState('all_schools_checked', {});
@@ -497,13 +530,35 @@ document.getElementById('allSaveBtn').addEventListener('click', async function()
         alert('✅ 已保存 ' + selected.length + ' 条到云端数据库！\n已选学校已从备选列表中移除。');
         return;
       }
-      alert('⚠️ 云端保存部分失败，同时导出本地文件作为备份');
+      alert('⚠️ 云端保存部分失败（add=' + addOk + ', remove=' + removeOk + '），同时导出本地文件作为备份');
     } catch(e) {
       console.error('Supabase 保存失败:', e);
+      alert('❌ Supabase 操作失败: ' + e.message + '\n将导出本地文件作为备份');
     }
   }
 
-  // 回退：下载文件
+  // 回退：从本地 allSchoolsData 收集数据
+  var selectedLocal = [];
+  var selectedKeysLocal = [];
+  for (var i = 0; i < allSchoolsData.length; i++) {
+    if (allSchoolsChecked[allSchoolsData[i]._key]) {
+      selectedLocal.push({
+        school_code: allSchoolsData[i].school_code,
+        school_name: allSchoolsData[i].school,
+        specialty_code: allSchoolsData[i].specialty_code,
+        specialty_name: allSchoolsData[i].major,
+        min_score: allSchoolsData[i].score_min
+      });
+      selectedKeysLocal.push({
+        school_code: allSchoolsData[i].school_code,
+        specialty_code: allSchoolsData[i].specialty_code
+      });
+    }
+  }
+  if (!selectedLocal.length) { alert('⚠️ 未找到勾选数据，请刷新后重试'); return; }
+  selectedLocal.sort(function(a, b) { return b.min_score - a.min_score; });
+
+  // 下载文件作为备份
   var remaining = [];
   for (var i = 0; i < allSchoolsData.length; i++) {
     if (!allSchoolsChecked[allSchoolsData[i]._key]) {
@@ -525,10 +580,10 @@ document.getElementById('allSaveBtn').addEventListener('click', async function()
     a.href = u; a.download = name; a.click();
     URL.revokeObjectURL(u);
   }
-  download('selectable_schools.json', JSON.stringify(selected, null, 2), 'application/json;charset=utf-8');
-  download('selectable_schools.js', 'const SELECTABLE_SCHOOLS = {"schools":' + JSON.stringify(selected) + '};', 'application/javascript;charset=utf-8');
+  download('selectable_schools.json', JSON.stringify(selectedLocal, null, 2), 'application/json;charset=utf-8');
+  download('selectable_schools.js', 'const SELECTABLE_SCHOOLS = {"schools":' + JSON.stringify(selectedLocal) + '};', 'application/javascript;charset=utf-8');
   download('available_selectable_schools.json', JSON.stringify(remaining, null, 2), 'application/json;charset=utf-8');
-  alert('已导出 ' + selected.length + ' 条到 selectable_schools。\n剩余 ' + remaining.length + ' 条备选。\n请将 3 个文件覆盖到 data/ 目录');
+  alert('已导出 ' + selectedLocal.length + ' 条到 selectable_schools。\n剩余 ' + remaining.length + ' 条备选。\n请将 3 个文件覆盖到 data_bak/ 目录');
 });
 
 // ======== 筛选方案页面 ========
@@ -549,26 +604,57 @@ function getCategoryTag(cat) {
 }
 
 async function initPlanningPage() {
-  const allData = (DATA_SOURCE.schools || []).map(mapFields);
-  // 去重
-  const seen = new Set();
-  planAllData = [];
-  allData.forEach(d => {
-    const key = d.school + '|' + d.major;
-    if (!seen.has(key)) {
-      seen.add(key);
-      d.category = getCategory(d.score_min);
-      d._key = key;
-      planAllData.push(d);
-    }
-  });
-  // 默认按 min_score 降序
-  planAllData.sort((a, b) => b.score_min - a.score_min);
+  // Supabase 模式：从 selectable_schools 表加载数据（实时反映保存操作）
+  if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
+    try {
+      var remoteData = await SupabaseAPI.getSelectableSchools();
+      if (remoteData !== null && remoteData.length > 0) {
+        const seen = new Set();
+        planAllData = [];
+        remoteData.forEach(function(d) {
+          var key = (d.school_name || '') + '|' + (d.specialty_name || '');
+          if (!seen.has(key)) {
+            seen.add(key);
+            var item = mapFields(d);
+            item.category = getCategory(item.score_min);
+            item._key = key;
+            planAllData.push(item);
+          }
+        });
+        planAllData.sort(function(a, b) { return b.score_min - a.score_min; });
+      }
+    } catch(e) { console.warn('Supabase 加载 selectable_schools 失败:', e); }
+  }
+
+  // 回退：使用本地静态数据
+  if (!planAllData || planAllData.length === 0) {
+    var allData = (DATA_SOURCE.schools || []).map(mapFields);
+    const seen = new Set();
+    planAllData = [];
+    allData.forEach(function(d) {
+      var key = d.school + '|' + d.major;
+      if (!seen.has(key)) {
+        seen.add(key);
+        d.category = getCategory(d.score_min);
+        d._key = key;
+        planAllData.push(d);
+      }
+    });
+    planAllData.sort(function(a, b) { return b.score_min - a.score_min; });
+  }
 
   // 初始化筛选
-  const majors = [...new Set(planAllData.map(d => d.major))].sort();
+  var majors = [];
+  var majorSet = {};
+  for (var i = 0; i < planAllData.length; i++) {
+    if (!majorSet[planAllData[i].major]) {
+      majorSet[planAllData[i].major] = true;
+      majors.push(planAllData[i].major);
+    }
+  }
+  majors.sort();
   document.getElementById('planFilterMajor').innerHTML =
-    '<option value="all">全部专业</option>' + majors.map(m => `<option value="${m}">${m}</option>`).join('');
+    '<option value="all">全部专业</option>' + majors.map(function(m) { return '<option value="' + m + '">' + m + '</option>'; }).join('');
 
   // 加载勾选状态：优先 Supabase
   if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
@@ -582,7 +668,7 @@ async function initPlanningPage() {
     } catch(e) { console.warn('Supabase 加载勾选状态失败:', e); }
   }
   if (Object.keys(planChecked).length === 0) {
-    const saved = localStorage.getItem('volunteer_plan_checked');
+    var saved = localStorage.getItem('volunteer_plan_checked');
     if (saved) {
       try { planChecked = JSON.parse(saved); } catch(e) { planChecked = {}; }
     }
@@ -591,18 +677,17 @@ async function initPlanningPage() {
   // 预加载投档率编辑缓存
   await loadRatioEdits();
 
-  // 从 all_selectable_schools.json 加载投档率数据
-  loadAllSelectableRatios().then(function() {
+  // 从 Supabase 加载投档率数据（回退本地 JSON）
+  try {
+    await loadAllSelectableRatios();
     planAllData.forEach(function(d) {
       var r = findRatioFromSelectable(d.school_code, d.specialty_code);
       if (r !== null) {
         d.ratio = r;
       }
     });
-    renderPlanTable();
-  }).catch(function() {
-    renderPlanTable();
-  });
+  } catch(e) { console.warn('加载 ratio 失败:', e); }
+  renderPlanTable();
 }
 
 function renderPlanTable() {
@@ -756,16 +841,9 @@ async function savePlan() {
         updated_at: planData.updatedAt
       });
       if (savedId) {
-        // 同时写 localStorage 作为本地缓存
-        var plans = loadAllPlansLocal();
-        plans.unshift(planData);
-        if (plans.length > 20) plans.length = 20;
-        localStorage.setItem('volunteer_plans', JSON.stringify(plans));
-        localStorage.setItem('volunteer_current_plan_id', planData.updatedAt);
-
-        // 仍然下载本地备份
+        // 下载本地备份文件
         downloadPlanFile(planData);
-        alert('✅ 方案已同步到云端并保存本地备份（' + checkedSchools.length + ' 条）');
+        alert('✅ 方案已保存到云端（' + checkedSchools.length + ' 条）');
         loadPlanSummary();
         return;
       }
@@ -875,17 +953,19 @@ async function loadAllPlans() {
     try {
       var remote = await SupabaseAPI.getPlans();
       if (remote !== null && remote.length > 0) {
-        // 转换为本地格式
-        var plans = remote.map(function(p) {
-          return p.data && p.data.updatedAt ? p.data : {
+        // 转换为本地格式，保留 Supabase UUID id
+        return remote.map(function(p) {
+          if (p.data && p.data.updatedAt) {
+            p.data._supabaseId = p.id;  // 保留 Supabase UUID
+            return p.data;
+          }
+          return {
             version: p.name || '未知',
             updatedAt: p.updated_at || new Date().toISOString(),
-            schools: (p.data && p.data.schools) || []
+            schools: (p.data && p.data.schools) || [],
+            _supabaseId: p.id
           };
         });
-        // 同步到 localStorage 作为缓存
-        localStorage.setItem('volunteer_plans', JSON.stringify(plans));
-        return plans;
       }
     } catch(e) {
       console.error('Supabase 加载方案失败:', e);
@@ -909,13 +989,6 @@ async function deletePlan(planId) {
     try {
       var ok = await SupabaseAPI.deletePlan(planId);
       if (ok) {
-        // 同步删除本地
-        var plans = loadAllPlansLocal();
-        var idx = plans.findIndex(function(p) { return p.updatedAt === planId; });
-        if (idx !== -1) { plans.splice(idx, 1); saveAllPlans(plans); }
-        if (localStorage.getItem('volunteer_current_plan_id') === planId) {
-          localStorage.removeItem('volunteer_current_plan_id');
-        }
         loadPlanSummary();
         return;
       }
@@ -937,6 +1010,7 @@ async function deletePlan(planId) {
 
 async function loadPlanSummary() {
   var plans = await loadAllPlans();
+
   const listContainer = document.getElementById('planListContainer');
   const detailContainer = document.getElementById('planDetailContainer');
   const currentPlanId = localStorage.getItem('volunteer_current_plan_id');
@@ -954,26 +1028,27 @@ async function loadPlanSummary() {
     const rush = (p.schools || []).filter(s => s.category === '冲').length;
     const steady = (p.schools || []).filter(s => s.category === '稳').length;
     const safe = (p.schools || []).filter(s => s.category === '保').length;
-    const isActive = currentPlanId === p.updatedAt;
-    return `<div class="plan-list-item${isActive ? ' active' : ''}" data-plan-id="${p.updatedAt}" onclick="selectPlan('${p.updatedAt}')">
+    const planId = p._supabaseId || p.updatedAt;
+    const isActive = currentPlanId === planId;
+    return `<div class="plan-list-item${isActive ? ' active' : ''}" data-plan-id="${planId}" onclick="selectPlan('${planId}')">
       <div class="plan-list-info">
         <span class="plan-list-name">📋 志愿方案 · ${p.version || '未知'}</span>
         <span class="plan-list-meta">${ts} · 🚀${rush} ⚖️${steady} 🛡️${safe} 共${total}条</span>
       </div>
-      <button class="btn btn-small btn-danger" onclick="event.stopPropagation();deletePlan('${p.updatedAt}')" title="删除方案">🗑 删除</button>
+      <button class="btn btn-small btn-danger" onclick="event.stopPropagation();deletePlan('${planId}')" title="删除方案">🗑 删除</button>
     </div>`;
   }).join('');
 
   // 自动选中第一个方案（如果没有当前选中）
   if (!currentPlanId && plans.length > 0) {
-    selectPlan(plans[0].updatedAt);
+    selectPlan(plans[0]._supabaseId || plans[0].updatedAt);
   } else if (currentPlanId) {
     // 确保当前选中的方案仍然存在
-    const found = plans.find(p => p.updatedAt === currentPlanId);
+    const found = plans.find(p => (p._supabaseId || p.updatedAt) === currentPlanId);
     if (found) {
       renderPlanDetail(found);
     } else if (plans.length > 0) {
-      selectPlan(plans[0].updatedAt);
+      selectPlan(plans[0]._supabaseId || plans[0].updatedAt);
     }
   }
 }
@@ -981,7 +1056,7 @@ async function loadPlanSummary() {
 async function selectPlan(planId) {
   localStorage.setItem('volunteer_current_plan_id', planId);
   var plans = await loadAllPlans();
-  var plan = plans.find(function(p) { return p.updatedAt === planId; });
+  var plan = plans.find(function(p) { return (p._supabaseId || p.updatedAt) === planId; });
   if (plan) {
     renderPlanDetail(plan);
     loadPlanSummary(); // 刷新列表高亮
@@ -1007,9 +1082,10 @@ function renderPlanDetail(planData) {
     </p>
   `;
 
-  renderPlanTableDetail('planRushList', rushItems, planData.updatedAt);
-  renderPlanTableDetail('planSteadyList', steadyItems, planData.updatedAt);
-  renderPlanTableDetail('planSafeList', safeItems, planData.updatedAt);
+  var pid = planData._supabaseId || planData.updatedAt;
+  renderPlanTableDetail('planRushList', rushItems, pid);
+  renderPlanTableDetail('planSteadyList', steadyItems, pid);
+  renderPlanTableDetail('planSafeList', safeItems, pid);
 }
 
 function renderPlanTableDetail(id, items, planId) {
@@ -1055,27 +1131,23 @@ function renderPlanTableDetail(id, items, planId) {
 }
 
 // 从方案中删除单条记录
-function deletePlanItem(planId, itemIdx, listId) {
+async function deletePlanItem(planId, itemIdx, listId) {
   if (!confirm('确定从方案中移除此条志愿吗？')) return;
 
-  const plans = loadAllPlans();
-  const plan = plans.find(p => p.updatedAt === planId);
+  var plans = await loadAllPlans();
+  var plan = plans.find(function(p) { return (p._supabaseId || p.updatedAt) === planId; });
   if (!plan) return;
 
   // 根据 listId 确定类别
-  let category;
+  var category;
   if (listId === 'planRushList') category = '冲';
   else if (listId === 'planSteadyList') category = '稳';
   else category = '保';
 
   // 找到该类别的第 itemIdx 条在 planData.schools 中的实际索引
-  const catItems = [];
-  const catIndexes = [];
-  (plan.schools || []).forEach((s, idx) => {
-    if (s.category === category) {
-      catItems.push(s);
-      catIndexes.push(idx);
-    }
+  var catIndexes = [];
+  (plan.schools || []).forEach(function(s, idx) {
+    if (s.category === category) catIndexes.push(idx);
   });
 
   if (itemIdx >= 0 && itemIdx < catIndexes.length) {
@@ -1083,21 +1155,38 @@ function deletePlanItem(planId, itemIdx, listId) {
   }
 
   // 重新编号
-  plan.schools.forEach((s, i) => { s.rank = i + 1; });
+  plan.schools.forEach(function(s, i) { s.rank = i + 1; });
   plan.updatedAt = new Date().toISOString();
 
+  // 保存到 Supabase
+  if (SupabaseAPI && SupabaseAPI.isAvailable && SupabaseAPI.isAvailable()) {
+    try {
+      var savedId = await SupabaseAPI.savePlan({
+        id: plan._supabaseId || plan.updatedAt,
+        name: '志愿方案 · ' + (plan.version || '未知'),
+        data: plan,
+        updated_at: plan.updatedAt
+      });
+      if (savedId) {
+        renderPlanDetail(plan);
+        return;
+      }
+    } catch(e) { console.error('Supabase 更新方案失败:', e); }
+  }
+
+  // 回退 localStorage
   saveAllPlans(plans);
   renderPlanDetail(plan);
 }
 
 // ======== 导出最终方案 ========
-function exportFinalPlan() {
+async function exportFinalPlan() {
   // 优先导出当前选中的方案
   const currentPlanId = localStorage.getItem('volunteer_current_plan_id');
-  const plans = loadAllPlans();
+  const plans = await loadAllPlans();
   let planData = null;
   if (currentPlanId) {
-    planData = plans.find(p => p.updatedAt === currentPlanId);
+    planData = plans.find(function(p) { return (p._supabaseId || p.updatedAt) === currentPlanId; });
   }
   if (!planData && plans.length > 0) {
     planData = plans[0];
@@ -1255,7 +1344,7 @@ loadSettings();
     acc[k] = v;
     return acc;
   }, {});
-  if (cookies['auth_token'] === AUTH_TOKEN) {
+  if (decodeURIComponent(cookies['auth_token'] || '') === AUTH_TOKEN || cookies['auth_token'] === AUTH_TOKEN) {
     document.getElementById('loginOverlay').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     initApp();

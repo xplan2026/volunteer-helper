@@ -142,16 +142,13 @@
                     <div class="dir-item dir-file">config.js <span class="dir-desc">学生信息配置</span></div>
                     <div class="dir-item dir-file">style.css</div>
                   </div>
-                  <div class="dir-item dir-dir">📁 data/</div>
+                  <div class="dir-item dir-dir">📁 data_bak/</div>
                   <div class="dir-children">
-                    <div class="dir-item dir-file">available_selectable_schools.json <span class="dir-desc">备选学校（已排除已选，2775条）</span></div>
-                    <div class="dir-item dir-file">selectable_schools.json <span class="dir-desc">已选学校（主页加载）</span></div>
-                    <div class="dir-item dir-file">selectable_schools.js <span class="dir-desc">同上（JS格式）</span></div>
-                    <div class="dir-item dir-file">all_selectable_schools.json <span class="dir-desc">全部可选学校源数据（2849条）</span></div>
-                    <div class="dir-item dir-dir">main/</div>
-                    <div class="dir-children">
-                      <div class="dir-item dir-file">.gitkeep <span class="dir-desc">保存的筛选方案</span></div>
-                    </div>
+                    <div class="dir-item dir-file">DATA_RESOURCE_BAK.tar.gz <span class="dir-desc">原始数据备份压缩包</span></div>
+                    <div class="dir-item dir-file">all_selectable_schools.json <span class="dir-desc">全部可选学校源数据（已迁移到 Supabase）</span></div>
+                    <div class="dir-item dir-file">available_selectable_schools.json <span class="dir-desc">备选学校（已迁移到 Supabase）</span></div>
+                    <div class="dir-item dir-file">selectable_schools.json <span class="dir-desc">已选学校（已迁移到 Supabase）</span></div>
+                    <div class="dir-item dir-file">selectable_schools.js <span class="dir-desc">同上（JS格式，已迁移到 Supabase）</span></div>
                   </div>
                   <div class="dir-item dir-dir">📁 pages/</div>
                   <div class="dir-children">
@@ -316,7 +313,6 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/supabase-client.js"></script>
-  <script src="data/selectable_schools.js"></script>
   <script src="assets/config.js"></script>
   <script src="assets/app.js"></script>
 </body>

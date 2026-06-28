@@ -213,13 +213,29 @@ const SupabaseAPI = {
     const sb = getSupabase();
     if (!sb) return null;
 
+    const name = plan.name || '';
+
+    // 先查是否已有同名方案，有则 update，无则 insert
+    const { data: existing } = await sb.from('volunteer_plans')
+      .select('id').eq('name', name).maybeSingle();
+
+    if (existing) {
+      const { error } = await sb.from('volunteer_plans')
+        .update({
+          data: plan.data || {},
+          updated_at: plan.updated_at || new Date().toISOString()
+        })
+        .eq('id', existing.id);
+      if (error) { console.error('更新方案失败:', error); return null; }
+      return existing.id;
+    }
+
     const { data, error } = await sb.from('volunteer_plans')
-      .upsert({
-        id: plan.id,
-        name: plan.name || '',
+      .insert({
+        name: name,
         data: plan.data || {},
         updated_at: plan.updated_at || new Date().toISOString()
-      }, { onConflict: 'id' })
+      })
       .select('id')
       .single();
 
@@ -234,6 +250,38 @@ const SupabaseAPI = {
     const { error } = await sb.from('volunteer_plans').delete().eq('id', id);
     if (error) { console.error('删除方案失败:', error); return false; }
     return true;
+  },
+
+  // ======== 获取所有 ratio（投档率）字典 ========
+  // 返回 { 'school_code|specialty_code': ratio } 格式
+  getAllRatios: async function() {
+    const sb = getSupabase();
+    if (!sb) return null;
+
+    // 分页加载，available_schools 可能有上千条
+    let allData = [];
+    let page = 0;
+    const pageSize = 1000;
+    let hasMore = true;
+
+    while (hasMore) {
+      const { data, error } = await sb.from('available_schools')
+        .select('school_code,specialty_code,ratio')
+        .range(page * pageSize, (page + 1) * pageSize - 1);
+
+      if (error) { console.error('获取投档率失败:', error); return null; }
+      if (!data || data.length === 0) { hasMore = false; break; }
+      allData = allData.concat(data);
+      if (data.length < pageSize) hasMore = false;
+      page++;
+    }
+
+    var result = {};
+    for (var i = 0; i < allData.length; i++) {
+      var key = allData[i].school_code + '|' + allData[i].specialty_code;
+      result[key] = allData[i].ratio;
+    }
+    return result;
   },
 
   // ======== 获取所有专业列表 ========
