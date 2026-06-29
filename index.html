@@ -48,6 +48,12 @@
           <span class="nav-icon">📋</span>
           <span>志愿方案</span>
         </a>
+
+        <div class="nav-section">追踪</div>
+        <a href="#" data-page="tracking">
+          <span class="nav-icon">🔍</span>
+          <span>志愿填报追踪</span>
+        </a>
       </nav>
     </aside>
 
@@ -305,6 +311,80 @@
           </div>
         </section>
       </div>
+
+        <!-- ===== 页面6: 志愿填报追踪 ===== -->
+        <section id="page-tracking" class="page">
+          <h2>🔍 志愿填报追踪</h2>
+          <p class="page-desc">查看已填报的广东志愿方案，追踪学校招生动态</p>
+
+          <!-- Subagent 执行状态 -->
+          <div class="tracking-status" id="trackingStatus" style="margin-bottom:20px;">
+            <div class="settings-card">
+              <h3>🤖 Subagent 执行情况</h3>
+              <div id="subagentStatus">
+                <p class="plan-empty">⏳ 等待 Subagent 返回结果...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 考生信息卡 -->
+          <div class="score-card tracking-score" id="trackingScoreCard" style="margin-bottom:20px;">
+            <div class="score-main">
+              <div class="score-number">
+                <span class="score-label">考生信息</span>
+                <span class="score-value" id="trackingStudentName">—</span>
+              </div>
+              <div class="score-detail">
+                <p>考生号：<span id="trackingStudentId">—</span></p>
+                <p>成绩：<span id="trackingStudentScore">—</span> 分 · 排位 <span id="trackingStudentRank">—</span></p>
+                <p>科类：<span id="trackingStudentSubject">—</span> · 省控线：<span id="trackingBatchLine">—</span> 分</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 志愿列表 -->
+          <div class="tracking-table-wrapper">
+            <h3>📋 已填报志愿（共 <span id="trackingTotalCount">0</span> 个）</h3>
+            <div class="table-controls" style="margin:12px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+              <input type="text" id="trackingSearch" placeholder="🔍 搜索院校名称..." style="padding:6px 10px;border:1px solid #ddd;border-radius:4px;flex:1;min-width:150px;">
+              <select id="trackingFilter" style="padding:6px 10px;border:1px solid #ddd;border-radius:4px;">
+                <option value="all">全部</option>
+                <option value="rush">🚀 冲刺</option>
+                <option value="steady">⚖️ 稳妥</option>
+                <option value="safe">🛡️ 保底</option>
+              </select>
+              <button class="btn btn-outline" onclick="refreshTrackingData()">🔄 刷新</button>
+            </div>
+            <div id="trackingTableContainer" style="overflow-x:auto;">
+              <table class="tracking-table" style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead>
+                  <tr style="background:#f5f7fa;position:sticky;top:0;">
+                    <th style="padding:8px 6px;text-align:center;border-bottom:2px solid #e0e6ed;">#</th>
+                    <th style="padding:8px 6px;text-align:left;border-bottom:2px solid #e0e6ed;">院校</th>
+                    <th style="padding:8px 6px;text-align:center;border-bottom:2px solid #e0e6ed;">专业组</th>
+                    <th style="padding:8px 6px;text-align:left;border-bottom:2px solid #e0e6ed;">专业</th>
+                    <th style="padding:8px 6px;text-align:center;border-bottom:2px solid #e0e6ed;">策略</th>
+                    <th style="padding:8px 6px;text-align:center;border-bottom:2px solid #e0e6ed;">官网状态</th>
+                    <th style="padding:8px 6px;text-align:center;border-bottom:2px solid #e0e6ed;">备注</th>
+                  </tr>
+                </thead>
+                <tbody id="trackingTableBody">
+                  <tr><td colspan="7" style="text-align:center;padding:40px;color:#999;">⏳ 加载中...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- 退档风险分析 -->
+          <div class="tracking-risk" id="trackingRiskSection" style="margin-top:24px;">
+            <div class="settings-card">
+              <h3>⚠️ 退档风险评估</h3>
+              <div id="riskAnalysisContent">
+                <p class="plan-empty">评估中...</p>
+              </div>
+            </div>
+          </div>
+        </section>
     </div>
   </div>
 

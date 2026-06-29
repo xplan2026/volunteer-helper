@@ -34,6 +34,7 @@ function initApp() {
   initAllSchoolsPage();
   initPlanningPage();
   loadPlanSummary();
+  initTrackingPage();
   setupNavigation();
 }
 
@@ -1464,6 +1465,148 @@ function importAllData(fileInput) {
   reader.readAsText(file);
   fileInput.value = '';
 }
+
+// ======== 志愿填报追踪页面 ========
+// 志愿数据对象
+let trackingData = null;
+
+// 预判策略：根据排位判断冲/稳/保
+function classifyStrategy(seq) {
+  // 前8个为冲刺，9-15为稳妥，16-60为保底
+  if (seq <= 8) return { label: '🚀 冲刺', cls: 'rush' };
+  if (seq <= 15) return { label: '⚖️ 稳妥', cls: 'steady' };
+  return { label: '🛡️ 保底', cls: 'safe' };
+}
+
+// 加载志愿数据
+async function loadTrackingData() {
+  try {
+    const resp = await fetch('data_bak/志愿填报.json');
+    if (!resp.ok) throw new Error('无法加载数据文件');
+    trackingData = await resp.json();
+    return true;
+  } catch(e) {
+    console.warn('志愿数据加载失败:', e.message);
+    return false;
+  }
+}
+
+// 搜索过滤函数
+function filterTrackingData(searchTerm, strategyFilter) {
+  if (!trackingData || !trackingData.志愿表) return [];
+  var results = trackingData.志愿表;
+  if (searchTerm) {
+    var kw = searchTerm.trim().toLowerCase();
+    results = results.filter(function(item) {
+      return item.院校.toLowerCase().indexOf(kw) !== -1;
+    });
+  }
+  if (strategyFilter && strategyFilter !== 'all') {
+    results = results.filter(function(item) {
+      return classifyStrategy(item.序号).cls === strategyFilter;
+    });
+  }
+  return results;
+}
+
+// 渲染追踪表格
+function renderTrackingTable(filtered) {
+  var tbody = document.getElementById('trackingTableBody');
+  if (!filtered || filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#999;">📭 无匹配结果</td></tr>';
+    document.getElementById('trackingTotalCount').textContent = '0';
+    return;
+  }
+
+  var html = '';
+  var colors = { rush: '#fff0f0', steady: '#fff8e7', safe: '#f0fff4' };
+
+  filtered.forEach(function(item) {
+    var strategy = classifyStrategy(item.序号);
+    var majors = Array.isArray(item.专业) ? item.专业.join('、') : '—';
+    // 超过5个专业折叠显示
+    var majorsDisplay = item.专业.length > 3
+      ? '<span class="majors-short">' + item.专业.slice(0,3).join('、') + '</span><span class="majors-toggle" style="color:#4a90d9;cursor:pointer;font-size:12px;" onclick="this.previousElementSibling.style.display=\'none\';this.nextElementSibling.style.display=\'inline\';"> 展开全部</span><span class="majors-full" style="display:none;">' + item.专业.join('、') + '</span>'
+      : majors;
+
+    // 官网状态（待扫描）
+    var siteStatus = '<span style="color:#999;">⏳ 待扫描</span>';
+
+    html += '<tr style="background:' + (colors[strategy.cls] || '#fff') + ';">';
+    html += '<td style="padding:8px 6px;text-align:center;">' + item.序号 + '</td>';
+    html += '<td style="padding:8px 6px;text-align:left;font-weight:500;">' + item.院校 + '</td>';
+    html += '<td style="padding:8px 6px;text-align:center;">' + item.专业组 + '</td>';
+    html += '<td style="padding:8px 6px;text-align:left;max-width:300px;">' + majorsDisplay + '</td>';
+    html += '<td style="padding:8px 6px;text-align:center;">' + strategy.label + '</td>';
+    html += '<td style="padding:8px 6px;text-align:center;">' + siteStatus + '</td>';
+    html += '<td style="padding:8px 6px;text-align:center;font-size:12px;color:#999;">—</td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+  document.getElementById('trackingTotalCount').textContent = filtered.length;
+}
+
+// 更新考生信息
+function renderTrackingStudentInfo() {
+  if (!trackingData || !trackingData.考生信息) return;
+  var s = trackingData.考生信息;
+  document.getElementById('trackingStudentName').textContent = s.姓名 || '—';
+  document.getElementById('trackingStudentId').textContent = s.考生号 || '—';
+  document.getElementById('trackingStudentScore').textContent = s.成绩 || '—';
+  document.getElementById('trackingStudentRank').textContent = s.排位 || '—';
+  document.getElementById('trackingStudentSubject').textContent = s.科类 || '—';
+  document.getElementById('trackingBatchLine').textContent = (s['省控线'] && s['省控线'].分数线) || '—';
+}
+
+// 刷新追踪数据
+function refreshTrackingData() {
+  var searchVal = document.getElementById('trackingSearch').value;
+  var filterVal = document.getElementById('trackingFilter').value;
+  var filtered = filterTrackingData(searchVal, filterVal);
+  renderTrackingTable(filtered);
+}
+
+// 初始化追踪页面
+async function initTrackingPage() {
+  var ok = await loadTrackingData();
+  if (ok) {
+    renderTrackingStudentInfo();
+    refreshTrackingData();
+  } else {
+    document.getElementById('trackingTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#f00;">❌ 数据加载失败，请检查 data_bak/志愿填报.json 是否存在</td></tr>';
+  }
+
+  // 搜索和筛选事件绑定
+  var searchInput = document.getElementById('trackingSearch');
+  var filterSelect = document.getElementById('trackingFilter');
+  if (searchInput) searchInput.addEventListener('input', refreshTrackingData);
+  if (filterSelect) filterSelect.addEventListener('change', refreshTrackingData);
+}
+
+// ======== 导航中注册追踪页面 ========
+// （在 setupNavigation 中原有的 plan 处理之后扩展）
+(function() {
+  var origSetup = setupNavigation;
+  setupNavigation = function() {
+    origSetup();
+    // 额外注册 tracking 页面
+    var trackingLinks = document.querySelectorAll('.sidebar-nav a[data-page="tracking"]');
+    trackingLinks.forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        var names = { dashboard:'📊 总览', allschools:'📋 所有可选学校', planning:'📝 筛选方案', plan:'📋 志愿方案', tracking:'🔍 志愿填报追踪' };
+        var breadcrumb = document.getElementById('breadcrumb');
+        if (breadcrumb && this.dataset.page === 'tracking') {
+          breadcrumb.innerHTML = (names[this.dataset.page] || this.dataset.page) + ' <span>志愿填报追踪</span>';
+        }
+        // 加载追踪数据（如果还没加载）
+        if (this.dataset.page === 'tracking' && !trackingData) {
+          initTrackingPage();
+        }
+      });
+    });
+  };
+})();
 
 // ======== 初始加载 ========
 loadSettings();

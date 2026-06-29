@@ -375,6 +375,24 @@ h2 { font-size: 22px; margin-bottom: 20px; display: flex; align-items: center; g
 .dir-file .dir-desc { color: #999; font-size: 11px; margin-left: 6px; }
 .dir-children { padding-left: 20px; border-left: 1px dashed #e0e0e0; margin-left: 6px; }
 
+/* === 志愿填报追踪 === */
+.tracking-table {
+  background: #fff; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.tracking-table th {
+  background: #f8f9fa; white-space: nowrap;
+}
+.tracking-table tr:hover td { background: #f8f9ff; }
+.tracking-score { background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); }
+.tracking-table-wrapper { margin-top: 16px; }
+.tracking-table-wrapper h3 { font-size: 16px; margin-bottom: 12px; }
+
+/* === 追踪空状态 === */
+.tracking-empty {
+  text-align: center; padding: 40px; color: #999;
+}
+
 /* === 响应式 === */
 @media (max-width: 768px) {
   .sidebar { width: 60px; }
