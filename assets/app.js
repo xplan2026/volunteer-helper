@@ -1469,6 +1469,7 @@ function importAllData(fileInput) {
 // ======== 志愿填报追踪页面 ========
 // 志愿数据对象
 let trackingData = null;
+let trackingScanResult = null;
 
 // 预判策略：根据排位判断冲/稳/保
 function classifyStrategy(seq) {
@@ -1489,6 +1490,29 @@ async function loadTrackingData() {
     console.warn('志愿数据加载失败:', e.message);
     return false;
   }
+}
+
+// 加载 Subagent 扫描结果
+async function loadTrackingScanResult() {
+  try {
+    const resp = await fetch('data_bak/tracking-result.json');
+    if (!resp.ok) throw new Error('暂无扫描结果');
+    trackingScanResult = await resp.json();
+    return true;
+  } catch(e) {
+    console.warn('扫描结果加载失败:', e.message);
+    return false;
+  }
+}
+
+// 获取学校的官网扫描状态
+function getSchoolScanStatus(schoolName) {
+  if (!trackingScanResult || !trackingScanResult.schoolResults) return null;
+  // 去掉括号后缀匹配
+  var cleanName = schoolName.replace(/\(.*\)/g, '');
+  return trackingScanResult.schoolResults.find(function(r) {
+    return r.school === cleanName;
+  }) || null;
 }
 
 // 搜索过滤函数
@@ -1529,8 +1553,27 @@ function renderTrackingTable(filtered) {
       ? '<span class="majors-short">' + item.专业.slice(0,3).join('、') + '</span><span class="majors-toggle" style="color:#4a90d9;cursor:pointer;font-size:12px;" onclick="this.previousElementSibling.style.display=\'none\';this.nextElementSibling.style.display=\'inline\';"> 展开全部</span><span class="majors-full" style="display:none;">' + item.专业.join('、') + '</span>'
       : majors;
 
-    // 官网状态（待扫描）
-    var siteStatus = '<span style="color:#999;">⏳ 待扫描</span>';
+    // 官网状态
+    var scanInfo = getSchoolScanStatus(item.院校);
+    var siteStatus, noteText;
+    if (!scanInfo) {
+      siteStatus = '<span style="color:#999;">⏳ 待扫描</span>';
+      noteText = '—';
+    } else if (scanInfo.error === 'no_url') {
+      siteStatus = '<span style="color:#999;">❓ 未知官网</span>';
+      noteText = '暂未收录官网';
+    } else if (!scanInfo.reachable) {
+      siteStatus = '<span style="color:#e74c3c;">🚫 不可达</span>';
+      noteText = '官网访问失败';
+    } else if (scanInfo.admissionMentioned) {
+      siteStatus = '<span style="color:#27ae60;">📢 有招生信息</span>';
+      noteText = scanInfo.admissionUrl
+        ? '<a href="' + scanInfo.admissionUrl + '" target="_blank" style="color:#2980b9;">查看</a>'
+        : '已检测到招生关键词';
+    } else {
+      siteStatus = '<span style="color:#7f8c8d;">✅ 正常</span>';
+      noteText = '官网可达，未发现招生公告';
+    }
 
     html += '<tr style="background:' + (colors[strategy.cls] || '#fff') + ';">';
     html += '<td style="padding:8px 6px;text-align:center;">' + item.序号 + '</td>';
@@ -1539,12 +1582,124 @@ function renderTrackingTable(filtered) {
     html += '<td style="padding:8px 6px;text-align:left;max-width:300px;">' + majorsDisplay + '</td>';
     html += '<td style="padding:8px 6px;text-align:center;">' + strategy.label + '</td>';
     html += '<td style="padding:8px 6px;text-align:center;">' + siteStatus + '</td>';
-    html += '<td style="padding:8px 6px;text-align:center;font-size:12px;color:#999;">—</td>';
+    html += '<td style="padding:8px 6px;text-align:center;font-size:12px;color:#555;">' + noteText + '</td>';
     html += '</tr>';
   });
 
   tbody.innerHTML = html;
   document.getElementById('trackingTotalCount').textContent = filtered.length;
+}
+
+// 渲染 Subagent 执行状态
+function renderSubagentStatus() {
+  var statusDiv = document.getElementById('subagentStatus');
+  if (!statusDiv) return;
+
+  if (!trackingScanResult) {
+    statusDiv.innerHTML = '<p class="plan-empty">⏳ 等待 Subagent 返回结果...</p>';
+    return;
+  }
+
+  var sr = trackingScanResult;
+  var timeAgo = getTimeAgo(sr.scanTime);
+  var riskColor = sr.riskAnalysis.overallRisk === 'high' ? '#e74c3c'
+    : sr.riskAnalysis.overallRisk === 'medium' ? '#f39c12'
+    : '#27ae60';
+
+  var html = '';
+  html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px;">';
+  html += '  <div class="stat-box" style="background:#f0f8ff;border-radius:8px;padding:12px;text-align:center;">';
+  html += '    <div style="font-size:24px;font-weight:bold;color:#2980b9;">' + sr.reachableCount + '/' + sr.totalSchools + '</div>';
+  html += '    <div style="font-size:12px;color:#666;">官网可达</div>';
+  html += '  </div>';
+  html += '  <div class="stat-box" style="background:#f0fff4;border-radius:8px;padding:12px;text-align:center;">';
+  html += '    <div style="font-size:24px;font-weight:bold;color:#27ae60;">' + sr.admissionFound + '</div>';
+  html += '    <div style="font-size:12px;color:#666;">发现招生信息</div>';
+  html += '  </div>';
+  html += '  <div class="stat-box" style="background:#fff0f0;border-radius:8px;padding:12px;text-align:center;">';
+  html += '    <div style="font-size:24px;font-weight:bold;color:#e74c3c;">' + sr.dangerDetected + '</div>';
+  html += '    <div style="font-size:12px;color:#666;">退档预警</div>';
+  html += '  </div>';
+  html += '  <div class="stat-box" style="background:#fff8e7;border-radius:8px;padding:12px;text-align:center;">';
+  html += '    <div style="font-size:14px;font-weight:bold;color:' + riskColor + ';">' + sr.summary.riskLevel + '</div>';
+  html += '    <div style="font-size:12px;color:#666;">综合风险</div>';
+  html += '  </div>';
+  html += '</div>';
+
+  html += '<div style="font-size:12px;color:#999;border-top:1px solid #eee;padding-top:8px;">';
+  html += '🕐 上次扫描: ' + timeAgo + ' &nbsp;|&nbsp; ';
+  html += '📡 ' + sr.summary.schoolStatus;
+  html += '</div>';
+
+  statusDiv.innerHTML = html;
+}
+
+// 渲染退档风险评估
+function renderRiskAnalysis() {
+  var riskDiv = document.getElementById('riskAnalysisContent');
+  if (!riskDiv) return;
+  if (!trackingScanResult || !trackingScanResult.riskAnalysis) {
+    riskDiv.innerHTML = '<p class="plan-empty">暂无退档风险评估数据</p>';
+    return;
+  }
+
+  var ra = trackingScanResult.riskAnalysis;
+  var riskColor = ra.overallRisk === 'high' ? '#e74c3c'
+    : ra.overallRisk === 'medium' ? '#f39c12'
+    : '#27ae60';
+
+  var html = '';
+
+  // 分数线信息
+  if (ra.batchLineCheck) {
+    var bl = ra.batchLineCheck;
+    html += '<div style="margin-bottom:12px;">';
+    html += '  <strong>📊 分数线信息</strong><br>';
+    html += '  成绩: <strong>' + bl.score + '</strong> 分 · ';
+    html += '  省控线: <strong>' + bl.batchLine + '</strong> 分 · ';
+    html += '  超出: <span style="color:' + (bl.diff >= 0 ? '#27ae60' : '#e74c3c') + ';font-weight:bold;">' + bl.diff + '</span> 分';
+    html += '</div>';
+  }
+
+  // 风险因素
+  if (ra.riskFactors && ra.riskFactors.length > 0) {
+    html += '<div style="margin-bottom:12px;">';
+    html += '  <strong>⚠️ 风险因素</strong>';
+    html += '  <ul style="margin:4px 0 0 16px;font-size:13px;">';
+    ra.riskFactors.forEach(function(f) {
+      html += '<li>' + f + '</li>';
+    });
+    html += '  </ul>';
+    html += '</div>';
+  } else {
+    html += '<div style="margin-bottom:12px;color:#27ae60;">✅ 暂未发现明显风险因素</div>';
+  }
+
+  // 建议
+  if (ra.suggestions && ra.suggestions.length > 0) {
+    html += '<div style="margin-bottom:8px;">';
+    html += '  <strong>💡 建议</strong>';
+    html += '  <ul style="margin:4px 0 0 16px;font-size:13px;">';
+    ra.suggestions.forEach(function(s) {
+      html += '<li>' + s + '</li>';
+    });
+    html += '  </ul>';
+    html += '</div>';
+  }
+
+  riskDiv.innerHTML = html;
+}
+
+// 格式化时间差
+function getTimeAgo(isoTime) {
+  if (!isoTime) return '未知';
+  var t = new Date(isoTime);
+  var now = new Date();
+  var diff = Math.floor((now - t) / 1000);
+  if (diff < 60) return '刚刚';
+  if (diff < 3600) return Math.floor(diff / 60) + ' 分钟前';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' 小时前';
+  return Math.floor(diff / 86400) + ' 天前';
 }
 
 // 更新考生信息
@@ -1570,9 +1725,13 @@ function refreshTrackingData() {
 // 初始化追踪页面
 async function initTrackingPage() {
   var ok = await loadTrackingData();
+  var scanOk = await loadTrackingScanResult();
+
   if (ok) {
     renderTrackingStudentInfo();
     refreshTrackingData();
+    renderSubagentStatus();
+    renderRiskAnalysis();
   } else {
     document.getElementById('trackingTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:#f00;">❌ 数据加载失败，请检查 data_bak/志愿填报.json 是否存在</td></tr>';
   }
@@ -1585,21 +1744,18 @@ async function initTrackingPage() {
 }
 
 // ======== 导航中注册追踪页面 ========
-// （在 setupNavigation 中原有的 plan 处理之后扩展）
 (function() {
   var origSetup = setupNavigation;
   setupNavigation = function() {
     origSetup();
-    // 额外注册 tracking 页面
     var trackingLinks = document.querySelectorAll('.sidebar-nav a[data-page="tracking"]');
     trackingLinks.forEach(function(link) {
       link.addEventListener('click', function(e) {
         var names = { dashboard:'📊 总览', allschools:'📋 所有可选学校', planning:'📝 筛选方案', plan:'📋 志愿方案', tracking:'🔍 志愿填报追踪' };
         var breadcrumb = document.getElementById('breadcrumb');
         if (breadcrumb && this.dataset.page === 'tracking') {
-          breadcrumb.innerHTML = (names[this.dataset.page] || this.dataset.page) + ' <span>志愿填报追踪</span>';
+          breadcrumb.innerHTML = (names[this.dataset.page] || this.dataset.page) + ' <span></span>';
         }
-        // 加载追踪数据（如果还没加载）
         if (this.dataset.page === 'tracking' && !trackingData) {
           initTrackingPage();
         }
