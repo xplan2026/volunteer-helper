@@ -1,0 +1,554 @@
+{
+  "scanTime": "2026-06-30T00:31:32.464Z",
+  "totalSchools": 36,
+  "scannedCount": 36,
+  "reachableCount": 28,
+  "admissionFound": 25,
+  "dangerDetected": 2,
+  "schoolResults": [
+    {
+      "school": "深圳技术大学",
+      "url": "https://www.sztu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://zs.sztu.edu.cn/",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://zs.sztu.edu.cn/",
+      "error": null
+    },
+    {
+      "school": "广州大学",
+      "url": "https://www.gzhu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程",
+        "招生计划"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.gzhu.edu.cn/zsjy1.htm",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.gzhu.edu.cn/zsjy1.htm",
+      "error": null
+    },
+    {
+      "school": "广东工业大学",
+      "url": "https://www.gdut.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "录取",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.gdut.edu.cn/#",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.gdut.edu.cn/#",
+      "error": null
+    },
+    {
+      "school": "华南农业大学",
+      "url": "https://www.scau.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.scau.edu.cn/#",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.scau.edu.cn/#",
+      "error": null
+    },
+    {
+      "school": "东莞理工学院",
+      "url": "https://www.dgut.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.dgut.edu.cn/#",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.dgut.edu.cn/#",
+      "error": null
+    },
+    {
+      "school": "佛山大学",
+      "url": "https://www.fosu.edu.cn",
+      "reachable": false,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "⚠️ 官网无法访问",
+      "error": "首页不可达 (HTTP 412)"
+    },
+    {
+      "school": "广东海洋大学",
+      "url": "https://www.gdou.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.gdou.edu.cn/zjzx/",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.gdou.edu.cn/zjzx/",
+      "error": null
+    },
+    {
+      "school": "五邑大学",
+      "url": "https://www.wyu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "简章",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "http://www.wyu.edu.cn/zsb/",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: http://www.wyu.edu.cn/zsb/",
+      "error": null
+    },
+    {
+      "school": "肇庆学院",
+      "url": "https://www.zqu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://zsb.zqu.edu.cn/",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://zsb.zqu.edu.cn/",
+      "error": null
+    },
+    {
+      "school": "惠州学院",
+      "url": "https://www.hzu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.hzu.edu.cn/543/list.htm",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.hzu.edu.cn/543/list.htm",
+      "error": null
+    },
+    {
+      "school": "岭南师范学院",
+      "url": "https://www.lingnan.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.lingnan.edu.cn/zsjy.htm",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.lingnan.edu.cn/zsjy.htm",
+      "error": null
+    },
+    {
+      "school": "北京师范大学珠海校区",
+      "url": "https://www.bnuzh.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生"
+      ],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息",
+      "error": null
+    },
+    {
+      "school": "北京理工大学珠海校区",
+      "url": "https://www.bitzh.edu.cn",
+      "reachable": false,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "⚠️ 官网无法访问",
+      "error": "首页不可达 (HTTP 0)"
+    },
+    {
+      "school": "广东技术师范大学",
+      "url": "https://www.gpnu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://bkzs.gpnu.edu.cn/",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://bkzs.gpnu.edu.cn/",
+      "error": null
+    },
+    {
+      "school": "韩山师范学院",
+      "url": "https://www.hstc.edu.cn",
+      "reachable": false,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "⚠️ 官网无法访问",
+      "error": "首页不可达 (HTTP 412)"
+    },
+    {
+      "school": "嘉应学院",
+      "url": "https://www.jyu.edu.cn",
+      "reachable": false,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "⚠️ 官网无法访问",
+      "error": "首页不可达 (HTTP 0)"
+    },
+    {
+      "school": "韶关学院",
+      "url": "https://www.sgu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程",
+        "招生信息"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "http://www.sgu.edu.cn/zsxxw",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: http://www.sgu.edu.cn/zsxxw",
+      "error": null
+    },
+    {
+      "school": "广东石油化工学院",
+      "url": "https://www.gdupt.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "http://xueshengchu.gdupt.edu.cn",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: http://xueshengchu.gdupt.edu.cn",
+      "error": null
+    },
+    {
+      "school": "电子科技大学中山学院",
+      "url": "https://www.zsc.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "招生信息"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: ",
+      "error": null
+    },
+    {
+      "school": "广州软件学院",
+      "url": "https://www.seig.edu.cn",
+      "reachable": true,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.seig.edu.cn/zs",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，暂未发现招生公告",
+      "error": null
+    },
+    {
+      "school": "广州应用科技学院",
+      "url": "https://www.gzasc.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程",
+        "招生计划"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "http://www.gzasc.edu.cn/zs/ptgk/zsjh.htm",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: http://www.gzasc.edu.cn/zs/ptgk/zsjh.htm",
+      "error": null
+    },
+    {
+      "school": "华南农业大学珠江学院",
+      "url": "https://www.scauzhujiang.cn",
+      "reachable": true,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.scauzhujiang.cn/zs",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，暂未发现招生公告",
+      "error": null
+    },
+    {
+      "school": "广东东软学院",
+      "url": "https://www.nuit.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "录取",
+        "录取查询",
+        "招生信息"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.nuit.edu.cn/zsxxw",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.nuit.edu.cn/zsxxw",
+      "error": null
+    },
+    {
+      "school": "广东理工学院",
+      "url": "https://www.gdlgxy.edu.cn",
+      "reachable": false,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "⚠️ 官网无法访问",
+      "error": "首页不可达 (HTTP 0)"
+    },
+    {
+      "school": "广州工商学院",
+      "url": "https://www.gzgs.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程",
+        "招生信息"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "http://www.gzgs.edu.cn/zsb/",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: http://www.gzgs.edu.cn/zsb/",
+      "error": null
+    },
+    {
+      "school": "广州科技职业技术大学",
+      "url": "https://www.gzkjxy.net",
+      "reachable": false,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "⚠️ 官网无法访问",
+      "error": "首页不可达 (HTTP 0)"
+    },
+    {
+      "school": "广东工商职业技术大学",
+      "url": "https://www.gdbtu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程",
+        "招生信息"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://zsb.gdbtu.edu.cn/",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://zsb.gdbtu.edu.cn/",
+      "error": null
+    },
+    {
+      "school": "广州理工学院",
+      "url": "https://www.gzist.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "http://zsb.gzist.edu.cn/",
+      "dangerKeywords": [
+        "体检"
+      ],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: http://zsb.gzist.edu.cn/ ⚠️ 检出退档预警词: 体检",
+      "error": null
+    },
+    {
+      "school": "东莞城市学院",
+      "url": "https://www.ccdgut.edu.cn",
+      "reachable": false,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "⚠️ 官网无法访问",
+      "error": "首页不可达 (HTTP 0)"
+    },
+    {
+      "school": "广州华立学院",
+      "url": "https://www.hualixy.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "章程"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.hualixy.edu.cn/zsb",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.hualixy.edu.cn/zsb",
+      "error": null
+    },
+    {
+      "school": "湛江科技学院",
+      "url": "https://www.zjkjxy.edu.cn",
+      "reachable": false,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": false,
+      "admissionUrl": null,
+      "dangerKeywords": [],
+      "summary": "⚠️ 官网无法访问",
+      "error": "首页不可达 (HTTP 0)"
+    },
+    {
+      "school": "广东科技学院",
+      "url": "https://www.gdust.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "志愿",
+        "招生信息"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://zs.gdust.edu.cn",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://zs.gdust.edu.cn",
+      "error": null
+    },
+    {
+      "school": "广州城市理工学院",
+      "url": "https://www.gcu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": false,
+      "keywordHits": [],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.gcu.edu.cn/zs",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，暂未发现招生公告",
+      "error": null
+    },
+    {
+      "school": "广州南方学院",
+      "url": "https://www.nfu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "javascript:;",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: javascript:;",
+      "error": null
+    },
+    {
+      "school": "广州新华学院",
+      "url": "https://www.xhsysu.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "招生信息"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "http://zsb.xhsysu.edu.cn/",
+      "dangerKeywords": [],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: http://zsb.xhsysu.edu.cn/",
+      "error": null
+    },
+    {
+      "school": "广东外语外贸大学南国商学院",
+      "url": "https://www.gwng.edu.cn",
+      "reachable": true,
+      "admissionMentioned": true,
+      "keywordHits": [
+        "招生",
+        "录取",
+        "投档",
+        "志愿",
+        "招生计划"
+      ],
+      "admissionPageFound": true,
+      "admissionUrl": "https://www.gwng.edu.cn/15/list.htm",
+      "dangerKeywords": [
+        "调剂",
+        "限制"
+      ],
+      "summary": "✅ 官网可访问，发现招生信息，招生页面: https://www.gwng.edu.cn/15/list.htm ⚠️ 检出退档预警词: 调剂, 限制",
+      "error": null
+    }
+  ],
+  "riskAnalysis": {
+    "overallRisk": "low",
+    "scoreAnalysis": null,
+    "batchLineCheck": {
+      "score": 489,
+      "batchLine": 442,
+      "diff": 47,
+      "aboveLine": true
+    },
+    "riskFactors": [
+      "2所学校检出退档相关关键词"
+    ],
+    "suggestions": [
+      "✅ 当前方案退档风险较低",
+      "注意 广州理工学院 可能涉及: 体检",
+      "注意 广东外语外贸大学南国商学院 可能涉及: 调剂, 限制"
+    ],
+    "lastScanTime": "2026-06-30T00:31:32.458Z"
+  },
+  "summary": {
+    "schoolStatus": "28/36 所学校官网可达",
+    "admissionInfo": "25 所学校检出招生关键词",
+    "riskLevel": "✅ 低风险"
+  }
+}
