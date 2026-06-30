@@ -79,7 +79,7 @@ const DANGER_KEYWORDS = [
 
 // ====== HTTP 请求工具 ======
 
-function fetchUrl(url, timeout = 8000) {
+function fetchUrl(url, timeout = 10000) {
   return new Promise((resolve) => {
     const client = url.startsWith('https') ? https : http;
     const req = client.get(url, {
@@ -91,15 +91,22 @@ function fetchUrl(url, timeout = 8000) {
       }
     }, (res) => {
       let data = '';
-      res.on('data', (chunk) => { data += chunk; if (data.length > 50000) req.destroy(); });
-      res.on('end', () => {
-        resolve({
-          status: res.statusCode,
-          headers: res.headers,
-          body: data.substring(0, 50000),
-          ok: res.statusCode >= 200 && res.statusCode < 400
-        });
+      res.setEncoding('utf8');
+      let handled = false;
+      const done = (result) => { if (!handled) { handled = true; resolve(result); } };
+      res.on('readable', () => {
+        let chunk;
+        while (null !== (chunk = res.read())) {
+          data += chunk;
+          if (data.length > 50000) {
+            req.destroy();
+            done({ status: res.statusCode, body: data.substring(0, 50000), ok: res.statusCode >= 200 && res.statusCode < 400 });
+            return;
+          }
+        }
       });
+      res.on('end', () => done({ status: res.statusCode, body: data.substring(0, 50000), ok: res.statusCode >= 200 && res.statusCode < 400 }));
+      res.on('error', (e) => done({ status: 0, ok: false, error: e.message }));
     });
     req.on('error', (e) => resolve({ status: 0, ok: false, error: e.message }));
     req.on('timeout', () => { req.destroy(); resolve({ status: 0, ok: false, error: 'timeout' }); });
